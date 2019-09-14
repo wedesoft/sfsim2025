@@ -5,6 +5,7 @@ config.h
 config.status
 configure
 ChangeLog
+etc
 libtool
 Makefile
 stamp-h1

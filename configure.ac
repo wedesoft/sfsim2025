@@ -12,4 +12,5 @@ AC_PROG_INSTALL
 AC_LANG(C)
 AM_CONFIG_HEADER(config.h)
 
-AC_OUTPUT(Makefile)
+AC_OUTPUT(Makefile
+          tests/Makefile)
