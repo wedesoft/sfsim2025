@@ -1,3 +1,3 @@
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = tests
+SUBDIRS = sfsim2025 tests

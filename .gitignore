@@ -1,4 +1,5 @@
 .deps
+.libs
 aclocal.m4
 autom4te.cache
 build-aux
@@ -11,5 +12,7 @@ libtool
 Makefile
 stamp-h1
 *.in
+*.la
+*.lo
 *.log
 *.o
