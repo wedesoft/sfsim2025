@@ -1,3 +1,4 @@
+.deps
 aclocal.m4
 autom4te.cache
 build-aux
@@ -11,3 +12,4 @@ Makefile
 stamp-h1
 *.in
 *.log
+*.o
