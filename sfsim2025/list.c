@@ -38,3 +38,15 @@ void append_pointer(list_t *list, void *value)
   grow_list(list, sizeof(void *), 0);
   ((void **)list->element)[list->size++] = value;
 }
+
+void append_point(list_t *list, point_t value)
+{
+  grow_list(list, sizeof(point_t), 1);
+  ((point_t *)list->element)[list->size++] = value;
+}
+
+void append_face(list_t *list, face_t value)
+{
+  grow_list(list, sizeof(face_t), 1);
+  ((face_t *)list->element)[list->size++] = value;
+}
