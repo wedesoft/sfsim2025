@@ -125,5 +125,5 @@ MunitTest test_list[] = {
   {"/get_glfloat"    , test_get_glfloat    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/append_pointer" , test_append_pointer , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/get_pointer"    , test_get_pointer    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {NULL              , NULL                , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
+  {NULL              , NULL                , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
