@@ -14,7 +14,7 @@ static MunitResult test_create(const MunitParameter params[], void *data)
 static MunitResult test_add_point(const MunitParameter params[], void *data)
 {
   rigid_body_t *body = make_rigid_body();
-  add_point(body, point(2, 3, 5));
+  add_point(body, vector(2, 3, 5));
   munit_assert_int(body->points->size, ==, 1);
   return MUNIT_OK;
 }
@@ -48,6 +48,20 @@ static MunitResult test_existing_edge(const MunitParameter params[], void *data)
   add_face(body, face(2, 1, 4));
   munit_assert_int(body->edges->size, ==, 5);
   return MUNIT_OK;
+}
+
+static rigid_body_t *make_object(void)
+{
+  rigid_body_t *result = make_rigid_body();
+  add_point(result, vector(0, 0, 0));
+  add_point(result, vector(1, 0, 0));
+  add_point(result, vector(0, 1, 0));
+  add_point(result, vector(0, 0, 1));
+  add_face(result, face(0, 2, 1));
+  add_face(result, face(0, 3, 2));
+  add_face(result, face(0, 1, 3));
+  add_face(result, face(1, 2, 3));
+  return result;
 }
 
 MunitTest test_rigid_body[] = {

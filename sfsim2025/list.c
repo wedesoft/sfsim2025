@@ -39,10 +39,10 @@ void append_pointer(list_t *list, void *value)
   ((void **)list->element)[list->size++] = value;
 }
 
-void append_point(list_t *list, point_t value)
+void append_vector(list_t *list, vector_t value)
 {
-  grow_list(list, sizeof(point_t), 1);
-  ((point_t *)list->element)[list->size++] = value;
+  grow_list(list, sizeof(vector_t), 1);
+  ((vector_t *)list->element)[list->size++] = value;
 }
 
 void append_face(list_t *list, face_t value)

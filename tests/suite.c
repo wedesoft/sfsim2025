@@ -2,10 +2,13 @@
 #include "munit.h"
 #include "test_list.h"
 #include "test_rigid_body.h"
+#include "test_vector.h"
+
 
 static MunitSuite test_sfsim[] = {
   {"/list"      , test_list      , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/rigid_body", test_rigid_body, NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/vector"    , test_vector    , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {NULL         , NULL           , NULL, 0, MUNIT_SUITE_OPTION_NONE}
 };
 

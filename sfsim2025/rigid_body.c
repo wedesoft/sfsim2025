@@ -11,9 +11,9 @@ rigid_body_t *make_rigid_body(void)
   return result;
 }
 
-void add_point(rigid_body_t *body, point_t point)
+void add_point(rigid_body_t *body, vector_t point)
 {
-  append_point(body->points, point);
+  append_vector(body->points, point);
 }
 
 void add_edge(rigid_body_t *body, edge_t edge)

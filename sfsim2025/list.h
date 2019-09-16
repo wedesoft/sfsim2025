@@ -1,6 +1,6 @@
 #pragma once
 #include <GL/gl.h>
-#include "point.h"
+#include "vector.h"
 #include "face.h"
 #include "edge.h"
 
@@ -25,9 +25,9 @@ void append_pointer(list_t *list, void *value);
 
 inline void **get_pointer(list_t *list) { return (void **)list->element; }
 
-void append_point(list_t *list, point_t value);
+void append_vector(list_t *list, vector_t value);
 
-inline point_t *get_point(list_t *list) { return (point_t *)list->element; }
+inline vector_t *get_vector(list_t *list) { return (vector_t *)list->element; }
 
 void append_face(list_t *list, face_t value);
 

@@ -1,6 +1,6 @@
 #pragma once
 #include "list.h"
-#include "point.h"
+#include "vector.h"
 #include "face.h"
 
 
@@ -12,6 +12,6 @@ typedef struct {
 
 rigid_body_t *make_rigid_body(void);
 
-void add_point(rigid_body_t *body, point_t point);
+void add_point(rigid_body_t *body, vector_t point);
 
 void add_face(rigid_body_t *body, face_t face);

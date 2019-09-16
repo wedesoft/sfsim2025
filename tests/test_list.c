@@ -112,22 +112,22 @@ static MunitResult test_get_pointer(const MunitParameter params[], void *data)
   return MUNIT_OK;
 }
 
-static MunitResult test_append_point(const MunitParameter params[], void *data)
+static MunitResult test_append_vector(const MunitParameter params[], void *data)
 {
   list_t *list = make_list();
-  append_point(list, point(2, 3, 5));
+  append_vector(list, vector(2, 3, 5));
   munit_assert_int(list->size, ==, 1);
   return MUNIT_OK;
 }
 
-static MunitResult test_get_point(const MunitParameter params[], void *data)
+static MunitResult test_get_vector(const MunitParameter params[], void *data)
 {
-  point_t p = point(2, 3, 5);
+  vector_t p = vector(2, 3, 5);
   list_t *list = make_list();
-  append_point(list, p);
-  munit_assert_float(get_point(list)[0].x, ==, 2);
-  munit_assert_float(get_point(list)[0].y, ==, 3);
-  munit_assert_float(get_point(list)[0].z, ==, 5);
+  append_vector(list, p);
+  munit_assert_float(get_vector(list)[0].x, ==, 2);
+  munit_assert_float(get_vector(list)[0].y, ==, 3);
+  munit_assert_float(get_vector(list)[0].z, ==, 5);
   return MUNIT_OK;
 }
 
@@ -182,8 +182,8 @@ MunitTest test_list[] = {
   {"/get_glfloat"    , test_get_glfloat    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/append_pointer" , test_append_pointer , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/get_pointer"    , test_get_pointer    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/append_point"   , test_append_point   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/get_point"      , test_get_point      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/append_vector"  , test_append_vector  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/get_vector"     , test_get_vector     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/append_face"    , test_append_face    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/get_face"       , test_get_face       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/append_edge"    , test_append_edge    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
