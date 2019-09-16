@@ -16,7 +16,20 @@ void add_point(rigid_body_t *body, point_t point)
   append_point(body->points, point);
 }
 
+void add_edge(rigid_body_t *body, edge_t edge)
+{
+  for (int i=0; i<body->edges->size; i++) {
+    edge_t current = get_edge(body->edges)[i];
+    if (current.a == edge.a && current.b == edge.b) return;
+    if (current.a == edge.b && current.b == edge.a) return;
+  };
+  append_edge(body->edges, edge);
+}
+
 void add_face(rigid_body_t *body, face_t face)
 {
   append_face(body->faces, face);
+  add_edge(body, edge(face.a, face.b));
+  add_edge(body, edge(face.b, face.c));
+  add_edge(body, edge(face.c, face.a));
 }

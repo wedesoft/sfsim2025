@@ -6,7 +6,8 @@
 
 static MunitResult test_zero_size(const MunitParameter params[], void *data)
 {
-  munit_assert_int(make_list()->size, ==, 0);
+  list_t *list = make_list();
+  munit_assert_int(list->size, ==, 0);
   return MUNIT_OK;
 }
 
