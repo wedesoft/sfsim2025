@@ -2,6 +2,7 @@
 #include <GL/gl.h>
 #include "point.h"
 #include "face.h"
+#include "edge.h"
 
 
 typedef struct {
@@ -31,3 +32,7 @@ inline point_t *get_point(list_t *list) { return (point_t *)list->element; }
 void append_face(list_t *list, face_t value);
 
 inline face_t *get_face(list_t *list) { return (face_t *)list->element; }
+
+void append_edge(list_t *list, edge_t value);
+
+inline edge_t *get_edge(list_t *list) { return (edge_t *)list->element; }

@@ -50,3 +50,9 @@ void append_face(list_t *list, face_t value)
   grow_list(list, sizeof(face_t), 1);
   ((face_t *)list->element)[list->size++] = value;
 }
+
+void append_edge(list_t *list, edge_t value)
+{
+  grow_list(list, sizeof(edge_t), 1);
+  ((edge_t *)list->element)[list->size++] = value;
+}

@@ -1,6 +1,6 @@
 lib_LTLIBRARIES = libsfsim2025.la
 
-pkginclude_HEADERS = list.h rigid_body.h point.h face.h
+pkginclude_HEADERS = list.h rigid_body.h point.h face.h edge.h
 
 libsfsim2025_la_SOURCES = list.c rigid_body.c
 libsfsim2025_la_CFLAGS = $(GLEW_CFLAGS) $(GL_CFLAGS) $(BOEHM_CFLAGS)

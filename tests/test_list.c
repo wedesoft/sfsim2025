@@ -149,6 +149,24 @@ static MunitResult test_get_face(const MunitParameter params[], void *data)
   return MUNIT_OK;
 }
 
+static MunitResult test_append_edge(const MunitParameter params[], void *data)
+{
+  list_t *list = make_list();
+  append_edge(list, edge(2, 3));
+  munit_assert_int(list->size, ==, 1);
+  return MUNIT_OK;
+}
+
+static MunitResult test_get_edge(const MunitParameter params[], void *data)
+{
+  edge_t e = edge(2, 3);
+  list_t *list = make_list();
+  append_edge(list, e);
+  munit_assert_float(get_edge(list)[0].a, ==, 2);
+  munit_assert_float(get_edge(list)[0].b, ==, 3);
+  return MUNIT_OK;
+}
+
 MunitTest test_list[] = {
   {"/zero_size"      , test_zero_size      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/append_gluint"  , test_append_gluint  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -167,5 +185,7 @@ MunitTest test_list[] = {
   {"/get_point"      , test_get_point      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/append_face"    , test_append_face    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/get_face"       , test_get_face       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/append_edge"    , test_append_edge    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/get_edge"       , test_get_edge       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL              , NULL                , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
