@@ -33,3 +33,13 @@ void add_face(rigid_body_t *body, face_t face)
   add_edge(body, edge(face.b, face.c));
   add_edge(body, edge(face.c, face.a));
 }
+
+vector_t face_normal(rigid_body_t *body, face_t face)
+{
+  vector_t a = get_vector(body->points)[face.a];
+  vector_t b = get_vector(body->points)[face.b];
+  vector_t c = get_vector(body->points)[face.c];
+  vector_t u = difference(b, a);
+  vector_t v = difference(c, a);
+  return cross_product(u, v);
+}

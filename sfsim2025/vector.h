@@ -16,6 +16,15 @@ inline vector_t vector(float x, float y, float z)
   return result;
 }
 
+inline vector_t difference(vector_t a, vector_t b)
+{
+  vector_t result;
+  result.x = a.x - b.x;
+  result.y = a.y - b.y;
+  result.z = a.z - b.z;
+  return result;
+}
+
 inline vector_t cross_product(vector_t a, vector_t b)
 {
   vector_t result;

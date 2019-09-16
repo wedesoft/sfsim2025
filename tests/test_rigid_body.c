@@ -64,11 +64,22 @@ static rigid_body_t *make_object(void)
   return result;
 }
 
+static MunitResult test_face_normal(const MunitParameter params[], void *data)
+{
+  rigid_body_t *body = make_object();
+  vector_t result = face_normal(body, face(0, 2, 1));
+  munit_assert_float(result.x, ==,  0.0f);
+  munit_assert_float(result.y, ==,  0.0f);
+  munit_assert_float(result.z, ==, -1.0f);
+  return MUNIT_OK;
+}
+
 MunitTest test_rigid_body[] = {
   {"/create"       , test_create       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/add_point"    , test_add_point    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/add_face"     , test_add_face     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/face_edges"   , test_face_edges   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/existing_edge", test_existing_edge, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/face_normal"  , test_face_normal  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL            , NULL              , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

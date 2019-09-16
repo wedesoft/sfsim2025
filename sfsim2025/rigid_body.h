@@ -15,3 +15,5 @@ rigid_body_t *make_rigid_body(void);
 void add_point(rigid_body_t *body, vector_t point);
 
 void add_face(rigid_body_t *body, face_t face);
+
+vector_t face_normal(rigid_body_t *body, face_t face);
