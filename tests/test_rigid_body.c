@@ -66,7 +66,7 @@ static rigid_body_t *make_object(float s)
 
 static MunitResult test_face_normal(const MunitParameter params[], void *data)
 {
-  rigid_body_t *body = make_object(1.0);
+  rigid_body_t *body = make_object(2.0);
   vector_t result = face_normal(body, face(0, 2, 1));
   munit_assert_float(result.x, ==,  0.0f);
   munit_assert_float(result.y, ==,  0.0f);

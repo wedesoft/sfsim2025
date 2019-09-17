@@ -33,3 +33,5 @@ inline vector_t cross_product(vector_t a, vector_t b)
   result.z = a.x * b.y - a.y * b.x;
   return result;
 }
+
+vector_t normalize(vector_t v);
