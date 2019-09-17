@@ -74,6 +74,19 @@ static MunitResult test_face_normal(const MunitParameter params[], void *data)
   return MUNIT_OK;
 }
 
+static MunitResult test_face_plane(const MunitParameter params[], void *data)
+{
+  rigid_body_t *body = make_object(1.0);
+  plane_t plane = face_plane(body, face(2, 1, 0));
+  munit_assert_double(plane.point.x, ==, 0.0);
+  munit_assert_double(plane.point.y, ==, 1.0);
+  munit_assert_double(plane.point.z, ==, 0.0);
+  munit_assert_double(plane.normal.x, ==,  0.0);
+  munit_assert_double(plane.normal.y, ==,  0.0);
+  munit_assert_double(plane.normal.z, ==, -1.0);
+  return MUNIT_OK;
+}
+
 MunitTest test_rigid_body[] = {
   {"/create"       , test_create       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/add_point"    , test_add_point    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -81,5 +94,6 @@ MunitTest test_rigid_body[] = {
   {"/face_edges"   , test_face_edges   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/existing_edge", test_existing_edge, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/face_normal"  , test_face_normal  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/face_plane"   , test_face_plane   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL            , NULL              , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

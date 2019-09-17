@@ -2,6 +2,7 @@
 #include "list.h"
 #include "vector.h"
 #include "face.h"
+#include "plane.h"
 
 
 typedef struct {
@@ -17,3 +18,5 @@ void add_point(rigid_body_t *body, vector_t point);
 void add_face(rigid_body_t *body, face_t face);
 
 vector_t face_normal(rigid_body_t *body, face_t face);
+
+plane_t face_plane(rigid_body_t *body, face_t face);
