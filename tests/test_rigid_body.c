@@ -50,13 +50,13 @@ static MunitResult test_existing_edge(const MunitParameter params[], void *data)
   return MUNIT_OK;
 }
 
-static rigid_body_t *make_object(void)
+static rigid_body_t *make_object(float s)
 {
   rigid_body_t *result = make_rigid_body();
   add_point(result, vector(0, 0, 0));
-  add_point(result, vector(1, 0, 0));
-  add_point(result, vector(0, 1, 0));
-  add_point(result, vector(0, 0, 1));
+  add_point(result, vector(s, 0, 0));
+  add_point(result, vector(0, s, 0));
+  add_point(result, vector(0, 0, s));
   add_face(result, face(0, 2, 1));
   add_face(result, face(0, 3, 2));
   add_face(result, face(0, 1, 3));
@@ -66,7 +66,7 @@ static rigid_body_t *make_object(void)
 
 static MunitResult test_face_normal(const MunitParameter params[], void *data)
 {
-  rigid_body_t *body = make_object();
+  rigid_body_t *body = make_object(1.0);
   vector_t result = face_normal(body, face(0, 2, 1));
   munit_assert_float(result.x, ==,  0.0f);
   munit_assert_float(result.y, ==,  0.0f);
