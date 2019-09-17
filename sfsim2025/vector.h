@@ -40,3 +40,8 @@ inline vector_t normalize(vector_t v)
   double norm = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
   return vector(v.x / norm, v.y / norm, v.z / norm);
 }
+
+inline double inner_product(vector_t a, vector_t b)
+{
+  return a.x * b.x + a.y * b.y + a.z * b.z;
+}
