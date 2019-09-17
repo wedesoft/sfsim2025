@@ -1,4 +1,5 @@
 #pragma once
+#include <math.h>
 
 
 typedef struct {
@@ -34,4 +35,8 @@ inline vector_t cross_product(vector_t a, vector_t b)
   return result;
 }
 
-vector_t normalize(vector_t v);
+inline vector_t normalize(vector_t v)
+{
+  float norm = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+  return vector(v.x / norm, v.y / norm, v.z / norm);
+}
