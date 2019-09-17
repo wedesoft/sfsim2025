@@ -125,9 +125,9 @@ static MunitResult test_get_vector(const MunitParameter params[], void *data)
   vector_t p = vector(2, 3, 5);
   list_t *list = make_list();
   append_vector(list, p);
-  munit_assert_float(get_vector(list)[0].x, ==, 2);
-  munit_assert_float(get_vector(list)[0].y, ==, 3);
-  munit_assert_float(get_vector(list)[0].z, ==, 5);
+  munit_assert_double(get_vector(list)[0].x, ==, 2);
+  munit_assert_double(get_vector(list)[0].y, ==, 3);
+  munit_assert_double(get_vector(list)[0].z, ==, 5);
   return MUNIT_OK;
 }
 
@@ -144,9 +144,9 @@ static MunitResult test_get_face(const MunitParameter params[], void *data)
   face_t f = face(0, 1, 2);
   list_t *list = make_list();
   append_face(list, f);
-  munit_assert_float(get_face(list)[0].a, ==, 0);
-  munit_assert_float(get_face(list)[0].b, ==, 1);
-  munit_assert_float(get_face(list)[0].c, ==, 2);
+  munit_assert_int(get_face(list)[0].a, ==, 0);
+  munit_assert_int(get_face(list)[0].b, ==, 1);
+  munit_assert_int(get_face(list)[0].c, ==, 2);
   return MUNIT_OK;
 }
 
@@ -163,8 +163,8 @@ static MunitResult test_get_edge(const MunitParameter params[], void *data)
   edge_t e = edge(2, 3);
   list_t *list = make_list();
   append_edge(list, e);
-  munit_assert_float(get_edge(list)[0].a, ==, 2);
-  munit_assert_float(get_edge(list)[0].b, ==, 3);
+  munit_assert_int(get_edge(list)[0].a, ==, 2);
+  munit_assert_int(get_edge(list)[0].b, ==, 3);
   return MUNIT_OK;
 }
 

@@ -3,12 +3,12 @@
 
 
 typedef struct {
-  float x;
-  float y;
-  float z;
+  double x;
+  double y;
+  double z;
 } vector_t;
 
-inline vector_t vector(float x, float y, float z)
+inline vector_t vector(double x, double y, double z)
 {
   vector_t result;
   result.x = x;
@@ -37,6 +37,6 @@ inline vector_t cross_product(vector_t a, vector_t b)
 
 inline vector_t normalize(vector_t v)
 {
-  float norm = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+  double norm = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
   return vector(v.x / norm, v.y / norm, v.z / norm);
 }
