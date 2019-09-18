@@ -50,13 +50,13 @@ static MunitResult test_existing_edge(const MunitParameter params[], void *data)
   return MUNIT_OK;
 }
 
-static rigid_body_t *make_object(double s)
+static rigid_body_t *make_object(double s, double z)
 {
   rigid_body_t *result = make_rigid_body();
-  add_point(result, vector(0, 0, 0));
-  add_point(result, vector(s, 0, 0));
-  add_point(result, vector(0, s, 0));
-  add_point(result, vector(0, 0, s));
+  add_point(result, vector(0, 0, z    ));
+  add_point(result, vector(s, 0, z    ));
+  add_point(result, vector(0, s, z    ));
+  add_point(result, vector(0, 0, z + s));
   add_face(result, face(0, 2, 1));
   add_face(result, face(0, 3, 2));
   add_face(result, face(0, 1, 3));
@@ -66,7 +66,7 @@ static rigid_body_t *make_object(double s)
 
 static MunitResult test_face_normal(const MunitParameter params[], void *data)
 {
-  rigid_body_t *body = make_object(2.0);
+  rigid_body_t *body = make_object(2.0, 0.0);
   vector_t result = face_normal(body, face(0, 2, 1));
   munit_assert_double(result.x, ==,  0.0);
   munit_assert_double(result.y, ==,  0.0);
@@ -76,7 +76,7 @@ static MunitResult test_face_normal(const MunitParameter params[], void *data)
 
 static MunitResult test_face_plane(const MunitParameter params[], void *data)
 {
-  rigid_body_t *body = make_object(1.0);
+  rigid_body_t *body = make_object(1.0, 0.0);
   plane_t plane = face_plane(body, face(2, 1, 0));
   munit_assert_double(plane.point.x, ==, 0.0);
   munit_assert_double(plane.point.y, ==, 1.0);
@@ -90,10 +90,22 @@ static MunitResult test_face_plane(const MunitParameter params[], void *data)
 static MunitResult test_smallest_distance(const MunitParameter params[], void *data)
 {
   plane_t p = plane(vector(0, 0, 3), vector(0, 0, -1));
-  rigid_body_t *body = make_object(1.0);
+  rigid_body_t *body = make_object(1.0, 0.0);
   int index = -1;
   munit_assert_double(smallest_distance(p, body, &index), ==, 2);
   munit_assert_int(index, ==, 3);
+  return MUNIT_OK;
+}
+
+static MunitResult test_best_face(const MunitParameter params[], void *data)
+{
+  rigid_body_t *body = make_object(1.0, 3.0);
+  rigid_body_t *other = make_object(1.0, 0.0);
+  int face_index = -1;
+  int point_index = -1;
+  munit_assert_double(best_face(body, other, &face_index, &point_index), ==, 2.0);
+  munit_assert_int(face_index, ==, 0);
+  munit_assert_int(point_index, ==, 3);
   return MUNIT_OK;
 }
 
@@ -106,5 +118,6 @@ MunitTest test_rigid_body[] = {
   {"/face_normal"      , test_face_normal      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/face_plane"       , test_face_plane       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/smallest_distance", test_smallest_distance, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/best_face"        , test_best_face        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                , NULL                  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

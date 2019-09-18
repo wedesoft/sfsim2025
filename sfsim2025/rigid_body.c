@@ -66,3 +66,19 @@ double smallest_distance(plane_t plane, rigid_body_t *body, int *index)
   };
   return result;
 }
+
+// Get face-point combination from two bodies with greatest separation.
+double best_face(rigid_body_t * body, rigid_body_t *other, int *face_index, int *point_index)
+{
+  double result = -DBL_MAX;
+  for (int i=0; i<body->faces->size; i++) {
+    int index;
+    double distance = smallest_distance(face_plane(body, get_face(body->faces)[i]), other, &index);
+    if (distance > result) {
+      result = distance;
+      if (face_index) *face_index = i;
+      if (point_index) *point_index = index;
+    };
+  };
+  return result;
+}
