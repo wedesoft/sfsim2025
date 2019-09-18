@@ -91,7 +91,9 @@ static MunitResult test_smallest_distance(const MunitParameter params[], void *d
 {
   plane_t p = plane(vector(0, 0, 3), vector(0, 0, -1));
   rigid_body_t *body = make_object(1.0);
-  munit_assert_double(smallest_distance(p, body), ==, 2);
+  int index = -1;
+  munit_assert_double(smallest_distance(p, body, &index), ==, 2);
+  munit_assert_int(index, ==, 3);
   return MUNIT_OK;
 }
 

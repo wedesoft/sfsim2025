@@ -21,4 +21,4 @@ vector_t face_normal(rigid_body_t *body, face_t face);
 
 plane_t face_plane(rigid_body_t *body, face_t face);
 
-double smallest_distance(plane_t plane, rigid_body_t *body);
+double smallest_distance(plane_t plane, rigid_body_t *body, int *index);
