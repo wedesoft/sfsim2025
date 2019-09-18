@@ -37,9 +37,9 @@ static MunitResult test_inner_product(const MunitParameter params[], void *data)
 }
 
 MunitTest test_vector[] = {
-  {"/difference"   , test_difference   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/cross_product", test_cross_product, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/normalize"    , test_normalize    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/inner_product", test_inner_product, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {NULL            , NULL              , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
+  {"/difference"   , test_difference   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/cross_product", test_cross_product, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/normalize"    , test_normalize    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/inner_product", test_inner_product, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {NULL            , NULL              , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
 };

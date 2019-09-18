@@ -1,3 +1,4 @@
+#include <float.h>
 #include <gc.h>
 #include "rigid_body.h"
 
@@ -49,5 +50,15 @@ plane_t face_plane(rigid_body_t *body, face_t face)
   plane_t result;
   result.point = get_vector(body->points)[face.a];
   result.normal = face_normal(body, face);
+  return result;
+}
+
+double smallest_distance(plane_t plane, rigid_body_t *body)
+{
+  double result = DBL_MAX;
+  for (int i=0; i<body->points->size; i++) {
+    double distance = plane_distance(plane, get_vector(body->points)[i]);
+    if (distance < result) result = distance;
+  };
   return result;
 }

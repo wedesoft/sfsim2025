@@ -11,6 +11,6 @@ static MunitResult test_plane_distance(const MunitParameter params[], void *data
 }
 
 MunitTest test_plane[] = {
-  {"/plane_distance", test_plane_distance, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {NULL             , NULL               , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
+  {"/plane_distance", test_plane_distance, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {NULL             , NULL               , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
 };
