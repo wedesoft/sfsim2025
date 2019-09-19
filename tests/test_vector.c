@@ -19,6 +19,11 @@ static MunitResult test_cross_product(const MunitParameter params[], void *data)
   return MUNIT_OK;
 }
 
+static MunitResult test_norm(const MunitParameter params[], void *data) {
+  munit_assert_double(norm(vector(3, 4, 0)), ==, 5);
+  return MUNIT_OK;
+}
+
 static MunitResult test_normalize(const MunitParameter params[], void *data) {
   vector_t result = normalize(vector(3, 4, 0));
   munit_assert_double(result.x, ==, 0.6);
@@ -35,7 +40,8 @@ static MunitResult test_inner_product(const MunitParameter params[], void *data)
 MunitTest test_vector[] = {
   {"/difference"   , test_difference   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/cross_product", test_cross_product, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/normalize"    , test_normalize    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/inner_product", test_inner_product, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/norm"         , test_norm         , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/normalize"    , test_normalize    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL            , NULL              , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
 };
