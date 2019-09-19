@@ -3,32 +3,28 @@
 #include "test_helper.h"
 
 
-static MunitResult test_create(const MunitParameter params[], void *data)
-{
+static MunitResult test_create(const MunitParameter params[], void *data) {
   munit_assert_int(make_rigid_body()->points->size, ==, 0);
   munit_assert_int(make_rigid_body()->edges->size, ==, 0);
   munit_assert_int(make_rigid_body()->faces->size, ==, 0);
   return MUNIT_OK;
 }
 
-static MunitResult test_add_point(const MunitParameter params[], void *data)
-{
+static MunitResult test_add_point(const MunitParameter params[], void *data) {
   rigid_body_t *body = make_rigid_body();
   add_point(body, vector(2, 3, 5));
   munit_assert_int(body->points->size, ==, 1);
   return MUNIT_OK;
 }
 
-static MunitResult test_add_face(const MunitParameter params[], void *data)
-{
+static MunitResult test_add_face(const MunitParameter params[], void *data) {
   rigid_body_t *body = make_rigid_body();
   add_face(body, face(0, 1, 2));
   munit_assert_int(body->faces->size, ==, 1);
   return MUNIT_OK;
 }
 
-static MunitResult test_face_edges(const MunitParameter params[], void *data)
-{
+static MunitResult test_face_edges(const MunitParameter params[], void *data) {
   rigid_body_t *body = make_rigid_body();
   add_face(body, face(0, 1, 2));
   munit_assert_int(body->edges->size, ==, 3);
@@ -41,8 +37,7 @@ static MunitResult test_face_edges(const MunitParameter params[], void *data)
   return MUNIT_OK;
 }
 
-static MunitResult test_existing_edge(const MunitParameter params[], void *data)
-{
+static MunitResult test_existing_edge(const MunitParameter params[], void *data) {
   rigid_body_t *body = make_rigid_body();
   add_face(body, face(0, 1, 2));
   add_face(body, face(2, 1, 4));
@@ -50,8 +45,7 @@ static MunitResult test_existing_edge(const MunitParameter params[], void *data)
   return MUNIT_OK;
 }
 
-static rigid_body_t *make_object(double s, double z)
-{
+static rigid_body_t *make_object(double s, double z) {
   rigid_body_t *result = make_rigid_body();
   add_point(result, vector(0, 0, z    ));
   add_point(result, vector(s, 0, z    ));
@@ -64,8 +58,7 @@ static rigid_body_t *make_object(double s, double z)
   return result;
 }
 
-static MunitResult test_face_normal(const MunitParameter params[], void *data)
-{
+static MunitResult test_face_normal(const MunitParameter params[], void *data) {
   rigid_body_t *body = make_object(2.0, 0.0);
   vector_t result = face_normal(body, face(0, 2, 1));
   munit_assert_double(result.x, ==,  0.0);
@@ -74,8 +67,7 @@ static MunitResult test_face_normal(const MunitParameter params[], void *data)
   return MUNIT_OK;
 }
 
-static MunitResult test_face_plane(const MunitParameter params[], void *data)
-{
+static MunitResult test_face_plane(const MunitParameter params[], void *data) {
   rigid_body_t *body = make_object(1.0, 0.0);
   plane_t plane = face_plane(body, face(2, 1, 0));
   munit_assert_double(plane.point.x, ==, 0.0);
@@ -87,8 +79,7 @@ static MunitResult test_face_plane(const MunitParameter params[], void *data)
   return MUNIT_OK;
 }
 
-static MunitResult test_smallest_distance(const MunitParameter params[], void *data)
-{
+static MunitResult test_smallest_distance(const MunitParameter params[], void *data) {
   plane_t p = plane(vector(0, 0, 3), vector(0, 0, -1));
   rigid_body_t *body = make_object(1.0, 0.0);
   int index = -1;
@@ -97,8 +88,7 @@ static MunitResult test_smallest_distance(const MunitParameter params[], void *d
   return MUNIT_OK;
 }
 
-static MunitResult test_best_face(const MunitParameter params[], void *data)
-{
+static MunitResult test_best_face(const MunitParameter params[], void *data) {
   rigid_body_t *body = make_object(1.0, 3.0);
   rigid_body_t *other = make_object(1.0, 0.0);
   int face_index = -1;

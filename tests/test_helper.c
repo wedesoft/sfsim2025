@@ -6,12 +6,10 @@
 #include "test_helper.h"
 
 
-void* test_setup_gc(const MunitParameter params[], void* user_data)
-{
+void* test_setup_gc(const MunitParameter params[], void* user_data) {
   GC_INIT();
 }
 
-void test_teardown_gc(void *fixture)
-{
+void test_teardown_gc(void *fixture) {
   GC_gcollect();
 }

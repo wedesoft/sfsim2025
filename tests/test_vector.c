@@ -3,8 +3,7 @@
 #include "test_helper.h"
 
 
-static MunitResult test_difference(const MunitParameter params[], void *data)
-{
+static MunitResult test_difference(const MunitParameter params[], void *data) {
   vector_t result = difference(vector(7, 11, 13), vector(2, 3, 5));
   munit_assert_double(result.x, ==, 5.0);
   munit_assert_double(result.y, ==, 8.0);
@@ -12,8 +11,7 @@ static MunitResult test_difference(const MunitParameter params[], void *data)
   return MUNIT_OK;
 }
 
-static MunitResult test_cross_product(const MunitParameter params[], void *data)
-{
+static MunitResult test_cross_product(const MunitParameter params[], void *data) {
   vector_t result = cross_product(vector(1, 0, 0), vector(0, 1, 0));
   munit_assert_double(result.x, ==, 0.0);
   munit_assert_double(result.y, ==, 0.0);
@@ -21,8 +19,7 @@ static MunitResult test_cross_product(const MunitParameter params[], void *data)
   return MUNIT_OK;
 }
 
-static MunitResult test_normalize(const MunitParameter params[], void *data)
-{
+static MunitResult test_normalize(const MunitParameter params[], void *data) {
   vector_t result = normalize(vector(3, 4, 0));
   munit_assert_double(result.x, ==, 0.6);
   munit_assert_double(result.y, ==, 0.8);
@@ -30,8 +27,7 @@ static MunitResult test_normalize(const MunitParameter params[], void *data)
   return MUNIT_OK;
 }
 
-static MunitResult test_inner_product(const MunitParameter params[], void *data)
-{
+static MunitResult test_inner_product(const MunitParameter params[], void *data) {
   munit_assert_double(inner_product(vector(2, 3, 5), vector(3, 5, 7)), ==, 56);
   return MUNIT_OK;
 }
