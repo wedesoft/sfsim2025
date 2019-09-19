@@ -12,6 +12,7 @@ libtool
 Makefile
 stamp-h1
 *.in
+*.in~
 *.la
 *.lo
 *.log
