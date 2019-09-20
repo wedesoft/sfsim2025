@@ -60,6 +60,19 @@ double smallest_distance(plane_t plane, rigid_body_t *body, int *index) {
   return result;
 }
 
+// Get point of body with largest distance to specified plane.
+double largest_distance(plane_t plane, rigid_body_t *body, int *index) {
+  double result = -DBL_MAX;
+  for (int i=0; i<body->points->size; i++) {
+    double distance = plane_distance(plane, get_vector(body->points)[i]);
+    if (distance > result) {
+      result = distance;
+      if (index) *index = i;
+    };
+  };
+  return result;
+}
+
 // Get face-point combination from two bodies with greatest separation.
 double best_face(rigid_body_t * body, rigid_body_t *other, int *face_index, int *point_index) {
   double result = -DBL_MAX;

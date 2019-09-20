@@ -88,6 +88,15 @@ static MunitResult test_smallest_distance(const MunitParameter params[], void *d
   return MUNIT_OK;
 }
 
+static MunitResult test_largest_distance(const MunitParameter params[], void *data) {
+  plane_t p = plane(vector(0, 0, 3), vector(0, 0, -1));
+  rigid_body_t *body = make_object(1.0, 0.0);
+  int index = -1;
+  munit_assert_double(largest_distance(p, body, &index), ==, 3);
+  munit_assert_int(index, ==, 0);
+  return MUNIT_OK;
+}
+
 static MunitResult test_best_face(const MunitParameter params[], void *data) {
   rigid_body_t *body = make_object(1.0, 3.0);
   rigid_body_t *other = make_object(1.0, 0.0);
@@ -108,6 +117,7 @@ MunitTest test_rigid_body[] = {
   {"/face_normal"      , test_face_normal      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/face_plane"       , test_face_plane       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/smallest_distance", test_smallest_distance, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/largest_distance" , test_largest_distance , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/best_face"        , test_best_face        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                , NULL                  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
