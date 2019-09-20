@@ -17,6 +17,14 @@ void add_point(rigid_body_t *body, vector_t point);
 
 void add_face(rigid_body_t *body, face_t face);
 
+inline vector_t edge_tail(rigid_body_t *body, edge_t edge) {
+  return get_vector(body->points)[edge.a];
+}
+
+inline vector_t edge_head(rigid_body_t *body, edge_t edge) {
+  return get_vector(body->points)[edge.b];
+}
+
 vector_t face_normal(rigid_body_t *body, face_t face);
 
 plane_t face_plane(rigid_body_t *body, face_t face);
