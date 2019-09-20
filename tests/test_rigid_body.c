@@ -76,6 +76,15 @@ static MunitResult test_edge_head(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_edge_vector(const MunitParameter params[], void *data) {
+  rigid_body_t *body = make_object(1.0, 0.0);
+  vector_t result = edge_vector(body, edge(1, 2));
+  munit_assert_double(result.x, ==, -1.0);
+  munit_assert_double(result.y, ==,  1.0);
+  munit_assert_double(result.z, ==,  0.0);
+  return MUNIT_OK;
+}
+
 static MunitResult test_face_normal(const MunitParameter params[], void *data) {
   rigid_body_t *body = make_object(2.0, 0.0);
   vector_t result = face_normal(body, face(0, 2, 1));
@@ -134,6 +143,7 @@ MunitTest test_rigid_body[] = {
   {"/existing_edge"    , test_existing_edge    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/edge_tail"        , test_edge_tail        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/edge_head"        , test_edge_head        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/edge_vector"      , test_edge_vector      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/face_normal"      , test_face_normal      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/face_plane"       , test_face_plane       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/smallest_distance", test_smallest_distance, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
