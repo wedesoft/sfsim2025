@@ -3,6 +3,14 @@
 #include "test_helper.h"
 
 
+static MunitResult test_negative(const MunitParameter params[], void *data) {
+  vector_t result = negative(vector(2, 3, 5));
+  munit_assert_double(result.x, ==, -2.0);
+  munit_assert_double(result.y, ==, -3.0);
+  munit_assert_double(result.z, ==, -5.0);
+  return MUNIT_OK;
+}
+
 static MunitResult test_difference(const MunitParameter params[], void *data) {
   vector_t result = difference(vector(7, 11, 13), vector(2, 3, 5));
   munit_assert_double(result.x, ==, 5.0);
@@ -38,6 +46,7 @@ static MunitResult test_inner_product(const MunitParameter params[], void *data)
 }
 
 MunitTest test_vector[] = {
+  {"/negative"     , test_negative     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/difference"   , test_difference   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/cross_product", test_cross_product, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/inner_product", test_inner_product, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},

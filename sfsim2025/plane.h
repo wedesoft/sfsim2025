@@ -21,5 +21,5 @@ inline double plane_distance(plane_t plane, vector_t point) {
 inline plane_t negative_plane(plane_t p)
 {
   vector_t normal = p.normal;
-  return plane(p.point, vector(-normal.x, -normal.y, -normal.z));
+  return plane(p.point, negative(normal));
 }

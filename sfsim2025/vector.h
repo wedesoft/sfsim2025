@@ -16,6 +16,11 @@ inline vector_t vector(double x, double y, double z) {
   return result;
 }
 
+inline vector_t negative(vector_t v)
+{
+  return vector(-v.x, -v.y, -v.z);
+}
+
 inline vector_t difference(vector_t a, vector_t b) {
   vector_t result;
   result.x = a.x - b.x;
