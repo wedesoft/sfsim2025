@@ -88,12 +88,13 @@ double best_face(rigid_body_t * body, rigid_body_t *other, int *face_index, int 
   return result;
 }
 
+// Construct separating planes from a pair of edges.
 bool edge_planes(rigid_body_t *body, edge_t edge1, rigid_body_t *other, edge_t edge2, plane_t *p1, plane_t *p2)
 {
   vector_t normal = normalize(cross_product(edge_vector(body, edge1), edge_vector(other, edge2)));
   p1->point = edge_tail(body, edge1);
-  p1->normal = normal;
   p2->point = edge_tail(other, edge2);
+  p1->normal = normal;
   p2->normal = negative(normal);
   if (largest_distance(*p1, body, NULL) <= 1e-6 && largest_distance(*p2, other, NULL) <= 1e-6)
     return true;
