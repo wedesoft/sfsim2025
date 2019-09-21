@@ -1,4 +1,5 @@
 #pragma once
+#include <stdbool.h>
 #include "list.h"
 #include "vector.h"
 #include "face.h"
@@ -38,4 +39,6 @@ double smallest_distance(plane_t plane, rigid_body_t *body, int *index);
 
 double largest_distance(plane_t plane, rigid_body_t *body, int *index);
 
-double best_face(rigid_body_t * body, rigid_body_t *other, int *face_index, int *point_index);
+double best_face(rigid_body_t *body, rigid_body_t *other, int *face_index, int *point_index);
+
+bool edge_planes(rigid_body_t *body, edge_t edge1, rigid_body_t *other, edge_t edge2, plane_t *p1, plane_t *p2);

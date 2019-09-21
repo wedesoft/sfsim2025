@@ -135,6 +135,54 @@ static MunitResult test_best_face(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_edge_planes(const MunitParameter params[], void *data) {
+  rigid_body_t *body = make_object(1, 2);
+  rigid_body_t *other = make_object(1, 5);
+  plane_t p1;
+  plane_t p2;
+  munit_assert_true(edge_planes(body, edge(1, 3), other, edge(2, 0), &p1, &p2));
+  munit_assert_double(p1.point.x, ==, 1);
+  munit_assert_double(p1.point.y, ==, 0);
+  munit_assert_double(p1.point.z, ==, 2);
+  munit_assert_double_equal(p1.normal.x, sqrt(0.5), 6);
+  munit_assert_double_equal(p1.normal.y,         0, 6);
+  munit_assert_double_equal(p1.normal.z, sqrt(0.5), 6);
+  munit_assert_double(p2.point.x, ==, 0);
+  munit_assert_double(p2.point.y, ==, 1);
+  munit_assert_double(p2.point.z, ==, 5);
+  munit_assert_double_equal(p2.normal.x, -sqrt(0.5), 6);
+  munit_assert_double_equal(p2.normal.y,          0, 6);
+  munit_assert_double_equal(p2.normal.z, -sqrt(0.5), 6);
+  return MUNIT_OK;
+}
+
+static MunitResult test_check_planes(const MunitParameter params[], void *data) {
+  rigid_body_t *body = make_object(1, 2);
+  rigid_body_t *other = make_object(1, 5);
+  plane_t p1;
+  plane_t p2;
+  munit_assert_true(edge_planes(body, edge(1, 3), other, edge(0, 2), &p1, &p2));
+  munit_assert_double_equal(p1.normal.x, sqrt(0.5), 6);
+  munit_assert_double_equal(p1.normal.y,         0, 6);
+  munit_assert_double_equal(p1.normal.z, sqrt(0.5), 6);
+  munit_assert_double(p2.point.x, ==, 0);
+  munit_assert_double(p2.point.y, ==, 0);
+  munit_assert_double(p2.point.z, ==, 5);
+  munit_assert_double_equal(p2.normal.x, -sqrt(0.5), 6);
+  munit_assert_double_equal(p2.normal.y,          0, 6);
+  munit_assert_double_equal(p2.normal.z, -sqrt(0.5), 6);
+  return MUNIT_OK;
+}
+
+static MunitResult test_reject_planes(const MunitParameter params[], void *data) {
+  rigid_body_t *body = make_object(1, 2);
+  rigid_body_t *other = make_object(1, 5);
+  plane_t p1;
+  plane_t p2;
+  munit_assert_false(edge_planes(body, edge(0, 1), other, edge(0, 2), &p1, &p2));
+  return MUNIT_OK;
+}
+
 MunitTest test_rigid_body[] = {
   {"/create"           , test_create           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/add_point"        , test_add_point        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -149,5 +197,8 @@ MunitTest test_rigid_body[] = {
   {"/smallest_distance", test_smallest_distance, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/largest_distance" , test_largest_distance , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/best_face"        , test_best_face        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/edge_planes"      , test_edge_planes      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/check_planes"     , test_check_planes     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/reject_planes"    , test_reject_planes    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                , NULL                  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

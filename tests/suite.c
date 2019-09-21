@@ -15,7 +15,7 @@ static MunitSuite test_sfsim[] = {
 };
 
 static const MunitSuite test_suite[] = {
-  "", NULL, test_sfsim, 1, MUNIT_SUITE_OPTION_NONE
+  {"", NULL, test_sfsim, 1, MUNIT_SUITE_OPTION_NONE}
 };
 
 int main(int argc, char *argv[MUNIT_ARRAY_PARAM(argc + 1)]) {

@@ -8,6 +8,7 @@
 
 void* test_setup_gc(const MunitParameter params[], void* user_data) {
   GC_INIT();
+  return NULL;
 }
 
 void test_teardown_gc(void *fixture) {
