@@ -49,3 +49,12 @@ inline vector_t normalize(vector_t v) {
   double n = norm(v);
   return vector(v.x / n, v.y / n, v.z / n);
 }
+
+// Get a vector which is not parallel to the given vector.
+vector_t not_parallel(vector_t v);
+
+// Get a vector which is orthogonal to the given vector.
+inline vector_t orthogonal1(vector_t v) { return normalize(cross_product(not_parallel(v), v)); }
+
+// Get a second vector which is orthogonal to the given vector.
+inline vector_t orthogonal2(vector_t v) { return normalize(cross_product(v, orthogonal1(v))); }
