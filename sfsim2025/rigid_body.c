@@ -111,4 +111,24 @@ bool edge_planes(rigid_body_t *body, edge_t edge1, rigid_body_t *other, edge_t e
   return false;
 }
 
-// TODO: Determine best pair of edges
+// Get best separating plane constructed from two edges.
+double best_edge_pair(rigid_body_t *body, rigid_body_t *other, int *edge1_index, int *edge2_index) {
+  double result = -DBL_MAX;
+  for (int j=0; j<body->edges->size; j++) {
+    for (int i=0; i<other->edges->size; i++) {
+      edge_t edge1 = get_edge(body->edges)[j];
+      edge_t edge2 = get_edge(other->edges)[i];
+      plane_t p1;
+      plane_t p2;
+      if (edge_planes(body, edge1, other, edge2, &p1, &p2)) {
+        double distance = plane_distance(p1, p2.point);
+        if (distance > result) {
+          result = distance;
+          if (edge1_index) *edge1_index = j;
+          if (edge2_index) *edge2_index = i;
+        };
+      };
+    };
+  };
+  return result;
+}

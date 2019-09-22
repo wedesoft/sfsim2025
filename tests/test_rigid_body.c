@@ -129,7 +129,7 @@ static MunitResult test_best_face(const MunitParameter params[], void *data) {
   rigid_body_t *other = make_object(1.0, 0.0);
   int face_index = -1;
   int point_index = -1;
-  munit_assert_double(best_face(body, other, &face_index, &point_index), ==, 2.0);
+  munit_assert_double_equal(best_face(body, other, &face_index, &point_index), 2.0, 6);
   munit_assert_int(face_index, ==, 0);
   munit_assert_int(point_index, ==, 3);
   return MUNIT_OK;
@@ -192,6 +192,21 @@ static MunitResult test_parallel_edges(const MunitParameter params[], void *data
   return MUNIT_OK;
 }
 
+static MunitResult test_best_edge_pair(const MunitParameter params[], void *data) {
+  rigid_body_t *body = make_object(1, 2);
+  rigid_body_t *other = make_object(1, 5);
+  int edge1_index = -1;
+  int edge2_index = -1;
+  munit_assert_double_equal(best_edge_pair(body, other, &edge1_index, &edge2_index), sqrt(2), 6);
+  edge_t edge1 = get_edge(body->edges)[edge1_index];
+  edge_t edge2 = get_edge(other->edges)[edge2_index];
+  munit_assert_int(edge1.a, ==, 3);
+  munit_assert_int(edge1.b, ==, 2);
+  munit_assert_int(edge2.a, ==, 1);
+  munit_assert_int(edge2.b, ==, 0);
+  return MUNIT_OK;
+}
+
 MunitTest test_rigid_body[] = {
   {"/create"           , test_create           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/add_point"        , test_add_point        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -210,5 +225,6 @@ MunitTest test_rigid_body[] = {
   {"/check_planes"     , test_check_planes     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/reject_planes"    , test_reject_planes    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/parallel_edges"   , test_parallel_edges   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/best_edge_pair"   , test_best_edge_pair   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                , NULL                  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
