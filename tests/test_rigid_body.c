@@ -183,6 +183,15 @@ static MunitResult test_reject_planes(const MunitParameter params[], void *data)
   return MUNIT_OK;
 }
 
+static MunitResult test_parallel_edges(const MunitParameter params[], void *data) {
+  rigid_body_t *body = make_object(1, 2);
+  rigid_body_t *other = make_object(1, 5);
+  plane_t p1;
+  plane_t p2;
+  munit_assert_false(edge_planes(body, edge(0, 1), other, edge(0, 1), &p1, &p2));
+  return MUNIT_OK;
+}
+
 MunitTest test_rigid_body[] = {
   {"/create"           , test_create           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/add_point"        , test_add_point        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -200,5 +209,6 @@ MunitTest test_rigid_body[] = {
   {"/edge_planes"      , test_edge_planes      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/check_planes"     , test_check_planes     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/reject_planes"    , test_reject_planes    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/parallel_edges"   , test_parallel_edges   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                , NULL                  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
