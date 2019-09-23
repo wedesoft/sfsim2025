@@ -50,7 +50,6 @@ inline vector_t normalize(vector_t v) {
   return vector(v.x / n, v.y / n, v.z / n);
 }
 
-// Get a vector which is not parallel to the given vector.
 vector_t not_parallel(vector_t v);
 
 // Get a vector which is orthogonal to the given vector.

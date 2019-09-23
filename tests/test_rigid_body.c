@@ -207,6 +207,20 @@ static MunitResult test_best_edge_pair(const MunitParameter params[], void *data
   return MUNIT_OK;
 }
 
+static MunitResult test_no_penetration(const MunitParameter params[], void *data) {
+  rigid_body_t *body = make_object(1, 2);
+  plane_t p = plane(vector(0, 0, 0), vector(0, 0, 1));
+  munit_assert_int(penetration_candidates(p, body)->size, ==, 0);
+  return MUNIT_OK;
+}
+
+static MunitResult test_penetration(const MunitParameter params[], void *data) {
+  rigid_body_t *body = make_object(1, 2);
+  plane_t p = plane(vector(0, 0, 2), vector(0, 0, 1));
+  munit_assert_int(penetration_candidates(p, body)->size, ==, 3);
+  return MUNIT_OK;
+}
+
 MunitTest test_rigid_body[] = {
   {"/create"           , test_create           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/add_point"        , test_add_point        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -226,5 +240,7 @@ MunitTest test_rigid_body[] = {
   {"/reject_planes"    , test_reject_planes    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/parallel_edges"   , test_parallel_edges   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/best_edge_pair"   , test_best_edge_pair   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/no_penetration"   , test_no_penetration   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/penetration"      , test_penetration      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                , NULL                  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

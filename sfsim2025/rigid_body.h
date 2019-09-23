@@ -43,3 +43,5 @@ double best_face(rigid_body_t *body, rigid_body_t *other, int *face_index, int *
 bool edge_planes(rigid_body_t *body, edge_t edge1, rigid_body_t *other, edge_t edge2, plane_t *p1, plane_t *p2);
 
 double best_edge_pair(rigid_body_t *body, rigid_body_t *other, int *edge1_index, int *edge2_index);
+
+list_t *penetration_candidates(plane_t p, rigid_body_t *body);

@@ -1,5 +1,6 @@
 #include "vector.h"
 
+// Get a vector which is not parallel to the given vector.
 vector_t not_parallel(vector_t v) {
   if (fabs(v.x) <= fabs(v.y))
     if (fabs(v.x) <= fabs(v.z))

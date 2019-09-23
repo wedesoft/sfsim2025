@@ -88,8 +88,8 @@ double best_face(rigid_body_t * body, rigid_body_t *other, int *face_index, int 
   return result;
 }
 
-#define NORM_EPS 1e-6
-#define DISTANCE_EPS 1e-6
+#define NORM_EPS 1e-3
+#define DISTANCE_EPS 1e-3
 
 // Construct separating planes from a pair of edges.
 bool edge_planes(rigid_body_t *body, edge_t edge1, rigid_body_t *other, edge_t edge2, plane_t *p1, plane_t *p2)
@@ -129,6 +129,19 @@ double best_edge_pair(rigid_body_t *body, rigid_body_t *other, int *edge1_index,
         };
       };
     };
+  };
+  return result;
+}
+
+#define PENETRATION_EPS 1e-3
+
+// Get points which are on the separating plane
+list_t *penetration_candidates(plane_t p, rigid_body_t *body) {
+  list_t *result = make_list();
+  for (int i=0; i<body->points->size; i++) {
+    vector_t v = get_vector(body->points)[i];
+    if (plane_distance(p, v) <= PENETRATION_EPS)
+      append_vector(result, v);
   };
   return result;
 }
