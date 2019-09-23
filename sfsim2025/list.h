@@ -1,8 +1,9 @@
 #pragma once
 #include <GL/gl.h>
-#include "vector.h"
-#include "face.h"
+#include "coordinate.h"
 #include "edge.h"
+#include "face.h"
+#include "vector.h"
 
 
 typedef struct {
@@ -36,3 +37,7 @@ inline face_t *get_face(list_t *list) { return (face_t *)list->element; }
 void append_edge(list_t *list, edge_t value);
 
 inline edge_t *get_edge(list_t *list) { return (edge_t *)list->element; }
+
+void append_coordinate(list_t *list, coordinate_t value);
+
+inline coordinate_t *get_coordinate(list_t *list) { return (coordinate_t *)list->element; }

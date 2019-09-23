@@ -48,3 +48,8 @@ void append_edge(list_t *list, edge_t value) {
   grow_list(list, sizeof(edge_t), 1);
   ((edge_t *)list->element)[list->size++] = value;
 }
+
+void append_coordinate(list_t *list, coordinate_t value) {
+  grow_list(list, sizeof(coordinate_t), 1);
+  ((coordinate_t *)list->element)[list->size++] = value;
+}

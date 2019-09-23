@@ -149,25 +149,43 @@ static MunitResult test_get_edge(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_append_coordinate(const MunitParameter params[], void *data) {
+  list_t *list = make_list();
+  append_coordinate(list, coordinate(2, 3));
+  munit_assert_int(list->size, ==, 1);
+  return MUNIT_OK;
+}
+
+static MunitResult test_get_coordinate(const MunitParameter params[], void *data) {
+  coordinate_t c = coordinate(2, 3);
+  list_t *list = make_list();
+  append_coordinate(list, c);
+  munit_assert_int(get_coordinate(list)[0].u, ==, 2);
+  munit_assert_int(get_coordinate(list)[0].v, ==, 3);
+  return MUNIT_OK;
+}
+
 MunitTest test_list[] = {
-  {"/zero_size"      , test_zero_size      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/append_gluint"  , test_append_gluint  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/get_gluint"     , test_get_gluint     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/append_two"     , test_append_two     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/get_two"        , test_get_two        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/initial_storage", test_initial_storage, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/allocation"     , test_allocation     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/reallocation"   , test_reallocation   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/double_size"    , test_double_size    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/append_glfloat" , test_append_glfloat , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/get_glfloat"    , test_get_glfloat    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/append_pointer" , test_append_pointer , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/get_pointer"    , test_get_pointer    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/append_vector"  , test_append_vector  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/get_vector"     , test_get_vector     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/append_face"    , test_append_face    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/get_face"       , test_get_face       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/append_edge"    , test_append_edge    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/get_edge"       , test_get_edge       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {NULL              , NULL                , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
+  {"/zero_size"        , test_zero_size        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/append_gluint"    , test_append_gluint    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/get_gluint"       , test_get_gluint       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/append_two"       , test_append_two       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/get_two"          , test_get_two          , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/initial_storage"  , test_initial_storage  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/allocation"       , test_allocation       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/reallocation"     , test_reallocation     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/double_size"      , test_double_size      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/append_glfloat"   , test_append_glfloat   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/get_glfloat"      , test_get_glfloat      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/append_pointer"   , test_append_pointer   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/get_pointer"      , test_get_pointer      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/append_vector"    , test_append_vector    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/get_vector"       , test_get_vector       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/append_face"      , test_append_face      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/get_face"         , test_get_face         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/append_edge"      , test_append_edge      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/get_edge"         , test_get_edge         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/append_coordinate", test_append_coordinate, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/get_coordinate"   , test_get_coordinate   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {NULL                , NULL                  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
