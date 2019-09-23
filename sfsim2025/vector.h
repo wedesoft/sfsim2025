@@ -37,14 +37,17 @@ inline vector_t cross_product(vector_t a, vector_t b) {
   return result;
 }
 
+// Dot product of two vectors.
 inline double inner_product(vector_t a, vector_t b) {
   return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
+// Return length of vector.
 inline double norm(vector_t v) {
   return sqrt(inner_product(v, v));
 }
 
+// Return normalized vector of length one.
 inline vector_t normalize(vector_t v) {
   double n = norm(v);
   return vector(v.x / n, v.y / n, v.z / n);

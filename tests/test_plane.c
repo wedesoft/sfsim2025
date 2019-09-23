@@ -9,15 +9,24 @@ static MunitResult test_plane_distance(const MunitParameter params[], void *data
   return MUNIT_OK;
 }
 
-// Return plane with inverted normal vector.
 static MunitResult test_negative_plane(const MunitParameter params[], void *data) {
   plane_t p = plane(vector(2, 3, 5), vector(0, 0, 1));
   munit_assert_double(negative_plane(p).normal.z, ==, -1);
   return MUNIT_OK;
 }
 
+static MunitResult test_plane_coordinates(const MunitParameter params[], void *data) {
+  list_t *vectors = make_list();
+  append_vector(vectors, vector(1, 5, 8));
+  list_t *result = plane_coordinates(plane(vector(1, 2, 3), vector(1, 0, 0)), vectors);
+  munit_assert_double(get_coordinate(result)[0].u, ==, 3);
+  munit_assert_double(get_coordinate(result)[0].v, ==, 5);
+  return MUNIT_OK;
+}
+
 MunitTest test_plane[] = {
-  {"/plane_distance", test_plane_distance, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/negative_plane", test_negative_plane, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {NULL             , NULL               , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
+  {"/plane_distance"        , test_plane_distance   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/negative_plane"        , test_negative_plane   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/test_plane_coordinates", test_plane_coordinates, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {NULL                     , NULL                  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
 };
