@@ -1,16 +1,18 @@
 #include <gc.h>
 #include "munit.h"
+#include "test_hull.h"
 #include "test_list.h"
+#include "test_plane.h"
 #include "test_rigid_body.h"
 #include "test_vector.h"
-#include "test_plane.h"
 
 
 static MunitSuite test_sfsim[] = {
+  {"/hull"      , test_hull      , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/list"      , test_list      , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/plane"     , test_plane     , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/rigid_body", test_rigid_body, NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/vector"    , test_vector    , NULL, 1, MUNIT_SUITE_OPTION_NONE},
-  {"/plane"     , test_plane     , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {NULL         , NULL           , NULL, 0, MUNIT_SUITE_OPTION_NONE}
 };
 
