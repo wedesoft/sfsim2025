@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include <float.h>
 #include "coordinate.h"
-#include "hull.h"
+#include "polygon.h"
 
 
 // Compute z-component of cross product of a minus b and a minus c.

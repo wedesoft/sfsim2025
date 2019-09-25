@@ -2,4 +2,4 @@
 #include "munit.h"
 
 
-extern MunitTest test_hull[];
+extern MunitTest test_polygon[];

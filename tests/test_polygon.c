@@ -1,5 +1,5 @@
-#include "sfsim2025/hull.h"
-#include "test_hull.h"
+#include "sfsim2025/polygon.h"
+#include "test_polygon.h"
 #include "test_helper.h"
 
 
@@ -97,7 +97,7 @@ static MunitResult test_skip_collinear2(const MunitParameter params[], void *dat
   return MUNIT_OK;
 }
 
-MunitTest test_hull[] = {
+MunitTest test_polygon[] = {
   {"/leftmost_point"  , test_leftmost_point  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/next_point"      , test_next_point      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/third_point"     , test_third_point     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
