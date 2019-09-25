@@ -14,6 +14,16 @@ static double cross_product_z(coordinate_t a, coordinate_t b, coordinate_t c)
   return v2 * u1 - v1 * u2;
 }
 
+// Check whether point c is further from a than point b.
+static bool further(coordinate_t a, coordinate_t b, coordinate_t c)
+{
+  double v1 = a.v - b.v;
+  double v2 = a.v - c.v;
+  double u1 = a.u - b.u;
+  double u2 = a.u - c.u;
+  return v2 * v2 + u2 * u2 > v1 * v1 + u1 * u1;
+}
+
 // Compute convex hull of 2D polygon.
 // https://www.tutorialspoint.com/Jarvis-March-Algorithm
 list_t *convex_hull(list_t *polygon) {
@@ -33,8 +43,13 @@ list_t *convex_hull(list_t *polygon) {
       if (point.u == current.u && point.v == current.v) continue;
       if (next.u == current.u && next.v == current.v)
         next = point;
-      else if (cross_product_z(current, next, point) > 0)
-        next = point;
+      else {
+        double prod = cross_product_z(current, next, point);
+        if (prod > 0)
+          next = point;
+        else if (prod == 0 && further(current, next, point))
+          next = point;
+      };
     };
     if (next.u == start.u && next.v == start.v)
       break;
