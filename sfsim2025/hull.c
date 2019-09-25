@@ -5,7 +5,7 @@
 
 
 // Compute z-component of cross product of a minus b and a minus c.
-static double cross_product_z(coordinate_t a, coordinate_t b, coordinate_t c)
+inline double cross_product_z(coordinate_t a, coordinate_t b, coordinate_t c)
 {
   double v1 = a.v - b.v;
   double v2 = a.v - c.v;
@@ -15,7 +15,7 @@ static double cross_product_z(coordinate_t a, coordinate_t b, coordinate_t c)
 }
 
 // Check whether point c is further from a than point b.
-static bool further(coordinate_t a, coordinate_t b, coordinate_t c)
+inline bool further(coordinate_t a, coordinate_t b, coordinate_t c)
 {
   double v1 = a.v - b.v;
   double v2 = a.v - c.v;
