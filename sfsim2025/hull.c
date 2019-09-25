@@ -32,7 +32,7 @@ list_t *convex_hull(list_t *polygon) {
   for (int i=0; i<polygon->size; i++) {
     coordinate_t current = get_coordinate(polygon)[i];
     if (current.u < start.u || (current.u == start.u && current.v < start.v))
-      start = current;
+      start = current;  // Find leftmost (and then bottommost) start point.
   };
   coordinate_t current = start;
   append_coordinate(result, current);
@@ -40,19 +40,19 @@ list_t *convex_hull(list_t *polygon) {
     coordinate_t next = current;
     for (int i=0; i<polygon->size; i++) {
       coordinate_t point = get_coordinate(polygon)[i];
-      if (point.u == current.u && point.v == current.v) continue;
+      if (point.u == current.u && point.v == current.v) continue;  // Skip current point.
       if (next.u == current.u && next.v == current.v)
-        next = point;
+        next = point;  // Pick first point.
       else {
         double prod = cross_product_z(current, next, point);
         if (prod > 0)
-          next = point;
+          next = point;  // Prefer point on the left side of the current edge.
         else if (prod == 0 && further(current, next, point))
-          next = point;
+          next = point;  // Skip collinear points.
       };
     };
     if (next.u == start.u && next.v == start.v)
-      break;
+      break;  // Finish when getting back to the start point.
     append_coordinate(result, next);
     current = next;
   };
