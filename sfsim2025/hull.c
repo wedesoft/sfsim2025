@@ -21,7 +21,8 @@ list_t *convex_hull(list_t *polygon) {
   coordinate_t start = coordinate(DBL_MAX, DBL_MAX);
   for (int i=0; i<polygon->size; i++) {
     coordinate_t current = get_coordinate(polygon)[i];
-    if (current.u < start.u) start = current;
+    if (current.u < start.u || (current.u == start.u && current.v < start.v))
+      start = current;
   };
   coordinate_t current = start;
   append_coordinate(result, current);
