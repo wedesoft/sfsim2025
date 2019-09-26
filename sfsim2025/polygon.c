@@ -75,3 +75,19 @@ bool inside(list_t *points, coordinate_t point) {
     return false;
   return true;
 }
+
+list_t *intersection(list_t *a, list_t *b)
+{
+  list_t *result = make_list();
+  for (int i=0; i<a->size; i++) {
+    coordinate_t p = get_coordinate(a)[i];
+    if (inside(b, p))
+      append_coordinate(result, p);
+  };
+  for (int i=0; i<b->size; i++) {
+    coordinate_t p = get_coordinate(b)[i];
+    if (inside(a, p))
+      append_coordinate(result, p);
+  };
+  return convex_hull(result);
+}
