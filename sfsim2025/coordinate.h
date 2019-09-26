@@ -12,3 +12,7 @@ inline coordinate_t coordinate(double u, double v) {
   result.v = v;
   return result;
 }
+
+inline coordinate_t coordinate_difference(coordinate_t a, coordinate_t b) {
+  return coordinate(a.u - b.u, a.v - b.v);
+}

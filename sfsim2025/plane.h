@@ -16,7 +16,7 @@ inline plane_t plane(vector_t point, vector_t normal) {
 }
 
 inline double plane_distance(plane_t plane, vector_t point) {
-  return inner_product(difference(point, plane.point), plane.normal);
+  return inner_product(vector_difference(point, plane.point), plane.normal);
 }
 
 // Return plane with inverted normal vector.

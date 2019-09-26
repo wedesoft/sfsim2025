@@ -24,14 +24,14 @@ inline bool further(coordinate_t a, coordinate_t b, coordinate_t c)
   return v2 * v2 + u2 * u2 > v1 * v1 + u1 * u1;
 }
 
-// Compute convex hull of 2D polygon.
+// Compute convex hull of 2D point cloud and return resulting polygon in counter clockwise order.
 // https://www.tutorialspoint.com/Jarvis-March-Algorithm
 list_t *convex_hull(list_t *polygon) {
   list_t *result = make_list();
   coordinate_t start = coordinate(DBL_MAX, DBL_MAX);
   for (int i=0; i<polygon->size; i++) {
     coordinate_t current = get_coordinate(polygon)[i];
-    if (current.u < start.u || (current.u == start.u && current.v < start.v))
+    if (current.u < start.u || (current.u == start.u && current.v > start.v))
       start = current;  // Find leftmost (and then bottommost) start point.
   };
   coordinate_t current = start;
@@ -45,8 +45,8 @@ list_t *convex_hull(list_t *polygon) {
         next = point;  // Pick first point.
       else {
         double prod = cross_product_z(current, next, point);
-        if (prod > 0)
-          next = point;  // Prefer point on the left side of the current edge.
+        if (prod < 0)
+          next = point;  // Prefer point on the right side of the current edge.
         else if (prod == 0 && further(current, next, point))
           next = point;  // Skip collinear points.
       };
@@ -57,4 +57,21 @@ list_t *convex_hull(list_t *polygon) {
     current = next;
   };
   return result;
+}
+
+inline double side(coordinate_t a, coordinate_t b, coordinate_t p)
+{
+  coordinate_t edge = coordinate_difference(b, a);
+  coordinate_t vector = coordinate_difference(p, a);
+  return edge.v * vector.u - edge.u * vector.v;
+}
+
+// Check whether point is inside polygon specified in counter clockwise order.
+bool inside(list_t *points, coordinate_t point) {
+  for (int i=0; i<points->size-1; i++)
+    if (side(get_coordinate(points)[i], get_coordinate(points)[i + 1], point) > 0)
+      return false;
+  if (side(get_coordinate(points)[points->size - 1], get_coordinate(points)[0], point) > 0)
+    return false;
+  return true;
 }

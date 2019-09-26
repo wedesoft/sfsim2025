@@ -12,7 +12,7 @@ static MunitResult test_negative(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_difference(const MunitParameter params[], void *data) {
-  vector_t result = difference(vector(7, 11, 13), vector(2, 3, 5));
+  vector_t result = vector_difference(vector(7, 11, 13), vector(2, 3, 5));
   munit_assert_double(result.x, ==, 5.0);
   munit_assert_double(result.y, ==, 8.0);
   munit_assert_double(result.z, ==, 8.0);

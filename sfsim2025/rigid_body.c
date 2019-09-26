@@ -35,8 +35,8 @@ vector_t face_normal(rigid_body_t *body, face_t face) {
   vector_t a = get_vector(body->points)[face.a];
   vector_t b = get_vector(body->points)[face.b];
   vector_t c = get_vector(body->points)[face.c];
-  vector_t u = difference(b, a);
-  vector_t v = difference(c, a);
+  vector_t u = vector_difference(b, a);
+  vector_t v = vector_difference(c, a);
   return normalize(cross_product(u, v));
 }
 

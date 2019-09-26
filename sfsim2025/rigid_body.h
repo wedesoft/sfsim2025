@@ -27,7 +27,7 @@ inline vector_t edge_head(rigid_body_t *body, edge_t edge) {
 }
 
 inline vector_t edge_vector(rigid_body_t *body, edge_t edge) {
-  return difference(edge_head(body, edge), edge_tail(body, edge));
+  return vector_difference(edge_head(body, edge), edge_tail(body, edge));
 }
 
 vector_t face_normal(rigid_body_t *body, face_t face);
