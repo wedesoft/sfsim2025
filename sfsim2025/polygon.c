@@ -79,6 +79,7 @@ bool inside(list_t *points, coordinate_t point) {
 }
 
 // Determine intersection of two convex counter clockwise polygons.
+// https://www.swtestacademy.com/intersection-convex-polygons-algorithm/
 list_t *intersection(list_t *a, list_t *b)
 {
   list_t *result = make_list();
