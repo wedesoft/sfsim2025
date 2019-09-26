@@ -4,14 +4,16 @@
 #include "polygon.h"
 
 
+inline double cross_product_coords(coordinate_t r, coordinate_t s) {
+  return r.u * s.v - r.v * s.u;
+}
+
 // Compute z-component of cross product of a minus b and a minus c.
-inline double cross_product_z(coordinate_t a, coordinate_t b, coordinate_t c)
+inline double cross_product_abc(coordinate_t a, coordinate_t b, coordinate_t c)
 {
-  double v1 = a.v - b.v;
-  double v2 = a.v - c.v;
-  double u1 = a.u - b.u;
-  double u2 = a.u - c.u;
-  return v2 * u1 - v1 * u2;
+  coordinate_t r = coordinate_difference(a, b);
+  coordinate_t s = coordinate_difference(a, c);
+  return cross_product_coords(r, s);
 }
 
 // Check whether point c is further from a than point b.
@@ -44,7 +46,7 @@ list_t *convex_hull(list_t *polygon) {
       if (next.u == current.u && next.v == current.v)
         next = point;  // Pick first point.
       else {
-        double prod = cross_product_z(current, next, point);
+        double prod = cross_product_abc(current, next, point);
         if (prod < 0)
           next = point;  // Prefer point on the right side of the current edge.
         else if (prod == 0 && further(current, next, point))
@@ -59,23 +61,24 @@ list_t *convex_hull(list_t *polygon) {
   return result;
 }
 
-inline double side(coordinate_t a, coordinate_t b, coordinate_t p)
+inline bool side(coordinate_t a, coordinate_t b, coordinate_t p)
 {
   coordinate_t edge = coordinate_difference(b, a);
   coordinate_t vector = coordinate_difference(p, a);
-  return edge.v * vector.u - edge.u * vector.v;
+  return edge.v * vector.u - edge.u * vector.v > 0;
 }
 
 // Check whether point is inside polygon specified in counter clockwise order.
 bool inside(list_t *points, coordinate_t point) {
-  for (int i=0; i<points->size-1; i++)
-    if (side(get_coordinate(points)[i], get_coordinate(points)[i + 1], point) > 0)
+  for (int i=0; i<points->size; i++) {
+    int j = i < points->size - 1 ? i + 1 : 0;
+    if (side(get_coordinate(points)[i], get_coordinate(points)[j], point))
       return false;
-  if (side(get_coordinate(points)[points->size - 1], get_coordinate(points)[0], point) > 0)
-    return false;
+  };
   return true;
 }
 
+// Determine intersection of two convex counter clockwise polygons.
 list_t *intersection(list_t *a, list_t *b)
 {
   list_t *result = make_list();
@@ -88,6 +91,23 @@ list_t *intersection(list_t *a, list_t *b)
     coordinate_t p = get_coordinate(b)[i];
     if (inside(a, p))
       append_coordinate(result, p);
+  };
+  for (int i=0; i<a->size; i++) {
+    int i2 = i < a->size - 1 ? i + 1 : 0;
+    coordinate_t p = get_coordinate(a)[i];
+    coordinate_t p2 = get_coordinate(a)[i2];
+    coordinate_t r = coordinate_difference(p2, p);
+    for (int j=0; j<b->size; j++) {
+      int j2 = j < b->size - 1 ? j + 1 : 0;
+      coordinate_t q = get_coordinate(b)[j];
+      coordinate_t q2 = get_coordinate(b)[j2];
+      coordinate_t s = coordinate_difference(q2, q);
+      if (side(p, p2, q) != side(p, p2, q2) && side(q, q2, p) != side(q, q2, p2)) {
+        // https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
+        double t = cross_product_coords(coordinate_difference(q, p), s) / cross_product_coords(r, s);
+        append_coordinate(result, coordinate(p.u + t * r.u, p.v + t * r.v));
+      };
+    };
   };
   return convex_hull(result);
 }

@@ -54,6 +54,24 @@ static list_t *collinear_points2(void) {
   return result;
 }
 
+static list_t *square(void) {
+  list_t *result = make_list();
+  append_coordinate(result, coordinate(0, 2));
+  append_coordinate(result, coordinate(0, 0));
+  append_coordinate(result, coordinate(2, 0));
+  append_coordinate(result, coordinate(2, 2));
+  return result;
+}
+
+static list_t *square2(void) {
+  list_t *result = make_list();
+  append_coordinate(result, coordinate(1, 3));
+  append_coordinate(result, coordinate(1, 1));
+  append_coordinate(result, coordinate(3, 1));
+  append_coordinate(result, coordinate(3, 3));
+  return result;
+}
+
 static MunitResult test_leftmost_point(const MunitParameter params[], void *data) {
   list_t *result = convex_hull(triangle());
   munit_assert_double(get_coordinate(result)[0].u, ==, -2);
@@ -144,6 +162,20 @@ static MunitResult test_subset2(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_intersections(const MunitParameter params[], void *data) {
+  list_t *result = intersection(square(), square2());
+  munit_assert_int(result->size, ==, 4);
+  munit_assert_double(get_coordinate(result)[0].u, ==, 1);
+  munit_assert_double(get_coordinate(result)[0].v, ==, 2);
+  munit_assert_double(get_coordinate(result)[1].u, ==, 1);
+  munit_assert_double(get_coordinate(result)[1].v, ==, 1);
+  munit_assert_double(get_coordinate(result)[2].u, ==, 2);
+  munit_assert_double(get_coordinate(result)[2].v, ==, 1);
+  munit_assert_double(get_coordinate(result)[3].u, ==, 2);
+  munit_assert_double(get_coordinate(result)[3].v, ==, 2);
+  return MUNIT_OK;
+}
+
 MunitTest test_polygon[] = {
   {"/leftmost_point"  , test_leftmost_point  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/next_point"      , test_next_point      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -157,6 +189,7 @@ MunitTest test_polygon[] = {
   {"/outside2"        , test_outside2        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/subset"          , test_subset          , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/subset2"         , test_subset2         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/intersections"   , test_intersections   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL               , NULL                 , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
 
