@@ -15,15 +15,17 @@ void add_point(rigid_body_t *body, vector_t point) {
   append_vector(body->points, point);
 }
 
+// Add edge to a rigid body.
 void add_edge(rigid_body_t *body, edge_t edge) {
   for (int i=0; i<body->edges->size; i++) {
     edge_t current = get_edge(body->edges)[i];
-    if (current.a == edge.a && current.b == edge.b) return;
-    if (current.a == edge.b && current.b == edge.a) return;
+    if (edge_eq(current, edge)) return;
+    if (edge_eq(current, swap_edge(edge))) return;
   };
   append_edge(body->edges, edge);
 }
 
+// Add face and corresponding edges to a rigid body.
 void add_face(rigid_body_t *body, face_t face) {
   append_face(body->faces, face);
   add_edge(body, edge(face.a, face.b));
@@ -31,6 +33,7 @@ void add_face(rigid_body_t *body, face_t face) {
   add_edge(body, edge(face.c, face.a));
 }
 
+// Get normal vector of a body's face.
 vector_t face_normal(rigid_body_t *body, face_t face) {
   vector_t a = get_vector(body->points)[face.a];
   vector_t b = get_vector(body->points)[face.b];
@@ -40,6 +43,7 @@ vector_t face_normal(rigid_body_t *body, face_t face) {
   return normalize(cross_product(u, v));
 }
 
+// Get face plane of a body's face.
 plane_t face_plane(rigid_body_t *body, face_t face) {
   plane_t result;
   result.point = get_vector(body->points)[face.a];

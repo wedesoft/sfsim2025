@@ -1,4 +1,5 @@
 #pragma once
+#include <stdbool.h>
 
 
 typedef struct {
@@ -11,6 +12,10 @@ inline coordinate_t coordinate(double u, double v) {
   result.u = u;
   result.v = v;
   return result;
+}
+
+inline bool coordinate_eq(coordinate_t a, coordinate_t b) {
+  return a.u == b.u && a.v == b.v;
 }
 
 inline coordinate_t coordinate_difference(coordinate_t a, coordinate_t b) {

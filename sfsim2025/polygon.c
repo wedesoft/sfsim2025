@@ -42,8 +42,9 @@ list_t *convex_hull(list_t *polygon) {
     coordinate_t next = current;
     for (int i=0; i<polygon->size; i++) {
       coordinate_t point = get_coordinate(polygon)[i];
-      if (point.u == current.u && point.v == current.v) continue;  // Skip current point.
-      if (next.u == current.u && next.v == current.v)
+      if (coordinate_eq(point, current))
+        continue;  // Skip current point.
+      if (coordinate_eq(next, current))
         next = point;  // Pick first point.
       else {
         double prod = cross_product_abc(current, next, point);
@@ -53,7 +54,7 @@ list_t *convex_hull(list_t *polygon) {
           next = point;  // Skip collinear points.
       };
     };
-    if (next.u == start.u && next.v == start.v)
+    if (coordinate_eq(next, start))
       break;  // Finish when getting back to the start point.
     append_coordinate(result, next);
     current = next;

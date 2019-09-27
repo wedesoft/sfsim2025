@@ -12,3 +12,12 @@ inline edge_t edge(int a, int b) {
   result.b = b;
   return result;
 }
+
+inline edge_t swap_edge(edge_t e)
+{
+  return edge(e.b, e.a);
+}
+
+inline bool edge_eq(edge_t edge1, edge_t edge2) {
+  return edge1.a == edge2.a && edge1.b == edge2.b;
+}
