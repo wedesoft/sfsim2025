@@ -13,3 +13,17 @@ list_t *plane_coordinates(plane_t plane, list_t *vectors)
   };
   return result;
 }
+
+// Backproject 2D coordinates on a plane to 3D points.
+list_t *plane_points(plane_t plane, list_t *coordinates) {
+  list_t *result = make_list();
+  vector_t u = orthogonal1(plane.normal);
+  vector_t v = orthogonal2(plane.normal);
+  for (int i=0; i<coordinates->size; i++) {
+    coordinate_t coordinate = get_coordinate(coordinates)[i];
+    append_vector(result, vector(plane.point.x + coordinate.u * u.x + coordinate.v * v.x,
+                                 plane.point.y + coordinate.u * u.y + coordinate.v * v.y,
+                                 plane.point.z + coordinate.u * u.z + coordinate.v * v.z));
+  };
+  return result;
+}

@@ -56,7 +56,11 @@ inline vector_t normalize(vector_t v) {
 vector_t not_parallel(vector_t v);
 
 // Get a vector which is orthogonal to the given vector.
-inline vector_t orthogonal1(vector_t v) { return normalize(cross_product(not_parallel(v), v)); }
+inline vector_t orthogonal1(vector_t v) {
+  return normalize(cross_product(not_parallel(v), v));
+}
 
 // Get a second vector which is orthogonal to the given vector.
-inline vector_t orthogonal2(vector_t v) { return normalize(cross_product(v, orthogonal1(v))); }
+inline vector_t orthogonal2(vector_t v) {
+  return normalize(cross_product(v, orthogonal1(v)));
+}

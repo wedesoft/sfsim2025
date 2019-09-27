@@ -26,3 +26,5 @@ inline plane_t negative_plane(plane_t p) {
 }
 
 list_t *plane_coordinates(plane_t plane, list_t *vectors);
+
+list_t *plane_points(plane_t plane, list_t *coordinates);
