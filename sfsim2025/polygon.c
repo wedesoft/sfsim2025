@@ -68,7 +68,7 @@ inline bool side(coordinate_t a, coordinate_t b, coordinate_t p)
   return edge.v * vector.u - edge.u * vector.v > 0;
 }
 
-// Check whether point is inside polygon specified in counter clockwise order.
+// Check whether point is inside polygon (must be specified in counter clockwise order!).
 bool inside(list_t *points, coordinate_t point) {
   for (int i=0; i<points->size; i++) {
     int j = i < points->size - 1 ? i + 1 : 0;
@@ -78,19 +78,19 @@ bool inside(list_t *points, coordinate_t point) {
   return true;
 }
 
-// Determine intersection of two convex counter clockwise polygons.
+// Return pointcloud defining intersection of two convex counter clockwise polygons.
 // https://www.swtestacademy.com/intersection-convex-polygons-algorithm/
 list_t *intersection(list_t *a, list_t *b)
 {
   list_t *result = make_list();
   for (int i=0; i<a->size; i++) {
     coordinate_t p = get_coordinate(a)[i];
-    if (inside(b, p))
+    if (inside(b, p))  // Find points of a which are inside b.
       append_coordinate(result, p);
   };
   for (int i=0; i<b->size; i++) {
     coordinate_t p = get_coordinate(b)[i];
-    if (inside(a, p))
+    if (inside(a, p))  // Find points of b which are inside a.
       append_coordinate(result, p);
   };
   for (int i=0; i<a->size; i++) {
@@ -103,12 +103,12 @@ list_t *intersection(list_t *a, list_t *b)
       coordinate_t q = get_coordinate(b)[j];
       coordinate_t q2 = get_coordinate(b)[j2];
       coordinate_t s = coordinate_difference(q2, q);
-      if (side(p, p2, q) != side(p, p2, q2) && side(q, q2, p) != side(q, q2, p2)) {
+      if (side(p, p2, q) != side(p, p2, q2) && side(q, q2, p) != side(q, q2, p2)) {  // Find intersection of edges of a and b.
         // https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
         double t = cross_product_coords(coordinate_difference(q, p), s) / cross_product_coords(r, s);
         append_coordinate(result, coordinate(p.u + t * r.u, p.v + t * r.v));
       };
     };
   };
-  return convex_hull(result);
+  return result;
 }

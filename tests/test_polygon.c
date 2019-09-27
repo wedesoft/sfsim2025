@@ -141,37 +141,37 @@ static MunitResult test_outside2(const MunitParameter params[], void *data) {
 static MunitResult test_subset(const MunitParameter params[], void *data) {
   list_t *result = intersection(triangle(), large_triangle());
   munit_assert_int(result->size, ==, 3);
-  munit_assert_double(get_coordinate(result)[0].u, ==, -2);
-  munit_assert_double(get_coordinate(result)[0].v, ==,  0);
-  munit_assert_double(get_coordinate(result)[1].u, ==,  2);
+  munit_assert_double(get_coordinate(result)[0].u, ==,  0);
+  munit_assert_double(get_coordinate(result)[0].v, ==,  3);
+  munit_assert_double(get_coordinate(result)[1].u, ==, -2);
   munit_assert_double(get_coordinate(result)[1].v, ==,  0);
-  munit_assert_double(get_coordinate(result)[2].u, ==,  0);
-  munit_assert_double(get_coordinate(result)[2].v, ==,  3);
+  munit_assert_double(get_coordinate(result)[2].u, ==,  2);
+  munit_assert_double(get_coordinate(result)[2].v, ==,  0);
   return MUNIT_OK;
 }
 
 static MunitResult test_subset2(const MunitParameter params[], void *data) {
   list_t *result = intersection(large_triangle(), triangle());
   munit_assert_int(result->size, ==, 3);
-  munit_assert_double(get_coordinate(result)[0].u, ==, -2);
-  munit_assert_double(get_coordinate(result)[0].v, ==,  0);
-  munit_assert_double(get_coordinate(result)[1].u, ==,  2);
+  munit_assert_double(get_coordinate(result)[0].u, ==,  0);
+  munit_assert_double(get_coordinate(result)[0].v, ==,  3);
+  munit_assert_double(get_coordinate(result)[1].u, ==, -2);
   munit_assert_double(get_coordinate(result)[1].v, ==,  0);
-  munit_assert_double(get_coordinate(result)[2].u, ==,  0);
-  munit_assert_double(get_coordinate(result)[2].v, ==,  3);
+  munit_assert_double(get_coordinate(result)[2].u, ==,  2);
+  munit_assert_double(get_coordinate(result)[2].v, ==,  0);
   return MUNIT_OK;
 }
 
 static MunitResult test_intersections(const MunitParameter params[], void *data) {
   list_t *result = intersection(square(), square2());
   munit_assert_int(result->size, ==, 4);
-  munit_assert_double(get_coordinate(result)[0].u, ==, 1);
+  munit_assert_double(get_coordinate(result)[0].u, ==, 2);
   munit_assert_double(get_coordinate(result)[0].v, ==, 2);
   munit_assert_double(get_coordinate(result)[1].u, ==, 1);
   munit_assert_double(get_coordinate(result)[1].v, ==, 1);
   munit_assert_double(get_coordinate(result)[2].u, ==, 2);
   munit_assert_double(get_coordinate(result)[2].v, ==, 1);
-  munit_assert_double(get_coordinate(result)[3].u, ==, 2);
+  munit_assert_double(get_coordinate(result)[3].u, ==, 1);
   munit_assert_double(get_coordinate(result)[3].v, ==, 2);
   return MUNIT_OK;
 }
