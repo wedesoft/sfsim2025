@@ -21,7 +21,7 @@ static rigid_body_t *make_tetrahedron(double scale, double z) {
   return result;
 }
 
-static rigid_body_t *make_cube(void)
+static rigid_body_t *make_cube(double x, double y, double z)
 {
   //   6-------7
   //  /       /|
@@ -31,14 +31,14 @@ static rigid_body_t *make_cube(void)
   // |       |/
   // 0-------1
   rigid_body_t *result = make_rigid_body();
-  add_point(result, vector(0, 0, 0));
-  add_point(result, vector(0, 0, 1));
-  add_point(result, vector(0, 1, 0));
-  add_point(result, vector(0, 1, 1));
-  add_point(result, vector(1, 0, 0));
-  add_point(result, vector(1, 0, 1));
-  add_point(result, vector(1, 1, 0));
-  add_point(result, vector(1, 1, 1));
+  add_point(result, vector(0 + x, 0 + y, 0 + z));
+  add_point(result, vector(0 + x, 0 + y, 2 + z));
+  add_point(result, vector(0 + x, 2 + y, 0 + z));
+  add_point(result, vector(0 + x, 2 + y, 2 + z));
+  add_point(result, vector(2 + x, 0 + y, 0 + z));
+  add_point(result, vector(2 + x, 0 + y, 2 + z));
+  add_point(result, vector(2 + x, 2 + y, 0 + z));
+  add_point(result, vector(2 + x, 2 + y, 2 + z));
   add_face(result, face(0, 1, 3));
   add_face(result, face(0, 3, 2));
   add_face(result, face(5, 4, 7));
@@ -259,6 +259,32 @@ static MunitResult test_penetration(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_separating_plane(const MunitParameter params[], void *data) {
+  rigid_body_t *cube1 = make_cube(0, 0, 0);
+  rigid_body_t *cube2 = make_cube(1, 1, 4);
+  double distance;
+  plane_t result = separating_plane(cube1, cube2, &distance);
+  munit_assert_double(distance, ==, 2.0);
+  munit_assert_double(result.point.z, ==, 3.0);
+  munit_assert_double(result.normal.x, ==, 0.0);
+  munit_assert_double(result.normal.y, ==, 0.0);
+  munit_assert_double(result.normal.z, ==, 1.0);
+  return MUNIT_OK;
+}
+
+static MunitResult test_separating_plane2(const MunitParameter params[], void *data) {
+  rigid_body_t *tetrahedron = make_tetrahedron(2, 0);
+  rigid_body_t *cube = make_cube(0, 0, 4);
+  double distance;
+  plane_t result = separating_plane(tetrahedron, cube, &distance);
+  munit_assert_double(distance, ==, 2.0);
+  munit_assert_double(result.point.z, ==, 3.0);
+  munit_assert_double(result.normal.x, ==, 0.0);
+  munit_assert_double(result.normal.y, ==, 0.0);
+  munit_assert_double(result.normal.z, ==, 1.0);
+  return MUNIT_OK;
+}
+
 MunitTest test_rigid_body[] = {
   {"/create"           , test_create           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/add_point"        , test_add_point        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -280,5 +306,7 @@ MunitTest test_rigid_body[] = {
   {"/best_edge_pair"   , test_best_edge_pair   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/no_penetration"   , test_no_penetration   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/penetration"      , test_penetration      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/separating_plane" , test_separating_plane , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/separating_plane2", test_separating_plane2, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                , NULL                  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

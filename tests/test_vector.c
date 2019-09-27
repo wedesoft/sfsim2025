@@ -11,11 +11,27 @@ static MunitResult test_negative(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_sum(const MunitParameter params[], void *data) {
+  vector_t result = vector_add(vector(7, 11, 13), vector(2, 3, 5));
+  munit_assert_double(result.x, ==, 9);
+  munit_assert_double(result.y, ==, 14);
+  munit_assert_double(result.z, ==, 18);
+  return MUNIT_OK;
+}
+
+static MunitResult test_scale(const MunitParameter params[], void *data) {
+  vector_t result = vector_scale(vector(7, 11, 13), 2);
+  munit_assert_double(result.x, ==, 14);
+  munit_assert_double(result.y, ==, 22);
+  munit_assert_double(result.z, ==, 26);
+  return MUNIT_OK;
+}
+
 static MunitResult test_difference(const MunitParameter params[], void *data) {
-  vector_t result = vector_difference(vector(7, 11, 13), vector(2, 3, 5));
-  munit_assert_double(result.x, ==, 5.0);
-  munit_assert_double(result.y, ==, 8.0);
-  munit_assert_double(result.z, ==, 8.0);
+  vector_t result = vector_subtract(vector(7, 11, 13), vector(2, 3, 5));
+  munit_assert_double(result.x, ==, 5);
+  munit_assert_double(result.y, ==, 8);
+  munit_assert_double(result.z, ==, 8);
   return MUNIT_OK;
 }
 
@@ -95,7 +111,9 @@ static MunitResult test_orthogonal2(const MunitParameter params[], void *data) {
 
 MunitTest test_vector[] = {
   {"/negative"     , test_negative     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/sum"          , test_sum          , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/difference"   , test_difference   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/scale"        , test_scale        , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/cross_product", test_cross_product, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/inner_product", test_inner_product, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/norm"         , test_norm         , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},

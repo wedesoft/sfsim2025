@@ -38,8 +38,8 @@ vector_t face_normal(rigid_body_t *body, face_t face) {
   vector_t a = get_vector(body->points)[face.a];
   vector_t b = get_vector(body->points)[face.b];
   vector_t c = get_vector(body->points)[face.c];
-  vector_t u = vector_difference(b, a);
-  vector_t v = vector_difference(c, a);
+  vector_t u = vector_subtract(b, a);
+  vector_t v = vector_subtract(c, a);
   return normalize(cross_product(u, v));
 }
 
@@ -146,6 +146,26 @@ list_t *penetration_candidates(plane_t p, rigid_body_t *body) {
     vector_t v = get_vector(body->points)[i];
     if (plane_distance(p, v) <= PENETRATION_EPS)
       append_vector(result, v);
+  };
+  return result;
+}
+
+plane_t separating_plane(rigid_body_t *body, rigid_body_t *other, double *distance) {
+  int face_index1;
+  int point_index1;
+  double separation1 = best_face(body, other, &face_index1, &point_index1);
+  int face_index2;
+  int point_index2;
+  double separation2 = best_face(other, body, &face_index2, &point_index2);
+  plane_t result;
+  if (separation1 >= separation2) {
+    plane_t p = face_plane(body, get_face(body->faces)[face_index1]);
+    result = plane(vector_add(p.point, vector_scale(p.normal, separation1 / 2)), p.normal);
+    if (distance) *distance = separation1;
+  } else {
+    plane_t p = face_plane(other, get_face(other->faces)[face_index2]);
+    result = plane(vector_add(p.point, vector_scale(p.normal, separation2 / 2)), negative(p.normal));
+    if (distance) *distance = separation2;
   };
   return result;
 }

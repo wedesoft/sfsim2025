@@ -27,7 +27,7 @@ inline vector_t edge_head(rigid_body_t *body, edge_t edge) {
 }
 
 inline vector_t edge_vector(rigid_body_t *body, edge_t edge) {
-  return vector_difference(edge_head(body, edge), edge_tail(body, edge));
+  return vector_subtract(edge_head(body, edge), edge_tail(body, edge));
 }
 
 vector_t face_normal(rigid_body_t *body, face_t face);
@@ -45,3 +45,5 @@ bool edge_planes(rigid_body_t *body, edge_t edge1, rigid_body_t *other, edge_t e
 double best_edge_pair(rigid_body_t *body, rigid_body_t *other, int *edge1_index, int *edge2_index);
 
 list_t *penetration_candidates(plane_t p, rigid_body_t *body);
+
+plane_t separating_plane(rigid_body_t *body, rigid_body_t *other, double *distance);

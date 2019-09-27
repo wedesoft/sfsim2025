@@ -21,11 +21,27 @@ inline vector_t negative(vector_t v)
   return vector(-v.x, -v.y, -v.z);
 }
 
-inline vector_t vector_difference(vector_t a, vector_t b) {
+inline vector_t vector_add(vector_t a, vector_t b) {
+  vector_t result;
+  result.x = a.x + b.x;
+  result.y = a.y + b.y;
+  result.z = a.z + b.z;
+  return result;
+}
+
+inline vector_t vector_subtract(vector_t a, vector_t b) {
   vector_t result;
   result.x = a.x - b.x;
   result.y = a.y - b.y;
   result.z = a.z - b.z;
+  return result;
+}
+
+inline vector_t vector_scale(vector_t a, double s) {
+  vector_t result;
+  result.x = a.x * s;
+  result.y = a.y * s;
+  result.z = a.z * s;
   return result;
 }
 
