@@ -260,10 +260,10 @@ static MunitResult test_penetration(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_separating_plane(const MunitParameter params[], void *data) {
-  rigid_body_t *cube1 = make_cube(0, 0, 0);
-  rigid_body_t *cube2 = make_cube(1, 1, 4);
+  rigid_body_t *cube = make_cube(0, 0, 0);
+  rigid_body_t *tetrahedron = make_tetrahedron(2, 4);
   double distance;
-  plane_t result = separating_plane(cube1, cube2, &distance);
+  plane_t result = separating_plane(cube, tetrahedron, &distance);
   munit_assert_double(distance, ==, 2.0);
   munit_assert_double(result.point.z, ==, 3.0);
   munit_assert_double(result.normal.x, ==, 0.0);
