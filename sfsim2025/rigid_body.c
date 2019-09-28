@@ -5,6 +5,7 @@
 #include "rigid_body.h"
 
 
+// Create an empty rigid body.
 rigid_body_t *make_rigid_body(void) {
   rigid_body_t *result = GC_MALLOC(sizeof(rigid_body_t));
   result->points = make_list();
@@ -13,6 +14,7 @@ rigid_body_t *make_rigid_body(void) {
   return result;
 }
 
+// Add 3D point to a rigid body.
 void add_point(rigid_body_t *body, vector_t point) {
   append_vector(body->points, point);
 }
@@ -98,8 +100,7 @@ double best_face(rigid_body_t * body, rigid_body_t *other, int *face_index, int 
 #define DISTANCE_EPS 1e-3
 
 // Construct separating planes from a pair of edges.
-bool edge_planes(rigid_body_t *body, edge_t edge1, rigid_body_t *other, edge_t edge2, plane_t *p1, plane_t *p2)
-{
+bool edge_planes(rigid_body_t *body, edge_t edge1, rigid_body_t *other, edge_t edge2, plane_t *p1, plane_t *p2) {
   assert(p1);
   assert(p2);
   vector_t orthogonal = cross_product(edge_vector(body, edge1), edge_vector(other, edge2));
@@ -182,6 +183,7 @@ plane_t separating_plane(rigid_body_t *body, rigid_body_t *other, double *distan
   return result;
 }
 
+// Get contact points and distance between two bodies.
 list_t *contact_points(rigid_body_t *body, rigid_body_t *other, double *distance) {
   plane_t p = separating_plane(body, other, distance);
   list_t *candidates1 = convex_hull(plane_coordinates(p, penetration_candidates(negative_plane(p), body)));

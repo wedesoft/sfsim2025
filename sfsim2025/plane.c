@@ -2,8 +2,7 @@
 
 
 // Project 3D points into a 2D coordinate system defined by the plane.
-list_t *plane_coordinates(plane_t plane, list_t *vectors)
-{
+list_t *plane_coordinates(plane_t plane, list_t *vectors) {
   list_t *result = make_list();
   vector_t u = orthogonal1(plane.normal);
   vector_t v = orthogonal2(plane.normal);
