@@ -58,6 +58,15 @@ static rigid_body_t *make_cube(double x, double y, double z) {
 }
 
 static rigid_body_t *make_rotated_cube1(double z) {
+  //        7
+  //       / \         ^  ^
+  //      3   \       z| /y
+  //     / \   5       |/
+  //    /   \ /    ----+----->
+  //   2     1        /|   x
+  //    \   /
+  //     \ /
+  //      0
   rigid_body_t *result = make_rigid_body();
   add_point(result, vector(1, 0, 0 + z));
   add_point(result, vector(2, 0, 1 + z));
@@ -72,6 +81,12 @@ static rigid_body_t *make_rotated_cube1(double z) {
 }
 
 static rigid_body_t *make_rotated_cube2(double z) {
+  //    7 ------3        ^  ^
+  //   /       / \      z| /y
+  //  /       /   1      |/
+  // 6-------2   /   ----+----->
+  //  \       \ /       /|   x
+  //   4-------0
   rigid_body_t *result = make_rigid_body();
   add_point(result, vector(2, 1, 0 + z));
   add_point(result, vector(2, 2, 1 + z));
