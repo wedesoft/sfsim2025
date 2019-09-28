@@ -1,5 +1,7 @@
+#include <assert.h>
 #include <float.h>
 #include <gc.h>
+#include "polygon.h"
 #include "rigid_body.h"
 
 
@@ -98,6 +100,8 @@ double best_face(rigid_body_t * body, rigid_body_t *other, int *face_index, int 
 // Construct separating planes from a pair of edges.
 bool edge_planes(rigid_body_t *body, edge_t edge1, rigid_body_t *other, edge_t edge2, plane_t *p1, plane_t *p2)
 {
+  assert(p1);
+  assert(p2);
   vector_t orthogonal = cross_product(edge_vector(body, edge1), edge_vector(other, edge2));
   if (norm(orthogonal) < NORM_EPS)
     return false;
@@ -150,6 +154,7 @@ list_t *penetration_candidates(plane_t p, rigid_body_t *body) {
   return result;
 }
 
+// Get best separating plane between two polyhedra.
 plane_t separating_plane(rigid_body_t *body, rigid_body_t *other, double *distance) {
   int face1_index, point1_index;
   double separation1 = best_face(body, other, &face1_index, &point1_index);
@@ -175,4 +180,10 @@ plane_t separating_plane(rigid_body_t *body, rigid_body_t *other, double *distan
     if (distance) *distance = separation3;
   };
   return result;
+}
+
+list_t *contact_points(rigid_body_t *body, rigid_body_t *other, double *distance) {
+  plane_t p = separating_plane(body, other, distance);
+  return plane_points(p, convex_hull(intersection(convex_hull(plane_coordinates(p, penetration_candidates(negative_plane(p), body))),
+                                                  convex_hull(plane_coordinates(p, penetration_candidates(p, other))))));
 }

@@ -47,3 +47,5 @@ double best_edge_pair(rigid_body_t *body, rigid_body_t *other, int *edge1_index,
 list_t *penetration_candidates(plane_t p, rigid_body_t *body);
 
 plane_t separating_plane(rigid_body_t *body, rigid_body_t *other, double *distance);
+
+list_t *contact_points(rigid_body_t *body, rigid_body_t *other, double *distance);

@@ -329,6 +329,39 @@ static MunitResult test_separating_plane3(const MunitParameter params[], void *d
   return MUNIT_OK;
 }
 
+static MunitResult test_contact_points(const MunitParameter params[], void *data) {
+  rigid_body_t *cube1 = make_cube(0, 0, 0);
+  rigid_body_t *cube2 = make_cube(1, 1, 2);
+  double distance;
+  list_t *points = contact_points(cube1, cube2, &distance);
+  munit_assert_int(points->size, ==, 4);
+  munit_assert_double(get_vector(points)[0].x, ==, 2);
+  munit_assert_double(get_vector(points)[0].y, ==, 2);
+  munit_assert_double(get_vector(points)[0].z, ==, 2);
+  munit_assert_double(get_vector(points)[1].x, ==, 1);
+  munit_assert_double(get_vector(points)[1].y, ==, 2);
+  munit_assert_double(get_vector(points)[1].z, ==, 2);
+  munit_assert_double(get_vector(points)[2].x, ==, 1);
+  munit_assert_double(get_vector(points)[2].y, ==, 1);
+  munit_assert_double(get_vector(points)[2].z, ==, 2);
+  munit_assert_double(get_vector(points)[3].x, ==, 2);
+  munit_assert_double(get_vector(points)[3].y, ==, 1);
+  munit_assert_double(get_vector(points)[3].z, ==, 2);
+  return MUNIT_OK;
+}
+
+static MunitResult test_contact_points2(const MunitParameter params[], void *data) {
+  rigid_body_t *cube1 = make_rotated_cube1(0);
+  rigid_body_t *cube2 = make_rotated_cube2(2);
+  double distance;
+  list_t *points = contact_points(cube1, cube2, &distance);
+  munit_assert_int(points->size, ==, 1);
+  munit_assert_double(get_vector(points)[0].x, ==, 1);
+  munit_assert_double(get_vector(points)[0].y, ==, 1);
+  munit_assert_double(get_vector(points)[0].z, ==, 2);
+  return MUNIT_OK;
+}
+
 MunitTest test_rigid_body[] = {
   {"/create"           , test_create           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/add_point"        , test_add_point        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -353,5 +386,7 @@ MunitTest test_rigid_body[] = {
   {"/separating_plane" , test_separating_plane , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/separating_plane2", test_separating_plane2, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/separating_plane3", test_separating_plane3, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/contact_points"   , test_contact_points   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/contact_points2"  , test_contact_points2  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                , NULL                  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
