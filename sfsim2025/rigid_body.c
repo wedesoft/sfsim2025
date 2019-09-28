@@ -160,11 +160,11 @@ plane_t separating_plane(rigid_body_t *body, rigid_body_t *other, double *distan
   plane_t result;
   if (separation1 >= separation2) {
     plane_t p = face_plane(body, get_face(body->faces)[face_index1]);
-    result = plane(vector_add(p.point, vector_scale(p.normal, separation1 / 2)), p.normal);
+    result = plane(vector_add(p.point, vector_scale(p.normal, 0.5 * separation1)), p.normal);
     if (distance) *distance = separation1;
   } else {
     plane_t p = face_plane(other, get_face(other->faces)[face_index2]);
-    result = plane(vector_add(p.point, vector_scale(p.normal, separation2 / 2)), vector_negative(p.normal));
+    result = plane(vector_add(p.point, vector_scale(p.normal, 0.5 * separation2)), vector_negative(p.normal));
     if (distance) *distance = separation2;
   };
   return result;
