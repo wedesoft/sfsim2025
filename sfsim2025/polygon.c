@@ -43,8 +43,7 @@ list_t *convex_hull(list_t *polygon) {
     coordinate_t next = current;
     for (int i=0; i<polygon->size; i++) {
       coordinate_t point = get_coordinate(polygon)[i];
-      if (coordinate_eq(point, current))
-        continue;  // Skip current point.
+      if (coordinate_eq(point, current)) continue;  // Skip current point.
       if (coordinate_eq(next, current))
         next = point;  // Pick first point.
       else {
@@ -55,8 +54,7 @@ list_t *convex_hull(list_t *polygon) {
           next = point;  // Skip collinear points.
       };
     };
-    if (coordinate_eq(next, start))
-      break;  // Finish when getting back to the start point.
+    if (coordinate_eq(next, start)) break;  // Finish when getting back to the start point.
     append_coordinate(result, next);
     current = next;
   };
