@@ -30,6 +30,7 @@ inline bool further(coordinate_t a, coordinate_t b, coordinate_t c)
 // https://www.tutorialspoint.com/Jarvis-March-Algorithm
 list_t *convex_hull(list_t *polygon) {
   list_t *result = make_list();
+  if (polygon->size == 0) return result;
   coordinate_t start = coordinate(DBL_MAX, DBL_MAX);
   for (int i=0; i<polygon->size; i++) {
     coordinate_t current = get_coordinate(polygon)[i];

@@ -184,6 +184,7 @@ plane_t separating_plane(rigid_body_t *body, rigid_body_t *other, double *distan
 
 list_t *contact_points(rigid_body_t *body, rigid_body_t *other, double *distance) {
   plane_t p = separating_plane(body, other, distance);
-  return plane_points(p, convex_hull(intersection(convex_hull(plane_coordinates(p, penetration_candidates(negative_plane(p), body))),
-                                                  convex_hull(plane_coordinates(p, penetration_candidates(p, other))))));
+  list_t *candidates1 = convex_hull(plane_coordinates(p, penetration_candidates(negative_plane(p), body)));
+  list_t *candidates2 = convex_hull(plane_coordinates(p, penetration_candidates(p, other)));
+  return plane_points(p, convex_hull(intersection(candidates1, candidates2)));
 }

@@ -123,6 +123,12 @@ static MunitResult test_skip_collinear2(const MunitParameter params[], void *dat
   return MUNIT_OK;
 }
 
+static MunitResult test_empty_hull(const MunitParameter params[], void *data) {
+  list_t *result = convex_hull(make_list());
+  munit_assert_int(result->size, ==, 0);
+  return MUNIT_OK;
+}
+
 static MunitResult test_inside(const MunitParameter params[], void *data) {
   munit_assert_true(inside(triangle(), coordinate(0, 1)));
   return MUNIT_OK;
@@ -184,6 +190,7 @@ MunitTest test_polygon[] = {
   {"/topmost_point"   , test_topmost_point   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/skip_collinear"  , test_skip_collinear  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/skip_collinear2" , test_skip_collinear2 , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/empty_hull"      , test_empty_hull      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/inside"          , test_inside          , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/outside"         , test_outside         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/outside2"        , test_outside2        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
