@@ -151,21 +151,28 @@ list_t *penetration_candidates(plane_t p, rigid_body_t *body) {
 }
 
 plane_t separating_plane(rigid_body_t *body, rigid_body_t *other, double *distance) {
-  int face_index1;
-  int point_index1;
-  double separation1 = best_face(body, other, &face_index1, &point_index1);
-  int face_index2;
-  int point_index2;
-  double separation2 = best_face(other, body, &face_index2, &point_index2);
+  int face1_index, point1_index;
+  double separation1 = best_face(body, other, &face1_index, &point1_index);
+  int face2_index, point2_index;
+  double separation2 = best_face(other, body, &face2_index, &point2_index);
+  int edge1_index, edge2_index;
+  double separation3 = best_edge_pair(body, other, &edge1_index, &edge2_index);
   plane_t result;
-  if (separation1 >= separation2) {
-    plane_t p = face_plane(body, get_face(body->faces)[face_index1]);
+  if (separation1 >= separation2 && separation1 >= separation3) {
+    plane_t p = face_plane(body, get_face(body->faces)[face1_index]);
     result = plane(vector_add(p.point, vector_scale(p.normal, 0.5 * separation1)), p.normal);
     if (distance) *distance = separation1;
-  } else {
-    plane_t p = face_plane(other, get_face(other->faces)[face_index2]);
+  } else if (separation2 >= separation1 && separation2 >= separation3) {
+    plane_t p = face_plane(other, get_face(other->faces)[face2_index]);
     result = plane(vector_add(p.point, vector_scale(p.normal, 0.5 * separation2)), vector_negative(p.normal));
     if (distance) *distance = separation2;
+  } else {
+    edge_t edge1 = get_edge(body->edges)[edge1_index];
+    edge_t edge2 = get_edge(other->edges)[edge2_index];
+    plane_t p1, p2;
+    edge_planes(body, edge1, other, edge2, &p1, &p2);
+    result = plane(vector_add(p1.point, vector_scale(p1.normal, 0.5 * separation3)), p1.normal);
+    if (distance) *distance = separation3;
   };
   return result;
 }

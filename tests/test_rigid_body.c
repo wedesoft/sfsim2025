@@ -4,10 +4,10 @@
 
 
 static rigid_body_t *make_tetrahedron(double scale, double z) {
-  //      3---2
-  //     / \  |
-  //    /   \ |
-  //   /     \|
+  //      3---2    z^  ^
+  //     / \  |     | /y
+  //    /   \ |  ---+---->
+  //   /     \|    /|   x
   // 0--------1
   rigid_body_t *result = make_rigid_body();
   add_point(result, vector(0, 0, z));
@@ -21,36 +21,67 @@ static rigid_body_t *make_tetrahedron(double scale, double z) {
   return result;
 }
 
-static rigid_body_t *make_cube(double x, double y, double z)
-{
+static void add_cube_faces(rigid_body_t *body) {
+  add_face(body, face(0, 1, 3));
+  add_face(body, face(0, 3, 2));
+  add_face(body, face(5, 4, 7));
+  add_face(body, face(5, 6, 7));
+  add_face(body, face(4, 0, 2));
+  add_face(body, face(4, 2, 6));
+  add_face(body, face(1, 5, 7));
+  add_face(body, face(1, 7, 3));
+  add_face(body, face(0, 5, 1));
+  add_face(body, face(0, 4, 5));
+  add_face(body, face(2, 3, 7));
+  add_face(body, face(2, 7, 6));
+}
+
+static rigid_body_t *make_cube(double x, double y, double z) {
   //   6-------7
-  //  /       /|
-  // 2-------3 |
-  // |       | |
-  // |       | 5
-  // |       |/
-  // 0-------1
+  //  /       /|        ^  ^
+  // 2-------3 |       z| /y
+  // |       | |        |/
+  // |       | 5    ----+----->
+  // |       |/        /|   x
+  // 0-------1        / |
   rigid_body_t *result = make_rigid_body();
   add_point(result, vector(0 + x, 0 + y, 0 + z));
-  add_point(result, vector(0 + x, 0 + y, 2 + z));
-  add_point(result, vector(0 + x, 2 + y, 0 + z));
-  add_point(result, vector(0 + x, 2 + y, 2 + z));
   add_point(result, vector(2 + x, 0 + y, 0 + z));
+  add_point(result, vector(0 + x, 0 + y, 2 + z));
   add_point(result, vector(2 + x, 0 + y, 2 + z));
+  add_point(result, vector(0 + x, 2 + y, 0 + z));
   add_point(result, vector(2 + x, 2 + y, 0 + z));
+  add_point(result, vector(0 + x, 2 + y, 2 + z));
   add_point(result, vector(2 + x, 2 + y, 2 + z));
-  add_face(result, face(0, 1, 3));
-  add_face(result, face(0, 3, 2));
-  add_face(result, face(5, 4, 7));
-  add_face(result, face(5, 6, 7));
-  add_face(result, face(4, 0, 2));
-  add_face(result, face(4, 2, 6));
-  add_face(result, face(1, 5, 7));
-  add_face(result, face(1, 7, 3));
-  add_face(result, face(0, 5, 1));
-  add_face(result, face(0, 4, 5));
-  add_face(result, face(2, 3, 7));
-  add_face(result, face(2, 7, 6));
+  add_cube_faces(result);
+  return result;
+}
+
+static rigid_body_t *make_rotated_cube1(double z) {
+  rigid_body_t *result = make_rigid_body();
+  add_point(result, vector(1, 0, 0 + z));
+  add_point(result, vector(2, 0, 1 + z));
+  add_point(result, vector(0, 0, 1 + z));
+  add_point(result, vector(1, 0, 2 + z));
+  add_point(result, vector(1, 2, 0 + z));
+  add_point(result, vector(2, 2, 1 + z));
+  add_point(result, vector(0, 2, 1 + z));
+  add_point(result, vector(1, 2, 2 + z));
+  add_cube_faces(result);
+  return result;
+}
+
+static rigid_body_t *make_rotated_cube2(double z) {
+  rigid_body_t *result = make_rigid_body();
+  add_point(result, vector(2, 1, 0 + z));
+  add_point(result, vector(2, 2, 1 + z));
+  add_point(result, vector(2, 0, 1 + z));
+  add_point(result, vector(2, 1, 2 + z));
+  add_point(result, vector(0, 1, 0 + z));
+  add_point(result, vector(0, 2, 1 + z));
+  add_point(result, vector(0, 0, 1 + z));
+  add_point(result, vector(0, 1, 2 + z));
+  add_cube_faces(result);
   return result;
 }
 
@@ -285,6 +316,19 @@ static MunitResult test_separating_plane2(const MunitParameter params[], void *d
   return MUNIT_OK;
 }
 
+static MunitResult test_separating_plane3(const MunitParameter params[], void *data) {
+  rigid_body_t *cube1 = make_rotated_cube1(0);
+  rigid_body_t *cube2 = make_rotated_cube2(4);
+  double distance;
+  plane_t result = separating_plane(cube1, cube2, &distance);
+  munit_assert_double(distance, ==, 2.0);
+  munit_assert_double(result.point.z, ==, 3.0);
+  munit_assert_double(result.normal.x, ==, 0.0);
+  munit_assert_double(result.normal.y, ==, 0.0);
+  munit_assert_double(result.normal.z, ==, 1.0);
+  return MUNIT_OK;
+}
+
 MunitTest test_rigid_body[] = {
   {"/create"           , test_create           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/add_point"        , test_add_point        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -308,5 +352,6 @@ MunitTest test_rigid_body[] = {
   {"/penetration"      , test_penetration      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/separating_plane" , test_separating_plane , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/separating_plane2", test_separating_plane2, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/separating_plane3", test_separating_plane3, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                , NULL                  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
