@@ -16,7 +16,7 @@ inline vector_t vector(double x, double y, double z) {
   return result;
 }
 
-inline vector_t negative(vector_t v)
+inline vector_t vector_negative(vector_t v)
 {
   return vector(-v.x, -v.y, -v.z);
 }

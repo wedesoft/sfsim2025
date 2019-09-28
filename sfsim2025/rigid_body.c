@@ -105,10 +105,10 @@ bool edge_planes(rigid_body_t *body, edge_t edge1, rigid_body_t *other, edge_t e
   p1->point = edge_tail(body, edge1);
   p2->point = edge_tail(other, edge2);
   p1->normal = normal;
-  p2->normal = negative(normal);
+  p2->normal = vector_negative(normal);
   if (largest_distance(*p1, body, NULL) <= DISTANCE_EPS && largest_distance(*p2, other, NULL) <= DISTANCE_EPS)
     return true;
-  p1->normal = negative(normal);
+  p1->normal = vector_negative(normal);
   p2->normal = normal;
   if (largest_distance(*p1, body, NULL) <= DISTANCE_EPS && largest_distance(*p2, other, NULL) <= DISTANCE_EPS)
     return true;
@@ -164,7 +164,7 @@ plane_t separating_plane(rigid_body_t *body, rigid_body_t *other, double *distan
     if (distance) *distance = separation1;
   } else {
     plane_t p = face_plane(other, get_face(other->faces)[face_index2]);
-    result = plane(vector_add(p.point, vector_scale(p.normal, separation2 / 2)), negative(p.normal));
+    result = plane(vector_add(p.point, vector_scale(p.normal, separation2 / 2)), vector_negative(p.normal));
     if (distance) *distance = separation2;
   };
   return result;

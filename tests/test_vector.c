@@ -4,7 +4,7 @@
 
 
 static MunitResult test_negative(const MunitParameter params[], void *data) {
-  vector_t result = negative(vector(2, 3, 5));
+  vector_t result = vector_negative(vector(2, 3, 5));
   munit_assert_double(result.x, ==, -2.0);
   munit_assert_double(result.y, ==, -3.0);
   munit_assert_double(result.z, ==, -5.0);
