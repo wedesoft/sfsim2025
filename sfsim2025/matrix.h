@@ -39,6 +39,7 @@ inline matrix_t transpose(matrix_t m) {
   return matrix(m.m11, m.m21, m.m31, m.m12, m.m22, m.m32, m.m13, m.m23, m.m33);
 };
 
+// Dot product of two matrices.
 inline matrix_t matrix_dot(matrix_t a, matrix_t b) {
   return matrix(a.m11 * b.m11 + a.m12 * b.m21 + a.m13 * b.m31,
                 a.m11 * b.m12 + a.m12 * b.m22 + a.m13 * b.m32,
@@ -49,4 +50,23 @@ inline matrix_t matrix_dot(matrix_t a, matrix_t b) {
                 a.m31 * b.m11 + a.m32 * b.m21 + a.m33 * b.m31,
                 a.m31 * b.m12 + a.m32 * b.m22 + a.m33 * b.m32,
                 a.m31 * b.m13 + a.m32 * b.m23 + a.m33 * b.m33);
+}
+
+// Compute inverse matrix.
+inline matrix_t inverse(matrix_t m)
+{
+  // https://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/threeD/index.htm
+  matrix_t result;
+  double det = m.m11 * m.m22 * m.m33 + m.m12 * m.m23 * m.m31 + m.m13 * m.m21 * m.m32
+             - m.m11 * m.m23 * m.m32 - m.m12 * m.m21 * m.m33 - m.m13 * m.m22 * m.m31;
+  result.m11 = (m.m22 * m.m33 - m.m23 * m.m32) / det;
+  result.m12 = (m.m13 * m.m32 - m.m12 * m.m33) / det;
+  result.m13 = (m.m12 * m.m23 - m.m13 * m.m22) / det;
+  result.m21 = (m.m23 * m.m31 - m.m21 * m.m33) / det;
+  result.m22 = (m.m11 * m.m33 - m.m13 * m.m31) / det;
+  result.m23 = (m.m13 * m.m21 - m.m11 * m.m23) / det;
+  result.m31 = (m.m21 * m.m32 - m.m22 * m.m31) / det;
+  result.m32 = (m.m12 * m.m31 - m.m11 * m.m32) / det;
+  result.m33 = (m.m11 * m.m22 - m.m12 * m.m21) / det;
+  return result;
 }

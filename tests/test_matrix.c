@@ -42,11 +42,27 @@ static MunitResult test_matrix_dot(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_inverse(const MunitParameter params[], void *data) {
+  matrix_t m = matrix(2, 3, 5, 7, 11, 13, 17, 19, 23);
+  matrix_t result = matrix_dot(m, inverse(m));
+  munit_assert_double_equal(result.m11, 1, 6);
+  munit_assert_double_equal(result.m12, 0, 6);
+  munit_assert_double_equal(result.m13, 0, 6);
+  munit_assert_double_equal(result.m21, 0, 6);
+  munit_assert_double_equal(result.m22, 1, 6);
+  munit_assert_double_equal(result.m23, 0, 6);
+  munit_assert_double_equal(result.m31, 0, 6);
+  munit_assert_double_equal(result.m32, 0, 6);
+  munit_assert_double_equal(result.m33, 1, 6);
+  return MUNIT_OK;
+}
+
 MunitTest test_matrix[] = {
   {"/create"              , test_create              , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/cross_product_matrix", test_cross_product_matrix, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/matrix_vector_dot"   , test_matrix_vector_dot   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/transpose"           , test_transpose           , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/matrix_dot"          , test_matrix_dot          , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/inverse"             , test_inverse             , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                   , NULL                     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
 };
