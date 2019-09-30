@@ -38,3 +38,15 @@ inline vector_t matrix_vector_dot(matrix_t m, vector_t v) {
 inline matrix_t transpose(matrix_t m) {
   return matrix(m.m11, m.m21, m.m31, m.m12, m.m22, m.m32, m.m13, m.m23, m.m33);
 };
+
+inline matrix_t matrix_dot(matrix_t a, matrix_t b) {
+  return matrix(a.m11 * b.m11 + a.m12 * b.m21 + a.m13 * b.m31,
+                a.m11 * b.m12 + a.m12 * b.m22 + a.m13 * b.m32,
+                a.m11 * b.m13 + a.m12 * b.m23 + a.m13 * b.m33,
+                a.m21 * b.m11 + a.m22 * b.m21 + a.m23 * b.m31,
+                a.m21 * b.m12 + a.m22 * b.m22 + a.m23 * b.m32,
+                a.m21 * b.m13 + a.m22 * b.m23 + a.m23 * b.m33,
+                a.m31 * b.m11 + a.m32 * b.m21 + a.m33 * b.m31,
+                a.m31 * b.m12 + a.m32 * b.m22 + a.m33 * b.m32,
+                a.m31 * b.m13 + a.m32 * b.m23 + a.m33 * b.m33);
+}
