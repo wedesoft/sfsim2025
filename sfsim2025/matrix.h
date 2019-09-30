@@ -22,7 +22,7 @@ inline matrix_t matrix(double m11, double m12, double m13, double m21, double m2
   return result;
 }
 
-// Cross-product matrix a~ so that a~*b is a x b.
+// Skew-symmetric cross-product matrix a~ so that a~*b is a x b.
 inline matrix_t cross_product_matrix(vector_t v) {
   return matrix(0, -v.z, v.y, v.z, 0, -v.x, -v.y, v.x, 0);
 }
