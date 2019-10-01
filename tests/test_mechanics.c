@@ -13,11 +13,11 @@ static MunitResult test_state(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
-static void *f(double dt, void *y_) {
+static void *f(double t, double dt, void *y_) {
   double *y = y_;
   double *result = GC_MALLOC_ATOMIC(2 * sizeof(double));
-  result[0] = y[1];
-  result[1] = 1.0;
+  result[0] = y[1] * dt;
+  result[1] = dt;
   return result;
 }
 
