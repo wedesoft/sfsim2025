@@ -7,8 +7,8 @@
 
 
 typedef struct {
-  int size;
-  int buffer_size;
+  size_t size;
+  size_t buffer_size;
   void *element;
 } list_t;
 
