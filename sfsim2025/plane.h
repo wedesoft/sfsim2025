@@ -9,9 +9,7 @@ typedef struct {
 } plane_t;
 
 inline plane_t plane(vector_t point, vector_t normal) {
-  plane_t result;
-  result.point = point;
-  result.normal = normal;
+  plane_t result = {.point = point, .normal = normal};
   return result;
 }
 

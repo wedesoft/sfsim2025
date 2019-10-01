@@ -15,10 +15,7 @@ typedef struct {
 } matrix_t;
 
 inline matrix_t matrix(double m11, double m12, double m13, double m21, double m22, double m23, double m31, double m32, double m33) {
-  matrix_t result;
-  result.m11 = m11; result.m12 = m12; result.m13 = m13;
-  result.m21 = m21; result.m22 = m22; result.m23 = m23;
-  result.m31 = m31; result.m32 = m32; result.m33 = m33;
+  matrix_t result = {.m11 = m11, .m12 = m12, .m13 = m13, .m21 = m21, .m22 = m22, .m23 = m23, .m31 = m31, .m32 = m32, .m33 = m33};
   return result;
 }
 

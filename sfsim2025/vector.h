@@ -9,10 +9,7 @@ typedef struct {
 } vector_t;
 
 inline vector_t vector(double x, double y, double z) {
-  vector_t result;
-  result.x = x;
-  result.y = y;
-  result.z = z;
+  vector_t result = {.x = x, .y = y, .z = z};
   return result;
 }
 
