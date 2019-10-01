@@ -21,4 +21,5 @@ inline state_t state(vector_t position, vector_t linear_momentum, quaternion_t o
   return result;
 }
 
-void *runge_kutta(void *y0, double dt, void *f(double, double, void *), void *add(void *, void *), void *scale(void *, double));
+void *runge_kutta(void *y0, double dt, void *f(double, double, void *, void *), void *add(void *, void *),
+                  void *scale(void *, double), void *data);

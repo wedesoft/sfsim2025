@@ -13,11 +13,12 @@ static MunitResult test_state(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
-static void *f(double t, double dt, void *y_) {
+static void *f(double t, double dt, void *y_, void *data) {
+  double *acceleration = data;
   double *y = y_;
   double *result = GC_MALLOC_ATOMIC(2 * sizeof(double));
   result[0] = y[1] * dt;
-  result[1] = dt;
+  result[1] = *acceleration * dt;
   return result;
 }
 
@@ -40,9 +41,10 @@ static void *scale(void *y_, double s) {
 
 static MunitResult test_runge_kutta(const MunitParameter params[], void *data) {
   double initial[2] = {0.0, 0.0};
-  double *final = runge_kutta(initial, 2, f, add, scale);
-  munit_assert_double_equal(final[1], 2, 6);
-  munit_assert_double_equal(final[0], 2, 6);
+  double acceleration = 3.0;
+  double *final = runge_kutta(initial, 4, f, add, scale, &acceleration);
+  munit_assert_double_equal(final[1], 12, 6);
+  munit_assert_double_equal(final[0], 24, 6);
   return MUNIT_OK;
 }
 
