@@ -10,6 +10,7 @@ typedef struct {
   vector_t angular_momentum;
 } state_t;
 
+// Create a state vector.
 inline state_t state(vector_t position, vector_t linear_momentum, quaternion_t orientation, vector_t angular_momentum) {
   state_t result = {
     .position = position,
@@ -20,5 +21,4 @@ inline state_t state(vector_t position, vector_t linear_momentum, quaternion_t o
   return result;
 }
 
-void *runge_kutta(double t0, void *y0, double dt, void *f(double, void *), void *add(void *, void *),
-                  void *scale(void *, double));
+void *runge_kutta(void *y0, double dt, void *f(double, void *), void *add(void *, void *), void *scale(void *, double));

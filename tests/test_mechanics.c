@@ -4,7 +4,16 @@
 #include "test_mechanics.h"
 
 
-static void *f(double t, void *y_) {
+static MunitResult test_state(const MunitParameter params[], void *data) {
+  state_t result = state(vector(2, 3, 5), vector(3, 5, 7), quaternion(1, 0, 0, 0), vector(5, 7, 11));
+  munit_assert_double(result.position.x, ==, 2);
+  munit_assert_double(result.linear_momentum.x, ==, 3);
+  munit_assert_double(result.orientation.a, ==, 1);
+  munit_assert_double(result.angular_momentum.x, ==, 5);
+  return MUNIT_OK;
+}
+
+static void *f(double dt, void *y_) {
   double *y = y_;
   double *result = GC_MALLOC_ATOMIC(2 * sizeof(double));
   result[0] = y[1];
@@ -31,23 +40,14 @@ static void *scale(void *y_, double s) {
 
 static MunitResult test_runge_kutta(const MunitParameter params[], void *data) {
   double initial[2] = {0.0, 0.0};
-  double *final = runge_kutta(0, initial, 2, f, add, scale);
+  double *final = runge_kutta(initial, 2, f, add, scale);
   munit_assert_double_equal(final[1], 2, 6);
   munit_assert_double_equal(final[0], 2, 6);
   return MUNIT_OK;
 }
 
-static MunitResult test_state(const MunitParameter params[], void *data) {
-  state_t result = state(vector(2, 3, 5), vector(3, 5, 7), quaternion(1, 0, 0, 0), vector(5, 7, 11));
-  munit_assert_double(result.position.x, ==, 2);
-  munit_assert_double(result.linear_momentum.x, ==, 3);
-  munit_assert_double(result.orientation.a, ==, 1);
-  munit_assert_double(result.angular_momentum.x, ==, 5);
-  return MUNIT_OK;
-}
-
 MunitTest test_mechanics[] = {
-  {"/runge_kutta"  , test_runge_kutta, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/state"        , test_state      , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/runge_kutta"  , test_runge_kutta, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL            , NULL            , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
