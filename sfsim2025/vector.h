@@ -8,16 +8,19 @@ typedef struct {
   double z;
 } vector_t;
 
+// Initialize vector.
 inline vector_t vector(double x, double y, double z) {
   vector_t result = {.x = x, .y = y, .z = z};
   return result;
 }
 
+// Negative vector.
 inline vector_t vector_negative(vector_t v)
 {
   return vector(-v.x, -v.y, -v.z);
 }
 
+// Add two vectors.
 inline vector_t vector_add(vector_t a, vector_t b) {
   vector_t result;
   result.x = a.x + b.x;
@@ -26,6 +29,7 @@ inline vector_t vector_add(vector_t a, vector_t b) {
   return result;
 }
 
+// Difference of two vectors.
 inline vector_t vector_subtract(vector_t a, vector_t b) {
   vector_t result;
   result.x = a.x - b.x;
@@ -34,6 +38,7 @@ inline vector_t vector_subtract(vector_t a, vector_t b) {
   return result;
 }
 
+// Multiply a vector with a scalar.
 inline vector_t vector_scale(vector_t a, double s) {
   vector_t result;
   result.x = a.x * s;
@@ -42,6 +47,7 @@ inline vector_t vector_scale(vector_t a, double s) {
   return result;
 }
 
+// Cross-product of two vectors.
 inline vector_t cross_product(vector_t a, vector_t b) {
   vector_t result;
   result.x = a.y * b.z - a.z * b.y;

@@ -5,6 +5,7 @@
 #include "test_mechanics.h"
 #include "test_plane.h"
 #include "test_polygon.h"
+#include "test_quaternion.h"
 #include "test_rigid_body.h"
 #include "test_vector.h"
 
@@ -15,6 +16,7 @@ static MunitSuite test_sfsim[] = {
   {"/mechanics" , test_mechanics , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/plane"     , test_plane     , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/polygon"   , test_polygon   , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/quaternion", test_quaternion, NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/rigid_body", test_rigid_body, NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/vector"    , test_vector    , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {NULL         , NULL           , NULL, 0, MUNIT_SUITE_OPTION_NONE}
