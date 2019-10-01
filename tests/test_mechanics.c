@@ -5,17 +5,17 @@
 
 
 static MunitResult test_state(const MunitParameter params[], void *data) {
-  state_t result = state(vector(2, 3, 5), vector(3, 5, 7), quaternion(1, 0, 0, 0), vector(5, 7, 11));
-  munit_assert_double(result.position.x, ==, 2);
-  munit_assert_double(result.linear_momentum.x, ==, 3);
-  munit_assert_double(result.orientation.a, ==, 1);
-  munit_assert_double(result.angular_momentum.x, ==, 5);
+  state_t *result = state(vector(2, 3, 5), vector(3, 5, 7), quaternion(1, 0, 0, 0), vector(5, 7, 11));
+  munit_assert_double(result->position.x, ==, 2);
+  munit_assert_double(result->linear_momentum.x, ==, 3);
+  munit_assert_double(result->orientation.a, ==, 1);
+  munit_assert_double(result->angular_momentum.x, ==, 5);
   return MUNIT_OK;
 }
 
 static void *f(double t, double dt, void *y_, void *data) {
-  double *acceleration = data;
   double *y = y_;
+  double *acceleration = data;
   double *result = GC_MALLOC_ATOMIC(2 * sizeof(double));
   result[0] = y[1] * dt;
   result[1] = *acceleration * dt;
@@ -49,7 +49,7 @@ static MunitResult test_runge_kutta(const MunitParameter params[], void *data) {
 }
 
 MunitTest test_mechanics[] = {
-  {"/state"        , test_state      , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/state"        , test_state      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/runge_kutta"  , test_runge_kutta, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL            , NULL            , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

@@ -1,4 +1,5 @@
 #pragma once
+#include <gc.h>
 #include "vector.h"
 #include "quaternion.h"
 
@@ -11,13 +12,12 @@ typedef struct {
 } state_t;
 
 // Create a state vector.
-inline state_t state(vector_t position, vector_t linear_momentum, quaternion_t orientation, vector_t angular_momentum) {
-  state_t result = {
-    .position = position,
-    .linear_momentum = linear_momentum,
-    .orientation = orientation,
-    .angular_momentum = angular_momentum
-  };
+inline state_t *state(vector_t position, vector_t linear_momentum, quaternion_t orientation, vector_t angular_momentum) {
+  state_t *result = GC_MALLOC_ATOMIC(sizeof(state_t));
+  result->position = position;
+  result->linear_momentum = linear_momentum;
+  result->orientation = orientation;
+  result->angular_momentum = angular_momentum;
   return result;
 }
 
