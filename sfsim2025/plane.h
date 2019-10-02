@@ -9,8 +9,7 @@ typedef struct {
 } plane_t;
 
 inline plane_t plane(vector_t point, vector_t normal) {
-  plane_t result = {.point = point, .normal = normal};
-  return result;
+  return (plane_t){.point = point, .normal = normal};
 }
 
 inline double plane_distance(plane_t plane, vector_t point) {
@@ -19,8 +18,7 @@ inline double plane_distance(plane_t plane, vector_t point) {
 
 // Return plane with inverted normal vector.
 inline plane_t negative_plane(plane_t p) {
-  vector_t normal = p.normal;
-  return plane(p.point, vector_negative(normal));
+  return plane(p.point, vector_negative(p.normal));
 }
 
 list_t *plane_coordinates(plane_t plane, list_t *vectors);

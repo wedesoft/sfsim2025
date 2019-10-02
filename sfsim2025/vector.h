@@ -10,8 +10,7 @@ typedef struct {
 
 // Initialize vector.
 inline vector_t vector(double x, double y, double z) {
-  vector_t result = {.x = x, .y = y, .z = z};
-  return result;
+  return (vector_t){.x = x, .y = y, .z = z};
 }
 
 // Negative vector.
@@ -22,38 +21,22 @@ inline vector_t vector_negative(vector_t v)
 
 // Add two vectors.
 inline vector_t vector_add(vector_t a, vector_t b) {
-  vector_t result;
-  result.x = a.x + b.x;
-  result.y = a.y + b.y;
-  result.z = a.z + b.z;
-  return result;
+  return vector(a.x + b.x, a.y + b.y, a.z + b.z);
 }
 
 // Difference of two vectors.
 inline vector_t vector_subtract(vector_t a, vector_t b) {
-  vector_t result;
-  result.x = a.x - b.x;
-  result.y = a.y - b.y;
-  result.z = a.z - b.z;
-  return result;
+  return vector(a.x - b.x, a.y - b.y, a.z - b.z);
 }
 
 // Multiply a vector with a scalar.
 inline vector_t vector_scale(vector_t a, double s) {
-  vector_t result;
-  result.x = a.x * s;
-  result.y = a.y * s;
-  result.z = a.z * s;
-  return result;
+  return vector(a.x * s, a.y * s, a.z * s);
 }
 
 // Cross-product of two vectors.
 inline vector_t cross_product(vector_t a, vector_t b) {
-  vector_t result;
-  result.x = a.y * b.z - a.z * b.y;
-  result.y = a.z * b.x - a.x * b.z;
-  result.z = a.x * b.y - a.y * b.x;
-  return result;
+  return vector(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
 }
 
 // Dot product of two vectors.

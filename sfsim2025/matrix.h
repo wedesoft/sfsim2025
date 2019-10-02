@@ -15,8 +15,7 @@ typedef struct {
 } matrix_t;
 
 inline matrix_t matrix(double m11, double m12, double m13, double m21, double m22, double m23, double m31, double m32, double m33) {
-  matrix_t result = {.m11 = m11, .m12 = m12, .m13 = m13, .m21 = m21, .m22 = m22, .m23 = m23, .m31 = m31, .m32 = m32, .m33 = m33};
-  return result;
+  return (matrix_t){.m11 = m11, .m12 = m12, .m13 = m13, .m21 = m21, .m22 = m22, .m23 = m23, .m31 = m31, .m32 = m32, .m33 = m33};
 }
 
 // Skew-symmetric cross-product matrix a~ so that a~*b is a x b.
