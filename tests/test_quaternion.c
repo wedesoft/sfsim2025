@@ -11,6 +11,15 @@ static MunitResult test_initialize(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_eq(const MunitParameter params[], void *data) {
+  munit_assert_true(quaternion_eq(quaternion(2, 3, 5, 7), quaternion(2, 3, 5, 7)));
+  munit_assert_false(quaternion_eq(quaternion(1, 3, 5, 7), quaternion(2, 3, 5, 7)));
+  munit_assert_false(quaternion_eq(quaternion(2, 2, 5, 7), quaternion(2, 3, 5, 7)));
+  munit_assert_false(quaternion_eq(quaternion(2, 3, 4, 7), quaternion(2, 3, 5, 7)));
+  munit_assert_false(quaternion_eq(quaternion(2, 3, 5, 6), quaternion(2, 3, 5, 7)));
+  return MUNIT_OK;
+}
+
 static MunitResult test_from_vector(const MunitParameter params[], void *data) {
   quaternion_t q = vector_to_quaternion(vector(2, 3, 5));
   munit_assert_double(q.a, ==, 0);
@@ -76,6 +85,7 @@ static MunitResult test_conjugate(const MunitParameter params[], void *data) {
 
 MunitTest test_quaternion[] = {
   {"/initialize" , test_initialize  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/eq"         , test_eq          , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/from_vector", test_from_vector , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/to_vector"  , test_to_vector   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/sinc"       , test_sinc        , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},

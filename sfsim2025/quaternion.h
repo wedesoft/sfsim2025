@@ -1,4 +1,5 @@
 #pragma once
+#include <stdbool.h>
 #include <tgmath.h>
 #include "vector.h"
 
@@ -13,6 +14,11 @@ typedef struct {
 // Initialize quaternion.
 inline quaternion_t quaternion(double a, double b, double c, double d) {
   return (quaternion_t){.a = a, .b = b, .c = c, .d = d};
+}
+
+// Equality of quaternions.
+inline bool quaternion_eq(quaternion_t q, quaternion_t r) {
+  return q.a == r.a && q.b == r.b && q.c == r.c && q.d == r.d;
 }
 
 // Create quaternion real component zero and other components taken from the vector.
