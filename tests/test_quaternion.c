@@ -11,7 +11,17 @@ static MunitResult test_initialize(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_from_vector(const MunitParameter params[], void *data) {
+  quaternion_t q = vector_to_quaternion(vector(2, 3, 5));
+  munit_assert_double(q.a, ==, 0);
+  munit_assert_double(q.b, ==, 2);
+  munit_assert_double(q.c, ==, 3);
+  munit_assert_double(q.d, ==, 5);
+  return MUNIT_OK;
+}
+
 MunitTest test_quaternion[] = {
-  {"/initialize", test_initialize  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {NULL         , NULL             , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
+  {"/initialize" , test_initialize  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/from_vector", test_from_vector , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {NULL          , NULL             , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
 };
