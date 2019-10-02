@@ -1,4 +1,5 @@
 #pragma once
+#include <stdbool.h>
 #include <tgmath.h>
 
 
@@ -11,6 +12,10 @@ typedef struct {
 // Initialize vector.
 inline vector_t vector(double x, double y, double z) {
   return (vector_t){.x = x, .y = y, .z = z};
+}
+
+inline bool vector_eq(vector_t a, vector_t b) {
+  return a.x == b.x && a.y == b.y && a.z == b.z;
 }
 
 // Negative vector.

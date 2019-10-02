@@ -3,6 +3,14 @@
 #include "test_helper.h"
 
 
+static MunitResult test_eq(const MunitParameter params[], void *data) {
+  munit_assert_true(vector_eq(vector(2, 3, 5), vector(2, 3, 5)));
+  munit_assert_false(vector_eq(vector(1, 3, 5), vector(2, 3, 5)));
+  munit_assert_false(vector_eq(vector(2, 2, 5), vector(2, 3, 5)));
+  munit_assert_false(vector_eq(vector(2, 3, 4), vector(2, 3, 5)));
+  return MUNIT_OK;
+}
+
 static MunitResult test_negative(const MunitParameter params[], void *data) {
   vector_t result = vector_negative(vector(2, 3, 5));
   munit_assert_double(result.x, ==, -2.0);
@@ -110,6 +118,7 @@ static MunitResult test_orthogonal2(const MunitParameter params[], void *data) {
 }
 
 MunitTest test_vector[] = {
+  {"/eq"           , test_eq           , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/negative"     , test_negative     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/sum"          , test_sum          , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/difference"   , test_difference   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
