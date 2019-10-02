@@ -31,3 +31,14 @@ inline double sinc(double x) {
 }
 
 quaternion_t quaternion_exp(quaternion_t q);
+
+// Determine rotation quaternion from angle value and axis vector.
+inline quaternion_t quaternion_rotation(double theta, vector_t axis) {
+  return quaternion_exp(vector_to_quaternion(vector_scale(axis, 0.5 * theta)));
+}
+
+// Get conjugate of a quaternion.
+inline quaternion_t quaternion_conjugate(quaternion_t q) {
+  double scale = 1 / (q.a * q.a + q.b * q.b + q.c * q.c + q.d * q.d);
+  return quaternion(q.a * scale, -q.b * scale, -q.c * scale, -q.d * scale);
+}

@@ -47,6 +47,33 @@ static MunitResult test_exp_imag(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_no_rotation(const MunitParameter params[], void *data) {
+  quaternion_t q = quaternion_rotation(0, vector(1, 0, 0));
+  munit_assert_double_equal(q.a, 1, 6);
+  munit_assert_double_equal(q.b, 0, 6);
+  munit_assert_double_equal(q.c, 0, 6);
+  munit_assert_double_equal(q.d, 0, 6);
+  return MUNIT_OK;
+}
+
+static MunitResult test_rotation(const MunitParameter params[], void *data) {
+  quaternion_t q = quaternion_rotation(M_PI, vector(1, 0, 0));
+  munit_assert_double_equal(q.a, 0, 6);
+  munit_assert_double_equal(q.b, 1, 6);
+  munit_assert_double_equal(q.c, 0, 6);
+  munit_assert_double_equal(q.d, 0, 6);
+  return MUNIT_OK;
+}
+
+static MunitResult test_conjugate(const MunitParameter params[], void *data) {
+  munit_assert_double(quaternion_conjugate(quaternion(1, 0, 0, 0)).a, ==, 1);
+  munit_assert_double(quaternion_conjugate(quaternion(2, 0, 0, 0)).a, ==, 0.5);
+  munit_assert_double(quaternion_conjugate(quaternion(0, 2, 0, 0)).b, ==, -0.5);
+  munit_assert_double(quaternion_conjugate(quaternion(0, 0, 2, 0)).c, ==, -0.5);
+  munit_assert_double(quaternion_conjugate(quaternion(0, 0, 0, 2)).d, ==, -0.5);
+  return MUNIT_OK;
+}
+
 MunitTest test_quaternion[] = {
   {"/initialize" , test_initialize  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/from_vector", test_from_vector , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
@@ -54,5 +81,8 @@ MunitTest test_quaternion[] = {
   {"/sinc"       , test_sinc        , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/exp_real"   , test_exp_real    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/exp_imag"   , test_exp_imag    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/no_rotation", test_no_rotation , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/rotation"   , test_rotation    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/conjugate"  , test_conjugate   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL          , NULL             , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
 };
