@@ -83,6 +83,26 @@ static MunitResult test_conjugate(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_product(const MunitParameter params[], void *data) {
+  munit_assert_true(quaternion_eq(quaternion_product(quaternion(2, 0, 0, 0), quaternion(2, 0, 0, 0)), quaternion( 4,  0,  0,  0)));
+  munit_assert_true(quaternion_eq(quaternion_product(quaternion(2, 0, 0, 0), quaternion(0, 1, 0, 0)), quaternion( 0,  2,  0,  0)));
+  munit_assert_true(quaternion_eq(quaternion_product(quaternion(2, 0, 0, 0), quaternion(0, 0, 1, 0)), quaternion( 0,  0,  2,  0)));
+  munit_assert_true(quaternion_eq(quaternion_product(quaternion(2, 0, 0, 0), quaternion(0, 0, 0, 1)), quaternion( 0,  0,  0,  2)));
+  munit_assert_true(quaternion_eq(quaternion_product(quaternion(0, 1, 0, 0), quaternion(2, 0, 0, 0)), quaternion( 0,  2,  0,  0)));
+  munit_assert_true(quaternion_eq(quaternion_product(quaternion(0, 1, 0, 0), quaternion(0, 1, 0, 0)), quaternion(-1,  0,  0,  0)));
+  munit_assert_true(quaternion_eq(quaternion_product(quaternion(0, 1, 0, 0), quaternion(0, 0, 1, 0)), quaternion( 0,  0,  0,  1)));
+  munit_assert_true(quaternion_eq(quaternion_product(quaternion(0, 1, 0, 0), quaternion(0, 0, 0, 1)), quaternion( 0,  0, -1,  0)));
+  munit_assert_true(quaternion_eq(quaternion_product(quaternion(0, 0, 1, 0), quaternion(2, 0, 0, 0)), quaternion( 0,  0,  2,  0)));
+  munit_assert_true(quaternion_eq(quaternion_product(quaternion(0, 0, 1, 0), quaternion(0, 1, 0, 0)), quaternion( 0,  0,  0, -1)));
+  munit_assert_true(quaternion_eq(quaternion_product(quaternion(0, 0, 1, 0), quaternion(0, 0, 1, 0)), quaternion(-1,  0,  0,  0)));
+  munit_assert_true(quaternion_eq(quaternion_product(quaternion(0, 0, 1, 0), quaternion(0, 0, 0, 1)), quaternion( 0,  1,  0,  0)));
+  munit_assert_true(quaternion_eq(quaternion_product(quaternion(0, 0, 0, 1), quaternion(2, 0, 0, 0)), quaternion( 0,  0,  0,  2)));
+  munit_assert_true(quaternion_eq(quaternion_product(quaternion(0, 0, 0, 1), quaternion(0, 1, 0, 0)), quaternion( 0,  0,  1,  0)));
+  munit_assert_true(quaternion_eq(quaternion_product(quaternion(0, 0, 0, 1), quaternion(0, 0, 1, 0)), quaternion( 0, -1,  0,  0)));
+  munit_assert_true(quaternion_eq(quaternion_product(quaternion(0, 0, 0, 1), quaternion(0, 0, 0, 1)), quaternion(-1,  0,  0,  0)));
+  return MUNIT_OK;
+}
+
 MunitTest test_quaternion[] = {
   {"/initialize" , test_initialize  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/eq"         , test_eq          , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
@@ -94,5 +114,6 @@ MunitTest test_quaternion[] = {
   {"/no_rotation", test_no_rotation , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/rotation"   , test_rotation    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/conjugate"  , test_conjugate   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/product"    , test_product     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL          , NULL             , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
 };

@@ -48,3 +48,10 @@ inline quaternion_t quaternion_conjugate(quaternion_t q) {
   double scale = 1 / (q.a * q.a + q.b * q.b + q.c * q.c + q.d * q.d);
   return quaternion(q.a * scale, -q.b * scale, -q.c * scale, -q.d * scale);
 }
+
+inline quaternion_t quaternion_product(quaternion_t q, quaternion_t r) {
+  return quaternion(q.a * r.a - q.b * r.b - q.c * r.c - q.d * r.d,
+                    q.a * r.b + q.b * r.a + q.c * r.d - q.d * r.c,
+                    q.a * r.c - q.b * r.d + q.c * r.a + q.d * r.b,
+                    q.a * r.d + q.b * r.c - q.c * r.b + q.d * r.a);
+}

@@ -14,4 +14,3 @@ quaternion_t quaternion_exp(quaternion_t q)
                     scale * sinc_rotation * axis.y,
                     scale * sinc_rotation * axis.z);
 }
-
