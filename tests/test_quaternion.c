@@ -119,19 +119,43 @@ static MunitResult test_rotate_vector(const MunitParameter params[], void *data)
   return MUNIT_OK;
 }
 
+static MunitResult test_identity_matrix(const MunitParameter params[], void *data) {
+  matrix_t result = rotation_matrix(quaternion_rotation(0, vector(1, 0, 0)));
+  munit_assert_double(result.m11, ==, 1); munit_assert_double(result.m12, ==, 0); munit_assert_double(result.m13, ==, 0);
+  munit_assert_double(result.m21, ==, 0); munit_assert_double(result.m22, ==, 1); munit_assert_double(result.m23, ==, 0);
+  munit_assert_double(result.m31, ==, 0); munit_assert_double(result.m32, ==, 0); munit_assert_double(result.m33, ==, 1);
+  return MUNIT_OK;
+}
+
+static MunitResult test_rotation_matrix(const MunitParameter params[], void *data) {
+  matrix_t result = rotation_matrix(quaternion_rotation(M_PI / 2, vector(0, 0, 1)));
+  munit_assert_double_equal(result.m11,  0, 6);
+  munit_assert_double_equal(result.m12, -1, 6);
+  munit_assert_double_equal(result.m13,  0, 6);
+  munit_assert_double_equal(result.m21,  1, 6);
+  munit_assert_double_equal(result.m22,  0, 6);
+  munit_assert_double_equal(result.m23,  0, 6);
+  munit_assert_double_equal(result.m31,  0, 6);
+  munit_assert_double_equal(result.m32,  0, 6);
+  munit_assert_double_equal(result.m33,  1, 6);
+  return MUNIT_OK;
+}
+
 MunitTest test_quaternion[] = {
-  {"/initialize"   , test_initialize    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/eq"           , test_eq            , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/from_vector"  , test_from_vector   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/to_vector"    , test_to_vector     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/sinc"         , test_sinc          , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/exp_real"     , test_exp_real      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/exp_imag"     , test_exp_imag      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/no_rotation"  , test_no_rotation   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/rotation"     , test_rotation      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/conjugate"    , test_conjugate     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/product"      , test_product       , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/dont_rotate"  , test_dont_rotate   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/rotate_vector", test_rotate_vector , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {NULL            , NULL               , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
+  {"/initialize"     , test_initialize     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/eq"             , test_eq             , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/from_vector"    , test_from_vector    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/to_vector"      , test_to_vector      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/sinc"           , test_sinc           , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/exp_real"       , test_exp_real       , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/exp_imag"       , test_exp_imag       , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/no_rotation"    , test_no_rotation    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/rotation"       , test_rotation       , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/conjugate"      , test_conjugate      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/product"        , test_product        , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/dont_rotate"    , test_dont_rotate    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/rotate_vector"  , test_rotate_vector  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/identity_matrix", test_identity_matrix, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/rotation_matrix", test_rotation_matrix, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {NULL              , NULL                , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
 };

@@ -14,3 +14,10 @@ quaternion_t quaternion_exp(quaternion_t q)
                     scale * sinc_rotation * axis.y,
                     scale * sinc_rotation * axis.z);
 }
+
+matrix_t rotation_matrix(quaternion_t q) {
+  vector_t u = rotate_vector(q, vector(1, 0, 0));
+  vector_t v = rotate_vector(q, vector(0, 1, 0));
+  vector_t w = rotate_vector(q, vector(0, 0, 1));
+  return matrix(u.x, v.x, w.x, u.y, v.y, w.y, u.z, v.z, w.z);
+}

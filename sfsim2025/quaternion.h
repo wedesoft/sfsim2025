@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <tgmath.h>
 #include "vector.h"
+#include "matrix.h"
 
 
 typedef struct {
@@ -61,3 +62,5 @@ inline quaternion_t quaternion_product(quaternion_t q, quaternion_t r) {
 inline vector_t rotate_vector(quaternion_t q, vector_t v) {
   return quaternion_to_vector(quaternion_product(quaternion_product(q, vector_to_quaternion(v)), quaternion_conjugate(q)));
 }
+
+matrix_t rotation_matrix(quaternion_t q);
