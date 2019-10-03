@@ -49,9 +49,15 @@ inline quaternion_t quaternion_conjugate(quaternion_t q) {
   return quaternion(q.a * scale, -q.b * scale, -q.c * scale, -q.d * scale);
 }
 
+// Get product of two quaternions.
 inline quaternion_t quaternion_product(quaternion_t q, quaternion_t r) {
   return quaternion(q.a * r.a - q.b * r.b - q.c * r.c - q.d * r.d,
                     q.a * r.b + q.b * r.a + q.c * r.d - q.d * r.c,
                     q.a * r.c - q.b * r.d + q.c * r.a + q.d * r.b,
                     q.a * r.d + q.b * r.c - q.c * r.b + q.d * r.a);
+}
+
+// Use quaternion to rotate a vector.
+inline vector_t rotate_vector(quaternion_t q, vector_t v) {
+  return quaternion_to_vector(quaternion_product(quaternion_product(q, vector_to_quaternion(v)), quaternion_conjugate(q)));
 }

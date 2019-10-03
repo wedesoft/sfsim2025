@@ -103,17 +103,35 @@ static MunitResult test_product(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_dont_rotate(const MunitParameter params[], void *data) {
+  vector_t v = rotate_vector(quaternion_rotation(0, vector(1, 0, 0)), vector(2, 4, 8));
+  munit_assert_double_equal(v.x, 2, 6);
+  munit_assert_double_equal(v.y, 4, 6);
+  munit_assert_double_equal(v.z, 8, 6);
+  return MUNIT_OK;
+}
+
+static MunitResult test_rotate_vector(const MunitParameter params[], void *data) {
+  vector_t v = rotate_vector(quaternion_rotation(M_PI / 2, vector(1, 0, 0)), vector(2, 4, 8));
+  munit_assert_double_equal(v.x,  2, 6);
+  munit_assert_double_equal(v.y, -8, 6);
+  munit_assert_double_equal(v.z,  4, 6);
+  return MUNIT_OK;
+}
+
 MunitTest test_quaternion[] = {
-  {"/initialize" , test_initialize  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/eq"         , test_eq          , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/from_vector", test_from_vector , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/to_vector"  , test_to_vector   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/sinc"       , test_sinc        , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/exp_real"   , test_exp_real    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/exp_imag"   , test_exp_imag    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/no_rotation", test_no_rotation , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/rotation"   , test_rotation    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/conjugate"  , test_conjugate   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/product"    , test_product     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {NULL          , NULL             , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
+  {"/initialize"   , test_initialize    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/eq"           , test_eq            , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/from_vector"  , test_from_vector   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/to_vector"    , test_to_vector     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/sinc"         , test_sinc          , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/exp_real"     , test_exp_real      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/exp_imag"     , test_exp_imag      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/no_rotation"  , test_no_rotation   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/rotation"     , test_rotation      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/conjugate"    , test_conjugate     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/product"      , test_product       , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/dont_rotate"  , test_dont_rotate   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/rotate_vector", test_rotate_vector , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {NULL            , NULL               , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
 };
