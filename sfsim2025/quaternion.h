@@ -64,3 +64,5 @@ inline vector_t rotate_vector(quaternion_t q, vector_t v) {
 }
 
 matrix_t rotation_matrix(quaternion_t q);
+
+matrix_t rotate_matrix(quaternion_t q, matrix_t m);

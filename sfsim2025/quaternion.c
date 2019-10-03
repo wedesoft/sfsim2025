@@ -2,8 +2,7 @@
 
 
 // Exponential of quaternion.
-quaternion_t quaternion_exp(quaternion_t q)
-{
+quaternion_t quaternion_exp(quaternion_t q) {
   double scale = exp(q.a);
   vector_t axis = quaternion_to_vector(q);
   double rotation = norm(axis);
@@ -15,9 +14,16 @@ quaternion_t quaternion_exp(quaternion_t q)
                     scale * sinc_rotation * axis.z);
 }
 
+// Convert quaternion to equivalent rotation matrix.
 matrix_t rotation_matrix(quaternion_t q) {
   vector_t u = rotate_vector(q, vector(1, 0, 0));
   vector_t v = rotate_vector(q, vector(0, 1, 0));
   vector_t w = rotate_vector(q, vector(0, 0, 1));
   return matrix(u.x, v.x, w.x, u.y, v.y, w.y, u.z, v.z, w.z);
+}
+
+// Rotate inertial matrix into a different coordinate system.
+matrix_t rotate_matrix(quaternion_t q, matrix_t m) {
+  matrix_t rotation = rotation_matrix(q);
+  return matrix_dot(rotation, matrix_dot(m, transpose(rotation)));
 }

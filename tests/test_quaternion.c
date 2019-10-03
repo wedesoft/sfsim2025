@@ -128,16 +128,26 @@ static MunitResult test_identity_matrix(const MunitParameter params[], void *dat
 }
 
 static MunitResult test_rotation_matrix(const MunitParameter params[], void *data) {
-  matrix_t result = rotation_matrix(quaternion_rotation(M_PI / 2, vector(0, 0, 1)));
-  munit_assert_double_equal(result.m11,  0, 6);
-  munit_assert_double_equal(result.m12, -1, 6);
-  munit_assert_double_equal(result.m13,  0, 6);
-  munit_assert_double_equal(result.m21,  1, 6);
-  munit_assert_double_equal(result.m22,  0, 6);
-  munit_assert_double_equal(result.m23,  0, 6);
-  munit_assert_double_equal(result.m31,  0, 6);
-  munit_assert_double_equal(result.m32,  0, 6);
-  munit_assert_double_equal(result.m33,  1, 6);
+  matrix_t m = rotation_matrix(quaternion_rotation(M_PI / 2, vector(0, 0, 1)));
+  munit_assert_double_equal(m.m11, 0, 6); munit_assert_double_equal(m.m12, -1, 6); munit_assert_double_equal(m.m13, 0, 6);
+  munit_assert_double_equal(m.m21, 1, 6); munit_assert_double_equal(m.m22,  0, 6); munit_assert_double_equal(m.m23, 0, 6);
+  munit_assert_double_equal(m.m31, 0, 6); munit_assert_double_equal(m.m32,  0, 6); munit_assert_double_equal(m.m33, 1, 6);
+  return MUNIT_OK;
+}
+
+static MunitResult test_no_rotate(const MunitParameter params[], void *data) {
+  matrix_t m = rotate_matrix(quaternion_rotation(0, vector(0, 0, 1)), matrix(1, 2, 3, 4, 5, 6, 7, 8, 9));
+  munit_assert_double_equal(m.m11, 1, 6); munit_assert_double_equal(m.m12, 2, 6); munit_assert_double_equal(m.m13, 3, 6);
+  munit_assert_double_equal(m.m21, 4, 6); munit_assert_double_equal(m.m22, 5, 6); munit_assert_double_equal(m.m23, 6, 6);
+  munit_assert_double_equal(m.m31, 7, 6); munit_assert_double_equal(m.m32, 8, 6); munit_assert_double_equal(m.m33, 9, 6);
+  return MUNIT_OK;
+}
+
+static MunitResult test_rotate_matrix(const MunitParameter params[], void *data) {
+  matrix_t m = rotate_matrix(quaternion_rotation(M_PI / 2, vector(0, 0, 1)), matrix(1, 2, 3, 4, 5, 6, 7, 8, 9));
+  munit_assert_double_equal(m.m11,  5, 6); munit_assert_double_equal(m.m12, -4, 6); munit_assert_double_equal(m.m13, -6, 6);
+  munit_assert_double_equal(m.m21, -2, 6); munit_assert_double_equal(m.m22,  1, 6); munit_assert_double_equal(m.m23,  3, 6);
+  munit_assert_double_equal(m.m31, -8, 6); munit_assert_double_equal(m.m32,  7, 6); munit_assert_double_equal(m.m33,  9, 6);
   return MUNIT_OK;
 }
 
@@ -157,5 +167,7 @@ MunitTest test_quaternion[] = {
   {"/rotate_vector"  , test_rotate_vector  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/identity_matrix", test_identity_matrix, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/rotation_matrix", test_rotation_matrix, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/no_rotate"      , test_no_rotate      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/rotate_matrix"  , test_rotate_matrix  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL              , NULL                , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
 };
