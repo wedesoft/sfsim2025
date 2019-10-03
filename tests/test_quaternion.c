@@ -83,6 +83,15 @@ static MunitResult test_conjugate(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_add(const MunitParameter params[], void *data) {
+  quaternion_t result = quaternion_add(quaternion(1, 2, 3, 4), quaternion(5, 6, 7, 8));
+  munit_assert_double(result.a, ==,  6);
+  munit_assert_double(result.b, ==,  8);
+  munit_assert_double(result.c, ==, 10);
+  munit_assert_double(result.d, ==, 12);
+  return MUNIT_OK;
+}
+
 static MunitResult test_product(const MunitParameter params[], void *data) {
   munit_assert_true(quaternion_eq(quaternion_product(quaternion(2, 0, 0, 0), quaternion(2, 0, 0, 0)), quaternion( 4,  0,  0,  0)));
   munit_assert_true(quaternion_eq(quaternion_product(quaternion(2, 0, 0, 0), quaternion(0, 1, 0, 0)), quaternion( 0,  2,  0,  0)));
@@ -162,6 +171,7 @@ MunitTest test_quaternion[] = {
   {"/no_rotation"    , test_no_rotation    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/rotation"       , test_rotation       , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/conjugate"      , test_conjugate      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/add"            , test_add            , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/product"        , test_product        , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/dont_rotate"    , test_dont_rotate    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/rotate_vector"  , test_rotate_vector  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},

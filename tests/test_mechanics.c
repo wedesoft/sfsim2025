@@ -120,6 +120,17 @@ static MunitResult test_consider_orientation(const MunitParameter params[], void
   return MUNIT_OK;
 }
 
+static MunitResult test_add_states(const MunitParameter params[], void *data) {
+  state_t *s1 = state(vector(1, 0, 0), vector(3, 0, 0), quaternion(-1, 0, 0, 0), vector(0.4, 0, 0));
+  state_t *s2 = state(vector(2, 0, 0), vector(4, 0, 0), quaternion( 2, 0, 0, 0), vector(0.1, 0, 0));
+  state_t *s = add_states(s1, s2);
+  munit_assert_double(s->position.x, ==, 3);
+  munit_assert_double(s->linear_momentum.x, ==, 7);
+  munit_assert_double(s->orientation.a, ==, 1);
+  munit_assert_double(s->angular_momentum.x, ==, 0.5);
+  return MUNIT_OK;
+}
+
 MunitTest test_mechanics[] = {
   {"/state"               , test_state               , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/runge_kutta"         , test_runge_kutta         , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
@@ -132,5 +143,6 @@ MunitTest test_mechanics[] = {
   {"/orientation_change"  , test_orientation_change  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/consider_inertia"    , test_consider_inertia    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/consider_orientation", test_consider_orientation, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/add_states"          , test_add_states          , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                   , NULL                     , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

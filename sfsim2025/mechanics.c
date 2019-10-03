@@ -32,3 +32,13 @@ void *state_change(double t, double dt, void *s_, void *data_) {
   state_t *result = state(position_change, linear_momentum_change, orientation_change, angular_momentum_change);
   return result;
 }
+
+// Add two states.
+void *add_states(void *a_, void *b_) {
+  state_t *a = a_;
+  state_t *b = b_;
+  return state(vector_add(a->position, b->position),
+               vector_add(a->linear_momentum, b->linear_momentum),
+               quaternion_add(a->orientation, b->orientation),
+               vector_add(a->angular_momentum, b->angular_momentum));
+};

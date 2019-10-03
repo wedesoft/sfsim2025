@@ -50,6 +50,11 @@ inline quaternion_t quaternion_conjugate(quaternion_t q) {
   return quaternion(q.a * scale, -q.b * scale, -q.c * scale, -q.d * scale);
 }
 
+// Add two quaternions.
+inline quaternion_t quaternion_add(quaternion_t q, quaternion_t r) {
+  return quaternion(q.a + r.a, q.b + r.b, q.c + r.c, q.d + r.d);
+}
+
 // Get product of two quaternions.
 inline quaternion_t quaternion_product(quaternion_t q, quaternion_t r) {
   return quaternion(q.a * r.a - q.b * r.b - q.c * r.c - q.d * r.d,
