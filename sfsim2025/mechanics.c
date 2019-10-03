@@ -21,9 +21,9 @@ void *runge_kutta(void *y0, double dt, void *f(double, double, void *, void *), 
 void *state_change(double t, double dt, void *s_, void *data_) {
   state_t *s = s_;
   body_info_t *data = data_;
-  double scale_momentum = dt / data->mass;
+  double dt_div_mass = dt / data->mass;
   vector_t position_change =
-    vector(s->linear_momentum.x * scale_momentum, s->linear_momentum.y * scale_momentum, s->linear_momentum.z * scale_momentum);
+    vector(s->linear_momentum.x * dt_div_mass, s->linear_momentum.y * dt_div_mass, s->linear_momentum.z * dt_div_mass);
   vector_t linear_momentum_change = vector(data->force.x * dt, data->force.y * dt, data->force.z * dt);
   vector_t angular_momentum_change = vector(data->torque.x * dt, data->torque.y * dt, data->torque.z * dt);
   state_t *result = state(position_change, linear_momentum_change, quaternion(0, 0, 0, 0), angular_momentum_change);

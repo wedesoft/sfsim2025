@@ -78,16 +78,37 @@ static MunitResult test_angular_momentum(const MunitParameter params[], void *da
   return MUNIT_OK;
 }
 
+static MunitResult test_zero_angular_speed(const MunitParameter params[], void *data) {
+  vector_t result = angular_velocity(diagonal(1, 2, 4), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  munit_assert_double(result.x, ==, 0); munit_assert_double(result.y, ==, 0); munit_assert_double(result.z, ==, 0);
+  return MUNIT_OK;
+}
+
+static MunitResult test_rotational_inertia(const MunitParameter params[], void *data) {
+  vector_t result = angular_velocity(diagonal(1, 2, 4), quaternion(1, 0, 0, 0), vector(2, 4, 6));
+  munit_assert_double_equal(result.x, 2, 6); munit_assert_double_equal(result.y, 2, 6); munit_assert_double_equal(result.z, 1.5, 6);
+  return MUNIT_OK;
+}
+
+static MunitResult test_rotated_inertia(const MunitParameter params[], void *data) {
+  vector_t result = angular_velocity(diagonal(1, 2, 4), quaternion_rotation(M_PI / 2, vector(1, 0, 0)), vector(2, 4, 6));
+  munit_assert_double_equal(result.x, 2, 6); munit_assert_double_equal(result.y, 1, 6); munit_assert_double_equal(result.z, 3, 6);
+  return MUNIT_OK;
+}
+
 static MunitResult test_orientation_change(const MunitParameter params[], void *data) {
   return MUNIT_SKIP;
 }
 
 MunitTest test_mechanics[] = {
   {"/state"             , test_state             , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/runge_kutta"       , test_runge_kutta       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/runge_kutta"       , test_runge_kutta       , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/position_change"   , test_position_change   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/momentum_change"   , test_momentum_change   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/angular_momentum"  , test_angular_momentum  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/zero_angular_speed", test_zero_angular_speed, NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/rotational_inertia", test_rotational_inertia, NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/rotated_inertia"   , test_rotated_inertia   , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/orientation_change", test_orientation_change, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                 , NULL                   , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

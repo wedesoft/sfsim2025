@@ -30,4 +30,9 @@ inline state_t *state(vector_t position, vector_t linear_momentum, quaternion_t 
 void *runge_kutta(void *y0, double dt, void *f(double, double, void *, void *), void *add(void *, void *),
                   void *scale(void *, double), void *data);
 
+// Determine angular velocity of rotated object with known angular momentum.
+inline vector_t angular_velocity(matrix_t inertia, quaternion_t orientation, vector_t angular_momentum) {
+  return matrix_vector_dot(inverse(rotate_matrix(orientation, inertia)), angular_momentum);
+}
+
 void *state_change(double t, double dt, void *s_, void *data_);
