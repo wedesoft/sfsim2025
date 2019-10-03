@@ -123,11 +123,21 @@ static MunitResult test_consider_orientation(const MunitParameter params[], void
 static MunitResult test_add_states(const MunitParameter params[], void *data) {
   state_t *s1 = state(vector(1, 0, 0), vector(3, 0, 0), quaternion(-1, 0, 0, 0), vector(0.4, 0, 0));
   state_t *s2 = state(vector(2, 0, 0), vector(4, 0, 0), quaternion( 2, 0, 0, 0), vector(0.1, 0, 0));
-  state_t *s = add_states(s1, s2);
-  munit_assert_double(s->position.x, ==, 3);
-  munit_assert_double(s->linear_momentum.x, ==, 7);
-  munit_assert_double(s->orientation.a, ==, 1);
-  munit_assert_double(s->angular_momentum.x, ==, 0.5);
+  state_t *result = add_states(s1, s2);
+  munit_assert_double(result->position.x, ==, 3);
+  munit_assert_double(result->linear_momentum.x, ==, 7);
+  munit_assert_double(result->orientation.a, ==, 1);
+  munit_assert_double(result->angular_momentum.x, ==, 0.5);
+  return MUNIT_OK;
+}
+
+static MunitResult test_scale_state(const MunitParameter params[], void *data) {
+  state_t *s = state(vector(1, 0, 0), vector(2, 0, 0), quaternion(-1, 0, 0, 0), vector(0.5, 0, 0));
+  state_t *result = scale_state(s, 2);
+  munit_assert_double(result->position.x, ==, 2);
+  munit_assert_double(result->linear_momentum.x, ==, 4);
+  munit_assert_double(result->orientation.a, ==, -2);
+  munit_assert_double(result->angular_momentum.x, ==, 1.0);
   return MUNIT_OK;
 }
 
@@ -144,5 +154,6 @@ MunitTest test_mechanics[] = {
   {"/consider_inertia"    , test_consider_inertia    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/consider_orientation", test_consider_orientation, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/add_states"          , test_add_states          , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/scale_state"         , test_scale_state         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                   , NULL                     , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

@@ -39,3 +39,5 @@ inline vector_t angular_velocity(matrix_t inertia, quaternion_t orientation, vec
 void *state_change(double t, double dt, void *s_, void *data_);
 
 void *add_states(void *a_, void *b_);
+
+void *scale_state(void *s_, double scale);

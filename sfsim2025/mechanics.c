@@ -41,4 +41,13 @@ void *add_states(void *a_, void *b_) {
                vector_add(a->linear_momentum, b->linear_momentum),
                quaternion_add(a->orientation, b->orientation),
                vector_add(a->angular_momentum, b->angular_momentum));
-};
+}
+
+// Scale a state.
+void *scale_state(void *s_, double scale) {
+  state_t *s = s_;
+  return state(vector_scale(s->position, scale),
+               vector_scale(s->linear_momentum, scale),
+               quaternion_scale(s->orientation, scale),
+               vector_scale(s->angular_momentum, scale));
+}

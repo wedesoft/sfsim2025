@@ -63,6 +63,10 @@ inline quaternion_t quaternion_product(quaternion_t q, quaternion_t r) {
                     q.a * r.d + q.b * r.c - q.c * r.b + q.d * r.a);
 }
 
+inline quaternion_t quaternion_scale(quaternion_t q, double scale) {
+  return quaternion(q.a * scale, q.b * scale, q.c * scale, q.d * scale);
+}
+
 // Use quaternion to rotate a vector.
 inline vector_t rotate_vector(quaternion_t q, vector_t v) {
   return quaternion_to_vector(quaternion_product(quaternion_product(q, vector_to_quaternion(v)), quaternion_conjugate(q)));

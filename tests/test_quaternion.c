@@ -112,6 +112,15 @@ static MunitResult test_product(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_scale(const MunitParameter params[], void *data) {
+  quaternion_t result = quaternion_scale(quaternion(1, 2, 3, 4), 2);
+  munit_assert_double(result.a, ==, 2);
+  munit_assert_double(result.b, ==, 4);
+  munit_assert_double(result.c, ==, 6);
+  munit_assert_double(result.d, ==, 8);
+  return MUNIT_OK;
+}
+
 static MunitResult test_dont_rotate(const MunitParameter params[], void *data) {
   vector_t v = rotate_vector(quaternion_rotation(0, vector(1, 0, 0)), vector(2, 4, 8));
   munit_assert_double_equal(v.x, 2, 6);
@@ -173,6 +182,7 @@ MunitTest test_quaternion[] = {
   {"/conjugate"      , test_conjugate      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/add"            , test_add            , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/product"        , test_product        , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/scale"          , test_scale          , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/dont_rotate"    , test_dont_rotate    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/rotate_vector"  , test_rotate_vector  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/identity_matrix", test_identity_matrix, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
