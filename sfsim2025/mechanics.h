@@ -13,6 +13,7 @@ typedef struct {
 
 typedef struct {
   double mass;
+  matrix_t inertia;
   vector_t force;
   vector_t torque;
 } body_info_t;

@@ -50,7 +50,7 @@ static MunitResult test_runge_kutta(const MunitParameter params[], void *data) {
 
 static MunitResult test_position_change(const MunitParameter params[], void *data) {
   state_t *s = state(vector(0, 0, 0), vector(1, 2, 3), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  body_info_t info = { .mass = 2.0, .force = vector(0, 0, 0), .torque = vector(0, 0, 0) };
+  body_info_t info = { .mass = 2.0, .inertia = diagonal(1, 1, 1), .force = vector(0, 0, 0), .torque = vector(0, 0, 0) };
   state_t *ds = state_change(0, 4, s, &info);
   munit_assert_double(ds->position.x, ==, 2);
   munit_assert_double(ds->position.y, ==, 4);
@@ -60,7 +60,7 @@ static MunitResult test_position_change(const MunitParameter params[], void *dat
 
 static MunitResult test_momentum_change(const MunitParameter params[], void *data) {
   state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  body_info_t info = { .mass = 1.0, .force = vector(1, 2, 3), .torque = vector(0, 0, 0) };
+  body_info_t info = { .mass = 1.0, .inertia = diagonal(1, 1, 1), .force = vector(1, 2, 3), .torque = vector(0, 0, 0) };
   state_t *ds = state_change(0, 2, s, &info);
   munit_assert_double(ds->linear_momentum.x, ==, 2);
   munit_assert_double(ds->linear_momentum.y, ==, 4);
@@ -70,7 +70,7 @@ static MunitResult test_momentum_change(const MunitParameter params[], void *dat
 
 static MunitResult test_angular_momentum(const MunitParameter params[], void *data) {
   state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  body_info_t info = { .mass = 1.0, .force = vector(1, 2, 3), .torque = vector(1, 2, 3) };
+  body_info_t info = { .mass = 1.0, .inertia = diagonal(1, 1, 1), .force = vector(1, 2, 3), .torque = vector(1, 2, 3) };
   state_t *ds = state_change(0, 2, s, &info);
   munit_assert_double(ds->angular_momentum.x, ==, 2);
   munit_assert_double(ds->angular_momentum.y, ==, 4);
@@ -97,18 +97,40 @@ static MunitResult test_rotated_inertia(const MunitParameter params[], void *dat
 }
 
 static MunitResult test_orientation_change(const MunitParameter params[], void *data) {
-  return MUNIT_SKIP;
+  state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.1, 0.2, 0.3));
+  body_info_t info = { .mass = 1.0, .inertia = diagonal(1, 1, 1), .force = vector(1, 2, 3), .torque = vector(1, 2, 3) };
+  state_t *ds = state_change(0, 2, s, &info);
+  munit_assert_double_equal(ds->orientation.b, 0.1, 6);
+  return MUNIT_OK;
+}
+
+static MunitResult test_consider_inertia(const MunitParameter params[], void *data) {
+  state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.1, 0.2, 0.3));
+  body_info_t info = { .mass = 1.0, .inertia = diagonal(0.5, 0.5, 0.5), .force = vector(1, 2, 3), .torque = vector(1, 2, 3) };
+  state_t *ds = state_change(0, 2, s, &info);
+  munit_assert_double_equal(ds->orientation.b, 0.2, 6);
+  return MUNIT_OK;
+}
+
+static MunitResult test_consider_orientation(const MunitParameter params[], void *data) {
+  state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(-1, 0, 0, 0), vector(0.1, 0.2, 0.3));
+  body_info_t info = { .mass = 1.0, .inertia = diagonal(1, 1, 1), .force = vector(1, 2, 3), .torque = vector(1, 2, 3) };
+  state_t *ds = state_change(0, 2, s, &info);
+  munit_assert_double_equal(ds->orientation.b, -0.1, 6);
+  return MUNIT_OK;
 }
 
 MunitTest test_mechanics[] = {
-  {"/state"             , test_state             , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/runge_kutta"       , test_runge_kutta       , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
-  {"/position_change"   , test_position_change   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/momentum_change"   , test_momentum_change   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/angular_momentum"  , test_angular_momentum  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/zero_angular_speed", test_zero_angular_speed, NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
-  {"/rotational_inertia", test_rotational_inertia, NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
-  {"/rotated_inertia"   , test_rotated_inertia   , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
-  {"/orientation_change", test_orientation_change, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {NULL                 , NULL                   , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
+  {"/state"               , test_state               , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/runge_kutta"         , test_runge_kutta         , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/position_change"     , test_position_change     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/momentum_change"     , test_momentum_change     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/angular_momentum"    , test_angular_momentum    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/zero_angular_speed"  , test_zero_angular_speed  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/rotational_inertia"  , test_rotational_inertia  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/rotated_inertia"     , test_rotated_inertia     , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/orientation_change"  , test_orientation_change  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/consider_inertia"    , test_consider_inertia    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/consider_orientation", test_consider_orientation, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {NULL                   , NULL                     , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
