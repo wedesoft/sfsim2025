@@ -7,16 +7,7 @@
 
 
 static state_t *s = 0;
-
-void wireBox(GLdouble width, GLdouble height, GLdouble depth) {
-  glPushMatrix();
-  glScalef(width, height, depth);
-  glutWireCube(1.0);
-  glPopMatrix();
-}
-
 struct timespec t0;
-
 double w = 2.0;
 double h = 0.4;
 double d = 1.0;
@@ -32,11 +23,12 @@ void display() {
     s->position.x, s->position.y, s->position.z, 1
   };
   glLoadMatrixd(m);
-  wireBox(w, h, d);
+  glScalef(w, h, d);
+  glutWireCube(1.0);
   glFlush();
 }
 
-void idle() {
+void step() {
   struct timespec t1;
   clock_gettime(CLOCK_REALTIME, &t1);
   double elapsed = t1.tv_sec - t0.tv_sec + (t1.tv_nsec - t0.tv_nsec) * 1e-9;
@@ -50,6 +42,7 @@ void idle() {
   t0 = t1;
 }
 
+// https://lazyfoo.net/tutorials/SDL/
 int main(int argc, char *argv[]) {
   GC_INIT();
   glutInit(&argc, argv);
@@ -72,7 +65,7 @@ int main(int argc, char *argv[]) {
       if (e.type == SDL_QUIT)
         quit = true;
     };
-    idle();
+    step();
     display();
     SDL_GL_SwapWindow(window);
   };
