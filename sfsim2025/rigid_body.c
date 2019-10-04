@@ -183,9 +183,10 @@ plane_t separating_plane(rigid_body_t *body, rigid_body_t *other, double *distan
   return result;
 }
 
-// Get contact points and distance between two bodies.
-list_t *contact_points(rigid_body_t *body, rigid_body_t *other, double *distance) {
+// Get contact points, contact normal, and distance between two bodies.
+list_t *contact_points(rigid_body_t *body, rigid_body_t *other, double *distance, vector_t *normal) {
   plane_t p = separating_plane(body, other, distance);
+  if (normal) *normal = p.normal;
   list_t *candidates1 = convex_hull(plane_coordinates(p, penetration_candidates(negative_plane(p), body)));
   list_t *candidates2 = convex_hull(plane_coordinates(p, penetration_candidates(p, other)));
   return plane_points(p, convex_hull(intersection(candidates1, candidates2)));

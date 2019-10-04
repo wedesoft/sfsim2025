@@ -348,7 +348,8 @@ static MunitResult test_contact_points(const MunitParameter params[], void *data
   rigid_body_t *cube1 = make_cube(0, 0, 0);
   rigid_body_t *cube2 = make_cube(1, 1, 2);
   double distance;
-  list_t *points = contact_points(cube1, cube2, &distance);
+  vector_t normal;
+  list_t *points = contact_points(cube1, cube2, &distance, &normal);
   munit_assert_double(distance, ==, 0);
   munit_assert_int(points->size, ==, 4);
   munit_assert_double(get_vector(points)[0].x, ==, 2);
@@ -363,6 +364,9 @@ static MunitResult test_contact_points(const MunitParameter params[], void *data
   munit_assert_double(get_vector(points)[3].x, ==, 2);
   munit_assert_double(get_vector(points)[3].y, ==, 1);
   munit_assert_double(get_vector(points)[3].z, ==, 2);
+  munit_assert_double(normal.x, ==, 0);
+  munit_assert_double(normal.y, ==, 0);
+  munit_assert_double(normal.z, ==, 1);
   return MUNIT_OK;
 }
 
@@ -370,12 +374,16 @@ static MunitResult test_contact_points2(const MunitParameter params[], void *dat
   rigid_body_t *cube1 = make_rotated_cube1(0);
   rigid_body_t *cube2 = make_rotated_cube2(2);
   double distance;
-  list_t *points = contact_points(cube1, cube2, &distance);
+  vector_t normal;
+  list_t *points = contact_points(cube1, cube2, &distance, &normal);
   munit_assert_double(distance, ==, 0);
   munit_assert_int(points->size, ==, 1);
   munit_assert_double(get_vector(points)[0].x, ==, 1);
   munit_assert_double(get_vector(points)[0].y, ==, 1);
   munit_assert_double(get_vector(points)[0].z, ==, 2);
+  munit_assert_double(normal.x, ==, 0);
+  munit_assert_double(normal.y, ==, 0);
+  munit_assert_double(normal.z, ==, 1);
   return MUNIT_OK;
 }
 
@@ -383,7 +391,8 @@ static MunitResult test_no_contact(const MunitParameter params[], void *data) {
   rigid_body_t *cube1 = make_cube(0, 0, 0);
   rigid_body_t *cube2 = make_cube(0, 0, 3);
   double distance;
-  list_t *points = contact_points(cube1, cube2, &distance);
+  vector_t normal;
+  list_t *points = contact_points(cube1, cube2, &distance, &normal);
   munit_assert_double(distance, ==, 1);
   munit_assert_int(points->size, ==, 0);
   return MUNIT_OK;

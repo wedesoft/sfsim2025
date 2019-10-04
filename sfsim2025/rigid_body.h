@@ -48,4 +48,4 @@ list_t *penetration_candidates(plane_t p, rigid_body_t *body);
 
 plane_t separating_plane(rigid_body_t *body, rigid_body_t *other, double *distance);
 
-list_t *contact_points(rigid_body_t *body, rigid_body_t *other, double *distance);
+list_t *contact_points(rigid_body_t *body, rigid_body_t *other, double *distance, vector_t *normal);
