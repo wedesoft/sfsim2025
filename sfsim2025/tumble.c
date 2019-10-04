@@ -43,7 +43,7 @@ void reshape(GLint w, GLint h) {
 void idle() {
   body_info_t data = {
     .mass = 1,
-    .inertia = diagonal(pow(h, 2) + pow(d, 2), pow(w, 2) + pow(d, 2), pow(w, 2) + pow(h, 2)),
+    .inertia = inertia_cuboid(1, w, h, d),
     .force = vector(0, 0, 0),
     .torque = vector(0, 0, 0)
   };
@@ -62,7 +62,7 @@ int main(int argc, char** argv) {
   glutInitWindowPosition(80, 80);
   glutInitWindowSize(800, 600);
   glutCreateWindow("tumble");
-  s = state(vector(0, 0, -4), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.1, 0.01, 2));
+  s = state(vector(0, 0, -4), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.01, 0.01, 0.2));
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);
   glutIdleFunc(idle);

@@ -141,6 +141,30 @@ static MunitResult test_scale_state(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_inertia_unit_cube(const MunitParameter params[], void *data) {
+  matrix_t result = inertia_cuboid(6, 1, 1, 1);
+  munit_assert_double(result.m11, ==, 1); munit_assert_double(result.m12, ==, 0); munit_assert_double(result.m13, ==, 0);
+  munit_assert_double(result.m21, ==, 0); munit_assert_double(result.m22, ==, 1); munit_assert_double(result.m23, ==, 0);
+  munit_assert_double(result.m31, ==, 0); munit_assert_double(result.m32, ==, 0); munit_assert_double(result.m33, ==, 1);
+  return MUNIT_OK;
+}
+
+static MunitResult test_heavy_cube(const MunitParameter params[], void *data) {
+  matrix_t result = inertia_cuboid(12, 1, 1, 1);
+  munit_assert_double(result.m11, ==, 2); munit_assert_double(result.m12, ==, 0); munit_assert_double(result.m13, ==, 0);
+  munit_assert_double(result.m21, ==, 0); munit_assert_double(result.m22, ==, 2); munit_assert_double(result.m23, ==, 0);
+  munit_assert_double(result.m31, ==, 0); munit_assert_double(result.m32, ==, 0); munit_assert_double(result.m33, ==, 2);
+  return MUNIT_OK;
+}
+
+static MunitResult test_inertia_cuboid(const MunitParameter params[], void *data) {
+  matrix_t result = inertia_cuboid(12, 2, 3, 5);
+  munit_assert_double(result.m11, ==, 34); munit_assert_double(result.m12, ==,  0); munit_assert_double(result.m13, ==,  0);
+  munit_assert_double(result.m21, ==,  0); munit_assert_double(result.m22, ==, 29); munit_assert_double(result.m23, ==,  0);
+  munit_assert_double(result.m31, ==,  0); munit_assert_double(result.m32, ==,  0); munit_assert_double(result.m33, ==, 13);
+  return MUNIT_OK;
+}
+
 MunitTest test_mechanics[] = {
   {"/state"               , test_state               , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/runge_kutta"         , test_runge_kutta         , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
@@ -155,5 +179,8 @@ MunitTest test_mechanics[] = {
   {"/consider_orientation", test_consider_orientation, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/add_states"          , test_add_states          , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/scale_state"         , test_scale_state         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/inertia_unit_cube"   , test_inertia_unit_cube   , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/heavy_cube"          , test_heavy_cube          , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/inertia_cuboid"      , test_inertia_cuboid      , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                   , NULL                     , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

@@ -8,6 +8,7 @@ typedef struct {
   double m31; double m32; double m33;
 } matrix_t;
 
+// Initialize a matrix.
 static inline matrix_t matrix(double m11, double m12, double m13,
                               double m21, double m22, double m23,
                               double m31, double m32, double m33) {
@@ -46,6 +47,12 @@ static inline matrix_t matrix_dot(matrix_t a, matrix_t b) {
 
 matrix_t inverse(matrix_t m);
 
+// Initialize a diagonal matrix.
 static inline matrix_t diagonal(double m11, double m22, double m33) {
   return matrix(m11, 0, 0, 0, m22, 0, 0, 0, m33);
+}
+
+// Scale matrix elements with a factor.
+static inline matrix_t matrix_scale(matrix_t m, double s) {
+  return matrix(m.m11 * s, m.m12 * s, m.m13 * s, m.m21 * s, m.m22 * s, m.m23 * s, m.m31 * s, m.m32 * s, m.m33 * s);
 }

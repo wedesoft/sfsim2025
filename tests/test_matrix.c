@@ -65,6 +65,14 @@ static MunitResult test_diagonal(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_scale(const MunitParameter params[], void *data) {
+  matrix_t result = matrix_scale(matrix(1, 2, 3, 4, 5, 6, 7, 8, 9), 2);
+  munit_assert_double(result.m11, ==,  2); munit_assert_double(result.m12, ==,  4); munit_assert_double(result.m13, ==,  6);
+  munit_assert_double(result.m21, ==,  8); munit_assert_double(result.m22, ==, 10); munit_assert_double(result.m23, ==, 12);
+  munit_assert_double(result.m31, ==, 14); munit_assert_double(result.m32, ==, 16); munit_assert_double(result.m33, ==, 18);
+  return MUNIT_OK;
+}
+
 MunitTest test_matrix[] = {
   {"/create"              , test_create              , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/cross_product_matrix", test_cross_product_matrix, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
@@ -73,5 +81,6 @@ MunitTest test_matrix[] = {
   {"/matrix_dot"          , test_matrix_dot          , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/inverse"             , test_inverse             , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/diagonal"            , test_diagonal            , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/scale"               , test_scale               , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                   , NULL                     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
 };
