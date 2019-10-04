@@ -1,4 +1,3 @@
-#include <tgmath.h>
 #include <GL/glut.h>
 #include <gc.h>
 #include <time.h>
