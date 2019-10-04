@@ -20,7 +20,6 @@ double d = 1.0;
 void display() {
   glClear(GL_COLOR_BUFFER_BIT);
   glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
   matrix_t r = rotation_matrix(s->orientation);
   double m[16] = {
     r.m11, r.m21, r.m31, 0,
