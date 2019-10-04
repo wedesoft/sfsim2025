@@ -16,28 +16,28 @@ list_t *make_list(void);
 
 void append_gluint(list_t *list, GLuint value);
 
-inline GLuint *get_gluint(list_t *list) { return (GLuint *)list->element; }
+static inline GLuint *get_gluint(list_t *list) { return (GLuint *)list->element; }
 
 void append_glfloat(list_t *list, GLfloat value);
 
-inline GLfloat *get_glfloat(list_t *list) { return (GLfloat *)list->element; }
+static inline GLfloat *get_glfloat(list_t *list) { return (GLfloat *)list->element; }
 
 void append_pointer(list_t *list, void *value);
 
-inline void **get_pointer(list_t *list) { return (void **)list->element; }
+static inline void **get_pointer(list_t *list) { return (void **)list->element; }
 
 void append_vector(list_t *list, vector_t value);
 
-inline vector_t *get_vector(list_t *list) { return (vector_t *)list->element; }
+static inline vector_t *get_vector(list_t *list) { return (vector_t *)list->element; }
 
 void append_face(list_t *list, face_t value);
 
-inline face_t *get_face(list_t *list) { return (face_t *)list->element; }
+static inline face_t *get_face(list_t *list) { return (face_t *)list->element; }
 
 void append_edge(list_t *list, edge_t value);
 
-inline edge_t *get_edge(list_t *list) { return (edge_t *)list->element; }
+static inline edge_t *get_edge(list_t *list) { return (edge_t *)list->element; }
 
 void append_coordinate(list_t *list, coordinate_t value);
 
-inline coordinate_t *get_coordinate(list_t *list) { return (coordinate_t *)list->element; }
+static inline coordinate_t *get_coordinate(list_t *list) { return (coordinate_t *)list->element; }

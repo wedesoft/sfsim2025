@@ -18,15 +18,15 @@ void add_point(rigid_body_t *body, vector_t point);
 
 void add_face(rigid_body_t *body, face_t face);
 
-inline vector_t edge_tail(rigid_body_t *body, edge_t edge) {
+static inline vector_t edge_tail(rigid_body_t *body, edge_t edge) {
   return get_vector(body->points)[edge.a];
 }
 
-inline vector_t edge_head(rigid_body_t *body, edge_t edge) {
+static inline vector_t edge_head(rigid_body_t *body, edge_t edge) {
   return get_vector(body->points)[edge.b];
 }
 
-inline vector_t edge_vector(rigid_body_t *body, edge_t edge) {
+static inline vector_t edge_vector(rigid_body_t *body, edge_t edge) {
   return vector_subtract(edge_head(body, edge), edge_tail(body, edge));
 }
 

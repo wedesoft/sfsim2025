@@ -7,7 +7,7 @@ typedef struct {
   int c;
 } face_t;
 
-inline face_t face(int a, int b, int c) {
+static inline face_t face(int a, int b, int c) {
   face_t result;
   result.a = a;
   result.b = b;
