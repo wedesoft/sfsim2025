@@ -32,12 +32,7 @@ void step() {
   struct timespec t1;
   clock_gettime(CLOCK_REALTIME, &t1);
   double elapsed = t1.tv_sec - t0.tv_sec + (t1.tv_nsec - t0.tv_nsec) * 1e-9;
-  body_info_t data = {
-    .mass = 1,
-    .inertia = inertia_cuboid(1, w, h, d),
-    .force = vector(0, 0, 0),
-    .torque = vector(0, 0, 0)
-  };
+  body_info_t data = {.mass = 1, .inertia = inertia_cuboid(1, w, h, d), .force = vector(0, 0, 0), .torque = vector(0, 0, 0)};
   s = runge_kutta(s, elapsed, state_change, add_states, scale_state, &data);
   t0 = t1;
 }
