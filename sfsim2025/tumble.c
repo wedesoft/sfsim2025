@@ -1,6 +1,8 @@
-#include <GL/glut.h>
 #include <gc.h>
 #include <time.h>
+#include <SDL.h>
+#include <SDL_opengl.h>
+#include <GL/glut.h>
 #include "sfsim2025/mechanics.h"
 
 
@@ -12,6 +14,8 @@ void wireBox(GLdouble width, GLdouble height, GLdouble depth) {
   glutWireCube(1.0);
   glPopMatrix();
 }
+
+struct timespec t0;
 
 double w = 2.0;
 double h = 0.4;
@@ -32,15 +36,6 @@ void display() {
   glFlush();
 }
 
-void reshape(GLint w, GLint h) {
-  glViewport(0, 0, w, h);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  gluPerspective(65.0, (GLfloat)w/(GLfloat)h, 1.0, 20.0);
-}
-
-struct timespec t0;
-
 void idle() {
   struct timespec t1;
   clock_gettime(CLOCK_REALTIME, &t1);
@@ -52,26 +47,36 @@ void idle() {
     .torque = vector(0, 0, 0)
   };
   s = runge_kutta(s, elapsed, state_change, add_states, scale_state, &data);
-  glutPostRedisplay();
   t0 = t1;
 }
 
-void init() {
-  glShadeModel(GL_FLAT);
-}
-
-int main(int argc, char** argv) {
+int main(int argc, char *argv[]) {
   GC_INIT();
   glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-  glutInitWindowPosition(80, 80);
-  glutInitWindowSize(800, 600);
-  glutCreateWindow("tumble");
-  s = state(vector(0, 0, -4), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.02, 0.02, 0.4));
-  glutDisplayFunc(display);
-  glutReshapeFunc(reshape);
-  glutIdleFunc(idle);
-  init();
+  SDL_Init(SDL_INIT_VIDEO);
+  SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+  SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 1);
+  SDL_Window *window = SDL_CreateWindow("tumble", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480,
+                                        SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+  SDL_GLContext context = SDL_GL_CreateContext(window);
+  glViewport(0, 0, 640, 480);
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  gluPerspective(65.0, (GLfloat)1024/(GLfloat)768, 1.0, 20.0);
+  s = state(vector(0, 0, -4), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.02, 0.02, 0.8));
   clock_gettime(CLOCK_REALTIME, &t0);
-  glutMainLoop();
+  bool quit = false;
+  while (!quit) {
+		SDL_Event e;
+    while (SDL_PollEvent(&e) != 0) {
+      if (e.type == SDL_QUIT)
+        quit = true;
+    };
+    idle();
+    display();
+    SDL_GL_SwapWindow(window);
+  };
+  SDL_DestroyWindow(window);
+  SDL_Quit();
+  return EXIT_SUCCESS;
 }
