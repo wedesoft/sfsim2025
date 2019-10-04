@@ -1,6 +1,7 @@
 #include <tgmath.h>
 #include <GL/glut.h>
 #include <gc.h>
+#include <time.h>
 #include "sfsim2025/mechanics.h"
 
 
@@ -39,15 +40,21 @@ void reshape(GLint w, GLint h) {
   gluPerspective(65.0, (GLfloat)w/(GLfloat)h, 1.0, 20.0);
 }
 
+struct timespec t0;
+
 void idle() {
+  struct timespec t1;
+  clock_gettime(CLOCK_REALTIME, &t1);
+  double elapsed = t1.tv_sec - t0.tv_sec + (t1.tv_nsec - t0.tv_nsec) * 1e-9;
   body_info_t data = {
     .mass = 1,
     .inertia = inertia_cuboid(1, w, h, d),
     .force = vector(0, 0, 0),
     .torque = vector(0, 0, 0)
   };
-  s = runge_kutta(s, 0.01, state_change, add_states, scale_state, &data);
+  s = runge_kutta(s, elapsed, state_change, add_states, scale_state, &data);
   glutPostRedisplay();
+  t0 = t1;
 }
 
 void init() {
@@ -61,10 +68,11 @@ int main(int argc, char** argv) {
   glutInitWindowPosition(80, 80);
   glutInitWindowSize(800, 600);
   glutCreateWindow("tumble");
-  s = state(vector(0, 0, -4), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.01, 0.01, 0.2));
+  s = state(vector(0, 0, -4), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.02, 0.02, 0.4));
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);
   glutIdleFunc(idle);
   init();
+  clock_gettime(CLOCK_REALTIME, &t0);
   glutMainLoop();
 }
