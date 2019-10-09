@@ -26,6 +26,7 @@ void *state_change(double t, double dt, void *s_, void *data_) {
     vector(s->linear_momentum.x * dt_div_mass, s->linear_momentum.y * dt_div_mass, s->linear_momentum.z * dt_div_mass);
   vector_t linear_momentum_change = vector(data->force.x * dt, data->force.y * dt, data->force.z * dt);
   vector_t angular_velocity_ = angular_velocity(data->inertia, s->orientation, s->angular_momentum);
+  // https://www.cl.cam.ac.uk/techreports/UCAM-CL-TR-683.pdf section 2.3.3
   quaternion_t orientation_change = quaternion_product(vector_to_quaternion(vector_scale(angular_velocity_, 0.5 * dt)),
                                                        s->orientation);
   vector_t angular_momentum_change = vector(data->torque.x * dt, data->torque.y * dt, data->torque.z * dt);
