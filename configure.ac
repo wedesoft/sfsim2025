@@ -27,21 +27,48 @@ AX_HAVE_OPENGL
 AC_MSG_CHECKING([for GL])
 if test "x$have_GL" != "xyes"; then
   AC_MSG_RESULT([no])
-  AC_MSG_ERROR([Could not find GL])
+  oldlibs="$LIBS"
+  LIBS="$LIBS -lopengl32"
+  AC_MSG_CHECKING([for opengl32])
+  AC_TRY_LINK([#include <GL/GL.h>],
+	      [glLoadMatrixd(0)],
+	      GL_LIBS="-lopengl32",
+              AC_MSG_ERROR([Could not find opengl32]))
+  AC_MSG_RESULT([yes])
+  AC_SUBST(GL_LIBS)
+  LIBS="$oldlibs"
 else
   AC_MSG_RESULT([yes])
 fi
 AC_MSG_CHECKING([for GLU])
 if test "x$have_GLU" != "xyes"; then
   AC_MSG_RESULT([no])
-  AC_MSG_ERROR([Could not find GLU])
+  oldlibs="$LIBS"
+  LIBS="$LIBS -lglu32 -lopengl32"
+  AC_MSG_CHECKING([for glu32])
+  AC_TRY_LINK([#include <GL/glu.h>],
+	      [gluPerspective(0, 0, 0, 0)],
+	      GL_LIBS="-lglu32 $GL_LIBS",
+              AC_MSG_ERROR([Could not find glu32]))
+  AC_MSG_RESULT([yes])
+  AC_SUBST(GL_LIBS)
+  LIBS="$oldlibs"
 else
   AC_MSG_RESULT([yes])
-fi
+ fi
 AC_MSG_CHECKING([for glut])
 if test "x$have_glut" != "xyes"; then
   AC_MSG_RESULT([no])
-  AC_MSG_ERROR([Could not find glut])
+  oldlibs="$LIBS"
+  LIBS="$LIBS -lfreeglut -lglu32 -lopengl32"
+  AC_MSG_CHECKING([for freeglut])
+  AC_TRY_LINK([#include <GL/glut.h>],
+	      [glutInit(0, 0)],
+	      GL_LIBS="-lfreeglut $GL_LIBS",
+              AC_MSG_ERROR([Could not find freeglut]))
+  AC_MSG_RESULT([yes])
+  AC_SUBST(GL_LIBS)
+  LIBS="$oldlibs"
 else
   AC_MSG_RESULT([yes])
 fi

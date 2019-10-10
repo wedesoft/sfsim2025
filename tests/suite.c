@@ -27,8 +27,6 @@ static const MunitSuite test_suite[] = {
 };
 
 int main(int argc, char *argv[MUNIT_ARRAY_PARAM(argc + 1)]) {
-  GC_INIT();
   int result = munit_suite_main(&test_suite[0], (void *)NULL, argc, argv);
-  GC_gcollect();
   return result;
 }

@@ -1,3 +1,4 @@
+#define SDL_MAIN_HANDLED
 #include <gc.h>
 #include <time.h>
 #include <SDL.h>
@@ -38,10 +39,10 @@ void step() {
 }
 
 // https://lazyfoo.net/tutorials/SDL/
-int main(int argc, char *argv[]) {
-  GC_INIT();
+int main(int argc, char **argv) {
   glutInit(&argc, argv);
   SDL_Init(SDL_INIT_VIDEO);
+  GC_INIT();
   SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 3);
   SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 1);
   SDL_Window *window = SDL_CreateWindow("tumble", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480,
