@@ -28,8 +28,7 @@ void *state_change(double t, double dt, void *s_, void *data_) {
   quaternion_t orientation_change = quaternion_product(vector_to_quaternion(vector_scale(s->rotation, 0.5 * dt)), s->orientation);
   matrix_t inertia = rotate_matrix(s->orientation, data->inertia);
   vector_t coriolis = vector_negative(cross_product(s->rotation, matrix_vector_dot(inertia, s->rotation)));
-  vector_t rotation_change =
-    vector_scale(matrix_vector_dot(inverse(inertia), vector_add(matrix_vector_dot(inverse(inertia), data->torque), coriolis)), dt);
+  vector_t rotation_change = vector_scale(matrix_vector_dot(inverse(inertia), vector_add(data->torque, coriolis)), dt);
   // https://physics.stackexchange.com/questions/412181/eulers-equation-for-rigid-body-rotation-applied-to-inertia-frame
   state_t *result = state(position_change, speed_change, orientation_change, rotation_change);
   return result;

@@ -70,11 +70,11 @@ static MunitResult test_speed_change(const MunitParameter params[], void *data) 
 
 static MunitResult test_rotation(const MunitParameter params[], void *data) {
   state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  body_info_t info = { .mass = 1.0, .inertia = diagonal(1, 2, 1), .force = vector(1, 2, 3), .torque = vector(1, 2, 3) };
+  body_info_t info = { .mass = 1.0, .inertia = diagonal(1, 2, 2), .force = vector(1, 2, 3), .torque = vector(1, 2, 3) };
   state_t *ds = state_change(0, 2, s, &info);
   munit_assert_double(ds->rotation.x, ==, 2);
-  munit_assert_double(ds->rotation.y, ==, 1);
-  munit_assert_double(ds->rotation.z, ==, 6);
+  munit_assert_double(ds->rotation.y, ==, 2);
+  munit_assert_double(ds->rotation.z, ==, 3);
   return MUNIT_OK;
 }
 
