@@ -5,6 +5,7 @@
 // Compute inverse matrix.
 matrix_t inverse(matrix_t m) {
   // https://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/threeD/index.htm
+  // https://stackoverflow.com/questions/3519959/computing-the-inverse-of-a-matrix-using-lapack-in-c
   double a[9] = {m.m11, m.m12, m.m13, m.m21, m.m22, m.m23, m.m31, m.m32, m.m33};
   int ipiv[3];
   clapack_dgetrf(CblasRowMajor, 3, 3, a, 3, ipiv);
