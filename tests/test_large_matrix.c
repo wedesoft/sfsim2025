@@ -1,4 +1,5 @@
 #include "sfsim2025/large_matrix.h"
+#include "test_large_matrix.h"
 #include "test_helper.h"
 
 

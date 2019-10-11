@@ -1,6 +1,7 @@
 #include <gc.h>
 #include "munit.h"
 #include "test_large_matrix.h"
+#include "test_large_vector.h"
 #include "test_list.h"
 #include "test_matrix.h"
 #include "test_mechanics.h"
@@ -13,6 +14,7 @@
 
 static MunitSuite test_sfsim[] = {
   {"/large_matrix", test_large_matrix, NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/large_vector", test_large_vector, NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/list"        , test_list        , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/matrix"      , test_matrix      , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/mechanics"   , test_mechanics   , NULL, 1, MUNIT_SUITE_OPTION_NONE},

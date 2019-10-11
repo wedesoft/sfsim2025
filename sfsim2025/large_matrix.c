@@ -16,7 +16,7 @@ large_matrix_t large_matrix_dot(large_matrix_t a, large_matrix_t b) {
       double *q = b.data + i;
       for (int k=0; k<a.cols; k++) {
         cell += *p * *q;
-        p += 1;
+        p++;
         q += b.cols;
       };
       *r++ = cell;
