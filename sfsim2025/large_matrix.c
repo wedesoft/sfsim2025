@@ -26,6 +26,23 @@ large_matrix_t large_matrix_dot(large_matrix_t a, large_matrix_t b) {
   return result;
 }
 
+// Return transposed matrix.
+large_matrix_t large_transpose(large_matrix_t a) {
+  large_matrix_t result = allocate_large_matrix(a.cols, a.rows);
+  double *r = result.data;
+  double *p0 = a.data;
+  for (int j=0; j<a.cols; j++) {
+    double *p = p0;
+    for (int i=0; i<a.rows; i++) {
+      *r = *p;
+      p += a.cols;
+      r++;
+    };
+    p0++;
+  };
+  return result;
+}
+
 // Compute inverse of large matrix.
 large_matrix_t large_inverse(large_matrix_t a) {
   assert(a.rows == a.cols);

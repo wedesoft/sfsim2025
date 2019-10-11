@@ -23,4 +23,6 @@ static inline large_matrix_t large_matrix(int rows, int cols, double *data) {
 
 large_matrix_t large_matrix_dot(large_matrix_t a, large_matrix_t b);
 
+large_matrix_t large_transpose(large_matrix_t a);
+
 large_matrix_t large_inverse(large_matrix_t a);
