@@ -73,7 +73,7 @@ static MunitResult test_rotation(const MunitParameter params[], void *data) {
   body_info_t info = { .mass = 1.0, .inertia = diagonal(1, 2, 1), .force = vector(1, 2, 3), .torque = vector(1, 2, 3) };
   state_t *ds = state_change(0, 2, s, &info);
   munit_assert_double(ds->rotation.x, ==, 2);
-  munit_assert_double(ds->rotation.y, ==, 2);
+  munit_assert_double(ds->rotation.y, ==, 1);
   munit_assert_double(ds->rotation.z, ==, 6);
   return MUNIT_OK;
 }
@@ -91,8 +91,8 @@ static MunitResult test_euler(const MunitParameter params[], void *data) {
   body_info_t info = { .mass = 1.0, .inertia = diagonal(1, 2, 4), .force = vector(0, 0, 0), .torque = vector(0, 0, 0) };
   state_t *ds = state_change(0, 2, s, &info);
   munit_assert_double(ds->rotation.x, ==, -4.0);
-  munit_assert_double(ds->rotation.y, ==,  6.0);
-  munit_assert_double(ds->rotation.z, ==, -2.0);
+  munit_assert_double(ds->rotation.y, ==,  3.0);
+  munit_assert_double(ds->rotation.z, ==, -0.5);
   return MUNIT_OK;
 }
 
