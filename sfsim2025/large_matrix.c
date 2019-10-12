@@ -45,6 +45,7 @@ large_matrix_t large_transpose(large_matrix_t a) {
 
 // Compute inverse of large matrix.
 large_matrix_t large_inverse(large_matrix_t a) {
+  // https://stackoverflow.com/questions/3519959/computing-the-inverse-of-a-matrix-using-lapack-in-c
   assert(a.rows == a.cols);
   large_matrix_t result = allocate_large_matrix(a.rows, a.cols);
   memcpy(result.data, a.data, a.rows * a.cols * sizeof(double));
