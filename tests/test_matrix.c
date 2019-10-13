@@ -11,10 +11,14 @@ static MunitResult test_create(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_cross_product_matrix(const MunitParameter params[], void *data) {
-  matrix_t result = cross_product_matrix(vector(1, 2, 3));
-  munit_assert_double(result.m11, ==,  0); munit_assert_double(result.m12, ==, -3); munit_assert_double(result.m13, ==,  2);
-  munit_assert_double(result.m21, ==,  3); munit_assert_double(result.m22, ==,  0); munit_assert_double(result.m23, ==, -1);
-  munit_assert_double(result.m31, ==, -2); munit_assert_double(result.m32, ==,  1); munit_assert_double(result.m33, ==,  0);
+  vector_t v[3] = {vector(1, 0, 0), vector(0, 1, 0), vector(0, 0, 1)};
+  for (int j=0; j<3; j++) {
+    vector_t b = v[j];
+    for (int i=0; i<3; i++) {
+      vector_t a = v[i];
+      munit_assert_true(vector_eq(matrix_vector_dot(cross_product_matrix(a), b), cross_product(a, b)));
+    };
+  };
   return MUNIT_OK;
 }
 
