@@ -4,6 +4,7 @@
 #include "test_large_vector.h"
 #include "test_list.h"
 #include "test_matrix.h"
+#include "test_matrix43.h"
 #include "test_mechanics.h"
 #include "test_plane.h"
 #include "test_polygon.h"
@@ -17,6 +18,7 @@ static MunitSuite test_sfsim[] = {
   {"/large_vector", test_large_vector, NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/list"        , test_list        , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/matrix"      , test_matrix      , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/matrix43"    , test_matrix43    , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/mechanics"   , test_mechanics   , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/plane"       , test_plane       , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/polygon"     , test_polygon     , NULL, 1, MUNIT_SUITE_OPTION_NONE},
@@ -31,8 +33,6 @@ static const MunitSuite test_suite[] = {
 };
 
 int main(int argc, char *argv[MUNIT_ARRAY_PARAM(argc + 1)]) {
-  GC_INIT();
   int result = munit_suite_main(&test_suite[0], (void *)NULL, argc, argv);
-  GC_gcollect();
   return result;
 }

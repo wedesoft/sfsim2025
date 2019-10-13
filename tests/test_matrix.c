@@ -13,9 +13,9 @@ static MunitResult test_create(const MunitParameter params[], void *data) {
 static MunitResult test_cross_product_matrix(const MunitParameter params[], void *data) {
   vector_t v[3] = {vector(1, 0, 0), vector(0, 1, 0), vector(0, 0, 1)};
   for (int j=0; j<3; j++) {
-    vector_t b = v[j];
+    vector_t a = v[j];
     for (int i=0; i<3; i++) {
-      vector_t a = v[i];
+      vector_t b = v[i];
       munit_assert_true(vector_eq(matrix_vector_dot(cross_product_matrix(a), b), cross_product(a, b)));
     };
   };
