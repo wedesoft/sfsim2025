@@ -93,6 +93,12 @@ static MunitResult test_add(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_product(const MunitParameter params[], void *data) {
+  //    |  1  i  j  k
+  // ---+------------
+  //  1 |  1  i  j  k
+  //  i |  i -1  k -j
+  //  j |  j -k -1  i
+  //  k |  k  j -i -1
   munit_assert_true(quaternion_eq(quaternion_product(quaternion(2, 0, 0, 0), quaternion(2, 0, 0, 0)), quaternion( 4,  0,  0,  0)));
   munit_assert_true(quaternion_eq(quaternion_product(quaternion(2, 0, 0, 0), quaternion(0, 1, 0, 0)), quaternion( 0,  2,  0,  0)));
   munit_assert_true(quaternion_eq(quaternion_product(quaternion(2, 0, 0, 0), quaternion(0, 0, 1, 0)), quaternion( 0,  0,  2,  0)));
