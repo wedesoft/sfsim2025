@@ -175,6 +175,22 @@ static MunitResult test_rotate_matrix(const MunitParameter params[], void *data)
   return MUNIT_OK;
 }
 
+static MunitResult test_translation(const MunitParameter params[], void *data) {
+  vector_t result = transform_point(quaternion(1, 0, 0, 0), vector(1, 2, 3), vector(2, 3, 5));
+  munit_assert_double_equal(result.x, 3, 6);
+  munit_assert_double_equal(result.y, 5, 6);
+  munit_assert_double_equal(result.z, 8, 6);
+  return MUNIT_OK;
+}
+
+static MunitResult test_transform(const MunitParameter params[], void *data) {
+  vector_t result = transform_point(quaternion_rotation(M_PI / 2, vector(1, 0, 0)), vector(1, 2, 3), vector(2, 3, 5));
+  munit_assert_double_equal(result.x,  2 + 1, 6);
+  munit_assert_double_equal(result.y, -5 + 2, 6);
+  munit_assert_double_equal(result.z,  3 + 3, 6);
+  return MUNIT_OK;
+}
+
 MunitTest test_quaternion[] = {
   {"/initialize"     , test_initialize     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/eq"             , test_eq             , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
@@ -195,5 +211,7 @@ MunitTest test_quaternion[] = {
   {"/rotation_matrix", test_rotation_matrix, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/no_rotate"      , test_no_rotate      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/rotate_matrix"  , test_rotate_matrix  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/translation"    , test_translation    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/transform"      , test_transform      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL              , NULL                , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
 };

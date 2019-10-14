@@ -191,3 +191,16 @@ list_t *contact_points(rigid_body_t *body, rigid_body_t *other, double *distance
   list_t *candidates2 = convex_hull(plane_coordinates(p, penetration_candidates(p, other)));
   return plane_points(p, convex_hull(intersection(candidates1, candidates2)));
 }
+
+rigid_body_t *transform_body(rigid_body_t *body, quaternion_t q, vector_t t) {
+  rigid_body_t *result = GC_MALLOC(sizeof(rigid_body_t));
+  list_t *points = make_list();
+  result->points = points;
+  result->edges = body->edges;
+  result->faces = body->faces;
+  for (int i=0; i<body->points->size; i++) {
+    vector_t p = get_vector(body->points)[i];
+    append_vector(points, transform_point(q, t, p));
+  };
+  return result;
+}

@@ -398,6 +398,21 @@ static MunitResult test_no_contact(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_transform(const MunitParameter params[], void *data) {
+  rigid_body_t *body = make_cube(0, 0, 0);
+  rigid_body_t *result = transform_body(body, quaternion_rotation(M_PI / 2, vector(1, 0, 0)), vector(1, 2, 3));
+  list_t *points = result->points;
+  munit_assert_ptr(result->edges, ==, body->edges);
+  munit_assert_ptr(result->faces, ==, body->faces);
+  munit_assert_double_equal(get_vector(points)[0].x, 1, 6);
+  munit_assert_double_equal(get_vector(points)[0].y, 2, 6);
+  munit_assert_double_equal(get_vector(points)[0].z, 3, 6);
+  munit_assert_double_equal(get_vector(points)[7].x, 3, 6);
+  munit_assert_double_equal(get_vector(points)[7].y, 0, 6);
+  munit_assert_double_equal(get_vector(points)[7].z, 5, 6);
+  return MUNIT_OK;
+}
+
 MunitTest test_rigid_body[] = {
   {"/create"           , test_create           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/add_point"        , test_add_point        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -425,5 +440,6 @@ MunitTest test_rigid_body[] = {
   {"/contact_points"   , test_contact_points   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/contact_points2"  , test_contact_points2  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/no_contact"       , test_no_contact       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/transform"        , test_transform        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                , NULL                  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

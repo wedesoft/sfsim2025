@@ -4,6 +4,7 @@
 #include "vector.h"
 #include "face.h"
 #include "plane.h"
+#include "quaternion.h"
 
 
 typedef struct {
@@ -49,3 +50,5 @@ list_t *penetration_candidates(plane_t p, rigid_body_t *body);
 plane_t separating_plane(rigid_body_t *body, rigid_body_t *other, double *distance);
 
 list_t *contact_points(rigid_body_t *body, rigid_body_t *other, double *distance, vector_t *normal);
+
+rigid_body_t *transform_body(rigid_body_t *body, quaternion_t q, vector_t t);
