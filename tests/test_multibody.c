@@ -31,9 +31,7 @@ static MunitResult test_state_adapter_identity(const MunitParameter params[], vo
 static MunitResult test_state_adapter_identity2(const MunitParameter params[], void *data) {
   quaternion_t q[] = {quaternion(1, 2, 3, 4), quaternion(5, 6, 7, 8)};
   large_matrix_t s = state_adapter(2, q);
-  munit_assert_double(s.data[ 90], ==, 1); munit_assert_double(s.data[ 91], ==, 0); munit_assert_double(s.data[ 92], ==, 0);
-  munit_assert_double(s.data[102], ==, 0); munit_assert_double(s.data[103], ==, 1); munit_assert_double(s.data[104], ==, 0);
-  munit_assert_double(s.data[114], ==, 0); munit_assert_double(s.data[115], ==, 0); munit_assert_double(s.data[116], ==, 1);
+  munit_assert_double(s.data[ 90], ==, 1);
   return MUNIT_OK;
 }
 
@@ -47,11 +45,19 @@ static MunitResult test_state_adapter_orientation(const MunitParameter params[],
   return MUNIT_OK;
 }
 
+static MunitResult test_state_adapter_orientation2(const MunitParameter params[], void *data) {
+  quaternion_t q[] = {quaternion(1, 2, 3, 4), quaternion(5, 6, 7, 8)};
+  large_matrix_t s = state_adapter(2, q);
+  munit_assert_double(s.data[129], ==, -3.0);
+  return MUNIT_OK;
+}
+
 MunitTest test_multibody[] = {
-  {"/state_adapter_shape1"     , test_state_adapter_shape1     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/state_adapter_shape2"     , test_state_adapter_shape2     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/state_adapter_identity"   , test_state_adapter_identity   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/state_adapter_identity2"  , test_state_adapter_identity2  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/state_adapter_orientation", test_state_adapter_orientation, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {NULL                        , NULL                          , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
+  {"/state_adapter_shape1"      , test_state_adapter_shape1      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/state_adapter_shape2"      , test_state_adapter_shape2      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/state_adapter_identity"    , test_state_adapter_identity    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/state_adapter_identity2"   , test_state_adapter_identity2   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/state_adapter_orientation" , test_state_adapter_orientation , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/state_adapter_orientation2", test_state_adapter_orientation2, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {NULL                         , NULL                           , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
 };

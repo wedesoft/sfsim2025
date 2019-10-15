@@ -15,7 +15,7 @@ large_matrix_t state_adapter(int n, quaternion_t q[]) {
     p[1] = 1; p += columns;
     p[2] = 1; p += columns;
     p += 3;
-    matrix43_t o = quaternion_matrix(q[0]);
+    matrix43_t o = quaternion_matrix(q[l]);
     p[0] =  o.m11; p[1] = o.m12; p[2] = o.m13; p += columns;
     p[0] =  o.m21; p[1] = o.m22; p[2] = o.m23; p += columns;
     p[0] =  o.m31; p[1] = o.m32; p[2] = o.m33; p += columns;
