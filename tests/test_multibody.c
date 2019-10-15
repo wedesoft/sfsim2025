@@ -100,6 +100,30 @@ static MunitResult test_mass_inertia2(const MunitParameter params[], void *data)
   return MUNIT_OK;
 }
 
+static MunitResult test_contact_normals_shape(const MunitParameter params[], void *data) {
+  vector_t normal = vector(1, 2, 3);
+  large_matrix_t n = contact_normals(1, &normal);
+  munit_assert_int(n.rows, ==, 3);
+  munit_assert_int(n.cols, ==, 1);
+  return MUNIT_OK;
+}
+
+static MunitResult test_contact_normals_shape2(const MunitParameter params[], void *data) {
+  vector_t normals[] = {vector(1, 2, 3), vector(4, 5, 6)};
+  large_matrix_t n = contact_normals(2, normals);
+  munit_assert_int(n.rows, ==, 6);
+  munit_assert_int(n.cols, ==, 2);
+  return MUNIT_OK;
+}
+
+static MunitResult test_normal_vectors(const MunitParameter params[], void *data) {
+  vector_t normals[] = {vector(1, 2, 3), vector(4, 5, 6)};
+  large_matrix_t n = contact_normals(2, normals);
+  munit_assert_double(n.data[0], ==, 1); munit_assert_double(n.data[2], ==, 2); munit_assert_double(n.data[ 4], ==, 3);
+  munit_assert_double(n.data[7], ==, 4); munit_assert_double(n.data[9], ==, 5); munit_assert_double(n.data[11], ==, 6);
+  return MUNIT_OK;
+}
+
 MunitTest test_multibody[] = {
   {"/state_adapter_shape1"      , test_state_adapter_shape1      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/state_adapter_shape2"      , test_state_adapter_shape2      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
@@ -113,5 +137,8 @@ MunitTest test_multibody[] = {
   {"/mass_diagonal2"            , test_mass_diagonal2            , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/mass_inertia"              , test_mass_inertia              , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/mass_inertia2"             , test_mass_inertia2             , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/contact_normals_shape"     , test_contact_normals_shape     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/contact_normals_shape2"    , test_contact_normals_shape2    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/normal_vectors"            , test_normal_vectors            , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                         , NULL                           , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
 };
