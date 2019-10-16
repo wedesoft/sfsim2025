@@ -1,5 +1,6 @@
 #include <gc.h>
 #include "munit.h"
+#include "test_contact.h"
 #include "test_large_matrix.h"
 #include "test_large_vector.h"
 #include "test_list.h"
@@ -26,6 +27,7 @@ static MunitSuite test_sfsim[] = {
   {"/polygon"     , test_polygon     , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/rigid_body"  , test_rigid_body  , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/mechanics"   , test_mechanics   , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/contact"     , test_contact     , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/multibody"   , test_multibody   , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {NULL           , NULL             , NULL, 0, MUNIT_SUITE_OPTION_NONE}
 };

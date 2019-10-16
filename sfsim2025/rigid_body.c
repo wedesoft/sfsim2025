@@ -192,6 +192,7 @@ list_t *contact_points(rigid_body_t *body, rigid_body_t *other, double *distance
   return plane_points(p, convex_hull(intersection(candidates1, candidates2)));
 }
 
+// Rotate and translate the points of a rigid body.
 rigid_body_t *transform_body(rigid_body_t *body, quaternion_t q, vector_t t) {
   rigid_body_t *result = GC_MALLOC(sizeof(rigid_body_t));
   list_t *points = make_list();
