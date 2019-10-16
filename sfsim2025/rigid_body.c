@@ -6,11 +6,12 @@
 
 
 // Create an empty rigid body.
-rigid_body_t *make_rigid_body(void) {
+rigid_body_t *make_rigid_body(vector_t center) {
   rigid_body_t *result = GC_MALLOC(sizeof(rigid_body_t));
   result->points = make_list();
   result->edges = make_list();
   result->faces = make_list();
+  result->center = center;
   return result;
 }
 
@@ -199,6 +200,7 @@ rigid_body_t *transform_body(rigid_body_t *body, quaternion_t q, vector_t t) {
   result->points = points;
   result->edges = body->edges;
   result->faces = body->faces;
+  result->center = transform_point(q, t, body->center);
   for (int i=0; i<body->points->size; i++) {
     vector_t p = get_vector(body->points)[i];
     append_vector(points, transform_point(q, t, p));
