@@ -159,7 +159,6 @@ static MunitResult test_conditions_content(const MunitParameter params[], void *
   munit_assert_double(j.data[27], ==,  0); munit_assert_double(j.data[28], ==,  3); munit_assert_double(j.data[29], ==,  0);
   munit_assert_double(j.data[30], ==, -3); munit_assert_double(j.data[31], ==,  0); munit_assert_double(j.data[32], ==,  0);
   munit_assert_double(j.data[33], ==,  0); munit_assert_double(j.data[34], ==,  0); munit_assert_double(j.data[35], ==,  0);
-
   return MUNIT_OK;
 }
 
