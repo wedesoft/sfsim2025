@@ -2,7 +2,7 @@
 #include "matrix43.h"
 
 
-// Create adapter matrix for position and orientation changes of multiple bodies.
+// Create adapter matrix for position and orientation changes of n bodies.
 // https://people.mpi-inf.mpg.de/~schoemer/publications/VRST98.pdf
 large_matrix_t state_adapter(int n, quaternion_t q[]) {
   int rows = 7 * n;
@@ -25,7 +25,7 @@ large_matrix_t state_adapter(int n, quaternion_t q[]) {
   return result;
 }
 
-// Create generalized mass matrix for multiple rigid bodies.
+// Create generalized mass matrix for n rigid bodies.
 // https://people.mpi-inf.mpg.de/~schoemer/publications/VRST98.pdf
 large_matrix_t generalized_mass(int n, double mass[], matrix_t inertia[]) {
   int rows = 6 * n;
@@ -47,7 +47,7 @@ large_matrix_t generalized_mass(int n, double mass[], matrix_t inertia[]) {
   return result;
 }
 
-// Create matrix of contact normals.
+// Create matrix of contact normals for k contacts.
 // https://people.mpi-inf.mpg.de/~schoemer/publications/VRST98.pdf
 large_matrix_t contact_normals(int k, vector_t normals[]) {
   int rows = 3 * k;
@@ -62,5 +62,16 @@ large_matrix_t contact_normals(int k, vector_t normals[]) {
     *p = normal->z; p += columns;
     p++;
   };
+  return result;
+}
+
+// Create matrix of contact conditions.
+// https://people.mpi-inf.mpg.de/~schoemer/publications/VRST98.pdf
+large_matrix_t contact_conditions(list_t *contacts, list_t *bodies) {
+  int k = contacts->size;
+  int n = bodies->size;
+  int rows = 6 * n;
+  int columns = 3 * k;
+  large_matrix_t result = allocate_large_matrix(rows, columns);
   return result;
 }

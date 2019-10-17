@@ -124,21 +124,34 @@ static MunitResult test_normal_vectors(const MunitParameter params[], void *data
   return MUNIT_OK;
 }
 
+static MunitResult test_conditions_shape(const MunitParameter params[], void *data) {
+  list_t *contacts = make_list();
+  append_contact(contacts, contact(0, 1, vector(0, 0, 1), vector(0, 0, 2)));
+  list_t *bodies = make_list();
+  append_pointer(bodies, make_rigid_body(vector(0, 0, 0)));
+  append_pointer(bodies, make_rigid_body(vector(0, 0, 4)));
+  large_matrix_t j = contact_conditions(contacts, bodies);
+  munit_assert_int(j.rows, ==, 12);
+  munit_assert_int(j.cols, ==, 3);
+  return MUNIT_OK;
+}
+
 MunitTest test_multibody[] = {
-  {"/state_adapter_shape1"      , test_state_adapter_shape1      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/state_adapter_shape2"      , test_state_adapter_shape2      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/state_adapter_identity"    , test_state_adapter_identity    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/state_adapter_identity2"   , test_state_adapter_identity2   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/state_adapter_orientation" , test_state_adapter_orientation , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/state_adapter_orientation2", test_state_adapter_orientation2, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/mass_shape"                , test_mass_shape                , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/mass_shape2"               , test_mass_shape2               , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/mass_diagonal"             , test_mass_diagonal             , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/mass_diagonal2"            , test_mass_diagonal2            , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/mass_inertia"              , test_mass_inertia              , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/mass_inertia2"             , test_mass_inertia2             , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/contact_normals_shape"     , test_contact_normals_shape     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/contact_normals_shape2"    , test_contact_normals_shape2    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/normal_vectors"            , test_normal_vectors            , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {NULL                         , NULL                           , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
+  {"/state_adapter_shape1"      , test_state_adapter_shape1      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/state_adapter_shape2"      , test_state_adapter_shape2      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/state_adapter_identity"    , test_state_adapter_identity    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/state_adapter_identity2"   , test_state_adapter_identity2   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/state_adapter_orientation" , test_state_adapter_orientation , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/state_adapter_orientation2", test_state_adapter_orientation2, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/mass_shape"                , test_mass_shape                , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/mass_shape2"               , test_mass_shape2               , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/mass_diagonal"             , test_mass_diagonal             , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/mass_diagonal2"            , test_mass_diagonal2            , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/mass_inertia"              , test_mass_inertia              , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/mass_inertia2"             , test_mass_inertia2             , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/contact_normals_shape"     , test_contact_normals_shape     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/contact_normals_shape2"    , test_contact_normals_shape2    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/normal_vectors"            , test_normal_vectors            , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/conditions_shape"          , test_conditions_shape          , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {NULL                         , NULL                           , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

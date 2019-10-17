@@ -165,6 +165,23 @@ static MunitResult test_get_coordinate(const MunitParameter params[], void *data
   return MUNIT_OK;
 }
 
+static MunitResult test_append_contact(const MunitParameter params[], void *data) {
+  contact_t c = contact(2, 3, vector(1, 2, 3), vector(3, 4, 5));
+  list_t *list = make_list();
+  append_contact(list, c);
+  munit_assert_int(list->size, ==, 1);
+  return MUNIT_OK;
+}
+
+static MunitResult test_get_contact(const MunitParameter params[], void *data) {
+  contact_t c = contact(2, 3, vector(1, 2, 3), vector(3, 4, 5));
+  list_t *list = make_list();
+  append_contact(list, c);
+  munit_assert_int(get_contact(list)[0].i, ==, 2);
+  munit_assert_int(get_contact(list)[0].j, ==, 3);
+  return MUNIT_OK;
+}
+
 MunitTest test_list[] = {
   {"/zero_size"        , test_zero_size        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/append_gluint"    , test_append_gluint    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -187,5 +204,7 @@ MunitTest test_list[] = {
   {"/get_edge"         , test_get_edge         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/append_coordinate", test_append_coordinate, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/get_coordinate"   , test_get_coordinate   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/append_contact"   , test_append_contact   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/get_contact"      , test_get_contact      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                , NULL                  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

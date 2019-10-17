@@ -54,3 +54,8 @@ void append_coordinate(list_t *list, coordinate_t value) {
   grow_list(list, sizeof(coordinate_t), true);
   ((coordinate_t *)list->element)[list->size++] = value;
 }
+
+void append_contact(list_t *list, contact_t value) {
+  grow_list(list, sizeof(contact_t), true);
+  ((contact_t *)list->element)[list->size++] = value;
+}
