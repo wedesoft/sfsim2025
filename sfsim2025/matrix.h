@@ -61,3 +61,8 @@ static inline matrix_t identity(void) {
 static inline matrix_t matrix_scale(matrix_t m, double s) {
   return matrix(m.m11 * s, m.m12 * s, m.m13 * s, m.m21 * s, m.m22 * s, m.m23 * s, m.m31 * s, m.m32 * s, m.m33 * s);
 }
+
+// Negate matrix.
+static inline matrix_t matrix_negative(matrix_t m) {
+  return matrix(-m.m11, -m.m12, -m.m13, -m.m21, -m.m22, -m.m23, -m.m31, -m.m32, -m.m33);
+}

@@ -143,12 +143,23 @@ static MunitResult test_conditions_content(const MunitParameter params[], void *
   append_pointer(bodies, make_rigid_body(vector(0, 0, 0)));
   append_pointer(bodies, make_rigid_body(vector(0, 0, 5)));
   large_matrix_t j = contact_conditions(contacts, bodies);
+  // negative identity matrix
   munit_assert_double(j.data[ 0], ==, -1); munit_assert_double(j.data[ 1], ==,  0); munit_assert_double(j.data[ 2], ==,  0);
   munit_assert_double(j.data[ 3], ==,  0); munit_assert_double(j.data[ 4], ==, -1); munit_assert_double(j.data[ 5], ==,  0);
   munit_assert_double(j.data[ 6], ==,  0); munit_assert_double(j.data[ 7], ==,  0); munit_assert_double(j.data[ 8], ==, -1);
+  // negative skew-symmetric matrix
+  munit_assert_double(j.data[ 9], ==,  0); munit_assert_double(j.data[10], ==,  2); munit_assert_double(j.data[11], ==,  0);
+  munit_assert_double(j.data[12], ==, -2); munit_assert_double(j.data[13], ==,  0); munit_assert_double(j.data[14], ==,  0);
+  munit_assert_double(j.data[15], ==,  0); munit_assert_double(j.data[16], ==,  0); munit_assert_double(j.data[17], ==,  0);
+  // positive identity matrix
   munit_assert_double(j.data[18], ==,  1); munit_assert_double(j.data[19], ==,  0); munit_assert_double(j.data[20], ==,  0);
   munit_assert_double(j.data[21], ==,  0); munit_assert_double(j.data[22], ==,  1); munit_assert_double(j.data[23], ==,  0);
   munit_assert_double(j.data[24], ==,  0); munit_assert_double(j.data[25], ==,  0); munit_assert_double(j.data[26], ==,  1);
+  // positive skew-symmetric matrix
+  munit_assert_double(j.data[27], ==,  0); munit_assert_double(j.data[28], ==,  3); munit_assert_double(j.data[29], ==,  0);
+  munit_assert_double(j.data[30], ==, -3); munit_assert_double(j.data[31], ==,  0); munit_assert_double(j.data[32], ==,  0);
+  munit_assert_double(j.data[33], ==,  0); munit_assert_double(j.data[34], ==,  0); munit_assert_double(j.data[35], ==,  0);
+
   return MUNIT_OK;
 }
 
