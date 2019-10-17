@@ -74,24 +74,28 @@ large_matrix_t contact_conditions(list_t *contacts, list_t *bodies) {
   memset(result.data, 0, rows * columns * sizeof(double));
   for (int k=0; k<contacts->size; k++) {
     contact_t contact = get_contact(contacts)[k];
-    double *p = &result.data[k * 3 + contact.i * columns * 6];
-    *p = -1; p += columns + 1;
-    *p = -1; p += columns + 1;
-    *p = -1; p += columns - 2;
-    vector_t r_i = vector_subtract(contact.point, ((rigid_body_t *)get_pointer(bodies)[contact.i])->center);
-    matrix_t m_i = matrix_negative(cross_product_matrix(r_i));
-    p[0] = m_i.m11; p[1] = m_i.m12; p[2] = m_i.m13; p += columns;
-    p[0] = m_i.m21; p[1] = m_i.m22; p[2] = m_i.m23; p += columns;
-    p[0] = m_i.m31; p[1] = m_i.m32; p[2] = m_i.m33; p += columns;
-    p = &result.data[k * 3 + contact.j * columns * 6];
-    *p = 1; p += columns + 1;
-    *p = 1; p += columns + 1;
-    *p = 1; p += columns - 2;
-    vector_t r_j = vector_subtract(contact.point, ((rigid_body_t *)get_pointer(bodies)[contact.j])->center);
-    matrix_t m_j = cross_product_matrix(r_j);
-    p[0] = m_j.m11; p[1] = m_j.m12; p[2] = m_j.m13; p += columns;
-    p[0] = m_j.m21; p[1] = m_j.m22; p[2] = m_j.m23; p += columns;
-    p[0] = m_j.m31; p[1] = m_j.m32; p[2] = m_j.m33; p += columns;
+    {
+      double *p = &result.data[k * 3 + contact.i * columns * 6];
+      *p = -1; p += columns + 1;
+      *p = -1; p += columns + 1;
+      *p = -1; p += columns - 2;
+      vector_t r_i = vector_subtract(contact.point, ((rigid_body_t *)get_pointer(bodies)[contact.i])->center);
+      matrix_t m_i = matrix_negative(cross_product_matrix(r_i));
+      p[0] = m_i.m11; p[1] = m_i.m12; p[2] = m_i.m13; p += columns;
+      p[0] = m_i.m21; p[1] = m_i.m22; p[2] = m_i.m23; p += columns;
+      p[0] = m_i.m31; p[1] = m_i.m32; p[2] = m_i.m33; p += columns;
+    };
+    {
+      double *p = &result.data[k * 3 + contact.j * columns * 6];
+      *p = 1; p += columns + 1;
+      *p = 1; p += columns + 1;
+      *p = 1; p += columns - 2;
+      vector_t r_j = vector_subtract(contact.point, ((rigid_body_t *)get_pointer(bodies)[contact.j])->center);
+      matrix_t m_j = cross_product_matrix(r_j);
+      p[0] = m_j.m11; p[1] = m_j.m12; p[2] = m_j.m13; p += columns;
+      p[0] = m_j.m21; p[1] = m_j.m22; p[2] = m_j.m23; p += columns;
+      p[0] = m_j.m31; p[1] = m_j.m32; p[2] = m_j.m33; p += columns;
+    };
   };
   return result;
 }
