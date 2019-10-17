@@ -129,10 +129,26 @@ static MunitResult test_conditions_shape(const MunitParameter params[], void *da
   append_contact(contacts, contact(0, 1, vector(0, 0, 1), vector(0, 0, 2)));
   list_t *bodies = make_list();
   append_pointer(bodies, make_rigid_body(vector(0, 0, 0)));
-  append_pointer(bodies, make_rigid_body(vector(0, 0, 4)));
+  append_pointer(bodies, make_rigid_body(vector(0, 0, 5)));
   large_matrix_t j = contact_conditions(contacts, bodies);
   munit_assert_int(j.rows, ==, 12);
   munit_assert_int(j.cols, ==, 3);
+  return MUNIT_OK;
+}
+
+static MunitResult test_conditions_content(const MunitParameter params[], void *data) {
+  list_t *contacts = make_list();
+  append_contact(contacts, contact(0, 1, vector(0, 0, 1), vector(0, 0, 2)));
+  list_t *bodies = make_list();
+  append_pointer(bodies, make_rigid_body(vector(0, 0, 0)));
+  append_pointer(bodies, make_rigid_body(vector(0, 0, 5)));
+  large_matrix_t j = contact_conditions(contacts, bodies);
+  munit_assert_double(j.data[ 0], ==, -1); munit_assert_double(j.data[ 1], ==,  0); munit_assert_double(j.data[ 2], ==,  0);
+  munit_assert_double(j.data[ 3], ==,  0); munit_assert_double(j.data[ 4], ==, -1); munit_assert_double(j.data[ 5], ==,  0);
+  munit_assert_double(j.data[ 6], ==,  0); munit_assert_double(j.data[ 7], ==,  0); munit_assert_double(j.data[ 8], ==, -1);
+  munit_assert_double(j.data[18], ==,  1); munit_assert_double(j.data[19], ==,  0); munit_assert_double(j.data[20], ==,  0);
+  munit_assert_double(j.data[21], ==,  0); munit_assert_double(j.data[22], ==,  1); munit_assert_double(j.data[23], ==,  0);
+  munit_assert_double(j.data[24], ==,  0); munit_assert_double(j.data[25], ==,  0); munit_assert_double(j.data[26], ==,  1);
   return MUNIT_OK;
 }
 
@@ -153,5 +169,6 @@ MunitTest test_multibody[] = {
   {"/contact_normals_shape2"    , test_contact_normals_shape2    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/normal_vectors"            , test_normal_vectors            , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/conditions_shape"          , test_conditions_shape          , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/conditions_content"        , test_conditions_content        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                         , NULL                           , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

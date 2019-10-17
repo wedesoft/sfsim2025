@@ -68,10 +68,20 @@ large_matrix_t contact_normals(int k, vector_t normals[]) {
 // Create matrix of contact conditions.
 // https://people.mpi-inf.mpg.de/~schoemer/publications/VRST98.pdf
 large_matrix_t contact_conditions(list_t *contacts, list_t *bodies) {
-  int k = contacts->size;
-  int n = bodies->size;
-  int rows = 6 * n;
-  int columns = 3 * k;
+  int rows = 6 * bodies->size;
+  int columns = 3 * contacts->size;
   large_matrix_t result = allocate_large_matrix(rows, columns);
+  memset(result.data, 0, rows * columns * sizeof(double));
+  for (int k=0; k<contacts->size; k++) {
+    contact_t contact = get_contact(contacts)[k];
+    double *p = &result.data[k * 3 + contact.i * columns * 6];
+    *p = -1; p += columns + 1;
+    *p = -1; p += columns + 1;
+    *p = -1; p += columns + 1;
+    p = &result.data[k * 3 + contact.j * columns * 6];
+    *p = 1; p += columns + 1;
+    *p = 1; p += columns + 1;
+    *p = 1; p += columns + 1;
+  };
   return result;
 }
