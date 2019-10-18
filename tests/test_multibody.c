@@ -165,7 +165,7 @@ static MunitResult test_conditions_content(const MunitParameter params[], void *
 static MunitResult test_speed_vector_size(const MunitParameter params[], void *data) {
   state_t *s = state(vector(0, 0, 0), vector(1, 2, 3), quaternion(1, 0, 0, 0), vector(2, 3, 5));
   list_t lst = make_list(); append_pointer(&lst, s); append_pointer(&lst, s);
-  large_vector_t v = speed_vector(lst);
+  large_vector_t v = velocity_vector(lst);
   munit_assert_int(v.rows, ==, 12);
   return MUNIT_OK;
 }
@@ -173,7 +173,7 @@ static MunitResult test_speed_vector_size(const MunitParameter params[], void *d
 static MunitResult test_speed_vector_content(const MunitParameter params[], void *data) {
   state_t *s = state(vector(0, 0, 0), vector(1, 2, 3), quaternion(1, 0, 0, 0), vector(2, 3, 5));
   list_t lst = make_list(); append_pointer(&lst, s);
-  large_vector_t v = speed_vector(lst);
+  large_vector_t v = velocity_vector(lst);
   munit_assert_double(v.data[0], ==, 1);
   munit_assert_double(v.data[1], ==, 2);
   munit_assert_double(v.data[2], ==, 3);

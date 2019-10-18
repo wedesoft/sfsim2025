@@ -15,4 +15,4 @@ large_matrix_t contact_normals(int k, vector_t normals[]);
 
 large_matrix_t contact_conditions(list_t contacts, list_t bodies);
 
-large_vector_t speed_vector(list_t states);
+large_vector_t velocity_vector(list_t states);
