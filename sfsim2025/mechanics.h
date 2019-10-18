@@ -1,14 +1,8 @@
 #pragma once
 #include <gc.h>
+#include "body_info.h"
 #include "state.h"
 
-
-typedef struct {
-  double mass;
-  matrix_t inertia;
-  vector_t force;
-  vector_t torque;
-} body_info_t;
 
 void *runge_kutta(void *y0, double dt, void *f(double, double, void *, void *), void *add(void *, void *),
                   void *scale(void *, double), void *data);

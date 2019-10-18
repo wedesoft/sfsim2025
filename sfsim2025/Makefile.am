@@ -2,8 +2,8 @@ noinst_PROGRAMS = tumble
 
 lib_LTLIBRARIES = libsfsim2025.la
 
-pkginclude_HEADERS = contact.h coordinate.h edge.h face.h large_matrix.h large_vector.h list.h matrix.h matrix43.h mechanics.h \
-										 multibody.h plane.h polygon.h quaternion.h rigid_body.h state.h vector.h
+pkginclude_HEADERS = body_info.h contact.h coordinate.h edge.h face.h large_matrix.h large_vector.h list.h matrix.h matrix43.h \
+										 mechanics.h multibody.h plane.h polygon.h quaternion.h rigid_body.h state.h vector.h
 
 tumble_SOURCES = tumble.c
 tumble_CFLAGS = $(GLEW_CFLAGS) $(GL_CFLAGS) $(ATLAS_CFLAGS) $(BOEHM_CFLAGS) $(SDL_CFLAGS)

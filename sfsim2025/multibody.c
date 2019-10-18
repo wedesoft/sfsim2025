@@ -116,3 +116,9 @@ large_vector_t velocity_vector(list_t states) {
   };
   return result;
 }
+
+large_vector_t external_forces(list_t states, matrix_t inertia[]) {
+  int n = states.size;
+  large_vector_t result = allocate_large_vector(6 * n);
+  return result;
+}

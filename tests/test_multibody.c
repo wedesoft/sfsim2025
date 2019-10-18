@@ -183,6 +183,15 @@ static MunitResult test_speed_vector_content(const MunitParameter params[], void
   return MUNIT_OK;
 }
 
+static MunitResult test_external_forces_size(const MunitParameter params[], void *data) {
+  state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(2, 3, 5));
+  list_t lst = make_list(); append_pointer(&lst, s); append_pointer(&lst, s);
+  matrix_t inertia[] = {diagonal(3, 5, 7), diagonal(5, 7, 11)};
+  large_vector_t f = external_forces(lst, inertia);
+  munit_assert_int(f.rows, ==, 12);
+  return MUNIT_OK;
+}
+
 MunitTest test_multibody[] = {
   {"/state_adapter_shape1"      , test_state_adapter_shape1      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/state_adapter_shape2"      , test_state_adapter_shape2      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -203,5 +212,6 @@ MunitTest test_multibody[] = {
   {"/conditions_content"        , test_conditions_content        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/speed_vector_size"         , test_speed_vector_size         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/speed_vector_content"      , test_speed_vector_content      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/external_forces_size"      , test_external_forces_size      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                         , NULL                           , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
