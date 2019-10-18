@@ -5,111 +5,111 @@
 
 
 static MunitResult test_zero_size(const MunitParameter params[], void *data) {
-  list_t *list = make_list();
-  munit_assert_int(list->size, ==, 0);
+  list_t list = make_list();
+  munit_assert_int(list.size, ==, 0);
   return MUNIT_OK;
 }
 
 static MunitResult test_append_gluint(const MunitParameter params[], void *data) {
-  list_t *list = make_list();
-  append_gluint(list, 123);
-  munit_assert_int(list->size, ==, 1);
+  list_t list = make_list();
+  append_gluint(&list, 123);
+  munit_assert_int(list.size, ==, 1);
   return MUNIT_OK;
 }
 
 static MunitResult test_get_gluint(const MunitParameter params[], void *data) {
-  list_t *list = make_list();
-  append_gluint(list, 123);
+  list_t list = make_list();
+  append_gluint(&list, 123);
   munit_assert_int(get_gluint(list)[0], ==, 123);
   return MUNIT_OK;
 }
 
 static MunitResult test_append_two(const MunitParameter params[], void *data) {
-  list_t *list = make_list();
-  append_gluint(list, 235);
-  append_gluint(list, 357);
-  munit_assert_int(list->size, ==, 2);
+  list_t list = make_list();
+  append_gluint(&list, 235);
+  append_gluint(&list, 357);
+  munit_assert_int(list.size, ==, 2);
   return MUNIT_OK;
 }
 
 static MunitResult test_get_two(const MunitParameter params[], void *data) {
-  list_t *list = make_list();
-  append_gluint(list, 235);
-  append_gluint(list, 357);
+  list_t list = make_list();
+  append_gluint(&list, 235);
+  append_gluint(&list, 357);
   munit_assert_int(get_gluint(list)[0], ==, 235);
   munit_assert_int(get_gluint(list)[1], ==, 357);
   return MUNIT_OK;
 }
 
 static MunitResult test_initial_storage(const MunitParameter params[], void *data) {
-  munit_assert_int(make_list()->buffer_size, ==, 0);
+  munit_assert_int(make_list().buffer_size, ==, 0);
   return MUNIT_OK;
 }
 
 static MunitResult test_allocation(const MunitParameter params[], void *data) {
-  list_t *list = make_list();
-  append_gluint(list, 235);
-  munit_assert_int(list->buffer_size, ==, sizeof(GLuint));
+  list_t list = make_list();
+  append_gluint(&list, 235);
+  munit_assert_int(list.buffer_size, ==, sizeof(GLuint));
   return MUNIT_OK;
 }
 
 static MunitResult test_reallocation(const MunitParameter params[], void *data) {
-  list_t *list = make_list();
-  append_gluint(list, 235);
-  append_gluint(list, 357);
-  munit_assert_int(list->buffer_size, ==, 2 * sizeof(GLuint));
+  list_t list = make_list();
+  append_gluint(&list, 235);
+  append_gluint(&list, 357);
+  munit_assert_int(list.buffer_size, ==, 2 * sizeof(GLuint));
   return MUNIT_OK;
 }
 
 static MunitResult test_double_size(const MunitParameter params[], void *data) {
-  list_t *list = make_list();
-  append_gluint(list, 235);
-  append_gluint(list, 357);
-  append_gluint(list, 5711);
-  munit_assert_int(list->buffer_size, ==, 4 * sizeof(GLuint));
+  list_t list = make_list();
+  append_gluint(&list, 235);
+  append_gluint(&list, 357);
+  append_gluint(&list, 5711);
+  munit_assert_int(list.buffer_size, ==, 4 * sizeof(GLuint));
   return MUNIT_OK;
 }
 
 static MunitResult test_append_glfloat(const MunitParameter params[], void *data) {
-  list_t *list = make_list();
-  append_glfloat(list, 2.5f);
-  munit_assert_int(list->size, ==, 1);
+  list_t list = make_list();
+  append_glfloat(&list, 2.5f);
+  munit_assert_int(list.size, ==, 1);
   return MUNIT_OK;
 }
 
 static MunitResult test_get_glfloat(const MunitParameter params[], void *data) {
-  list_t *list = make_list();
-  append_glfloat(list, 7.5f);
+  list_t list = make_list();
+  append_glfloat(&list, 7.5f);
   munit_assert_float(get_glfloat(list)[0], ==, 7.5f);
   return MUNIT_OK;
 }
 
 static MunitResult test_append_pointer(const MunitParameter params[], void *data) {
-  list_t *list = make_list();
-  append_pointer(list, NULL);
-  munit_assert_int(list->size, ==, 1);
+  list_t list = make_list();
+  append_pointer(&list, NULL);
+  munit_assert_int(list.size, ==, 1);
   return MUNIT_OK;
 }
 
 static MunitResult test_get_pointer(const MunitParameter params[], void *data) {
   char test = 42;
-  list_t *list = make_list();
-  append_pointer(list, &test);
+  list_t list = make_list();
+  append_pointer(&list, &test);
   munit_assert_ptr(get_pointer(list)[0], ==, &test);
   return MUNIT_OK;
 }
 
 static MunitResult test_append_vector(const MunitParameter params[], void *data) {
-  list_t *list = make_list();
-  append_vector(list, vector(2, 3, 5));
-  munit_assert_int(list->size, ==, 1);
+  list_t list = make_list();
+  append_vector(&list, vector(2, 3, 5));
+  munit_assert_int(list.size, ==, 1);
   return MUNIT_OK;
 }
 
 static MunitResult test_get_vector(const MunitParameter params[], void *data) {
   vector_t p = vector(2, 3, 5);
-  list_t *list = make_list();
-  append_vector(list, p);
+  list_t list = make_list();
+  append_vector(&list, p);
   munit_assert_double(get_vector(list)[0].x, ==, 2);
   munit_assert_double(get_vector(list)[0].y, ==, 3);
   munit_assert_double(get_vector(list)[0].z, ==, 5);
@@ -117,16 +117,16 @@ static MunitResult test_get_vector(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_append_face(const MunitParameter params[], void *data) {
-  list_t *list = make_list();
-  append_face(list, face(0, 1, 2));
-  munit_assert_int(list->size, ==, 1);
+  list_t list = make_list();
+  append_face(&list, face(0, 1, 2));
+  munit_assert_int(list.size, ==, 1);
   return MUNIT_OK;
 }
 
 static MunitResult test_get_face(const MunitParameter params[], void *data) {
   face_t f = face(0, 1, 2);
-  list_t *list = make_list();
-  append_face(list, f);
+  list_t list = make_list();
+  append_face(&list, f);
   munit_assert_int(get_face(list)[0].a, ==, 0);
   munit_assert_int(get_face(list)[0].b, ==, 1);
   munit_assert_int(get_face(list)[0].c, ==, 2);
@@ -134,32 +134,32 @@ static MunitResult test_get_face(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_append_edge(const MunitParameter params[], void *data) {
-  list_t *list = make_list();
-  append_edge(list, edge(2, 3));
-  munit_assert_int(list->size, ==, 1);
+  list_t list = make_list();
+  append_edge(&list, edge(2, 3));
+  munit_assert_int(list.size, ==, 1);
   return MUNIT_OK;
 }
 
 static MunitResult test_get_edge(const MunitParameter params[], void *data) {
   edge_t e = edge(2, 3);
-  list_t *list = make_list();
-  append_edge(list, e);
+  list_t list = make_list();
+  append_edge(&list, e);
   munit_assert_int(get_edge(list)[0].a, ==, 2);
   munit_assert_int(get_edge(list)[0].b, ==, 3);
   return MUNIT_OK;
 }
 
 static MunitResult test_append_coordinate(const MunitParameter params[], void *data) {
-  list_t *list = make_list();
-  append_coordinate(list, coordinate(2, 3));
-  munit_assert_int(list->size, ==, 1);
+  list_t list = make_list();
+  append_coordinate(&list, coordinate(2, 3));
+  munit_assert_int(list.size, ==, 1);
   return MUNIT_OK;
 }
 
 static MunitResult test_get_coordinate(const MunitParameter params[], void *data) {
   coordinate_t c = coordinate(2, 3);
-  list_t *list = make_list();
-  append_coordinate(list, c);
+  list_t list = make_list();
+  append_coordinate(&list, c);
   munit_assert_int(get_coordinate(list)[0].u, ==, 2);
   munit_assert_int(get_coordinate(list)[0].v, ==, 3);
   return MUNIT_OK;
@@ -167,16 +167,16 @@ static MunitResult test_get_coordinate(const MunitParameter params[], void *data
 
 static MunitResult test_append_contact(const MunitParameter params[], void *data) {
   contact_t c = contact(2, 3, vector(1, 2, 3), vector(3, 4, 5));
-  list_t *list = make_list();
-  append_contact(list, c);
-  munit_assert_int(list->size, ==, 1);
+  list_t list = make_list();
+  append_contact(&list, c);
+  munit_assert_int(list.size, ==, 1);
   return MUNIT_OK;
 }
 
 static MunitResult test_get_contact(const MunitParameter params[], void *data) {
   contact_t c = contact(2, 3, vector(1, 2, 3), vector(3, 4, 5));
-  list_t *list = make_list();
-  append_contact(list, c);
+  list_t list = make_list();
+  append_contact(&list, c);
   munit_assert_int(get_contact(list)[0].i, ==, 2);
   munit_assert_int(get_contact(list)[0].j, ==, 3);
   return MUNIT_OK;

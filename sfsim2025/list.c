@@ -3,14 +3,6 @@
 #include <gc.h>
 #include "list.h"
 
-list_t *make_list(void) {
-  list_t *result = GC_MALLOC(sizeof(list_t));
-  result->size = 0;
-  result->buffer_size = 0;
-  result->element = NULL;
-  return result;
-}
-
 static void grow_list(list_t *list, size_t element_size, bool atomic) {
   if (list->buffer_size < (list->size + 1) * element_size) {
     list->buffer_size = list->buffer_size ? 2 * list->buffer_size : element_size;

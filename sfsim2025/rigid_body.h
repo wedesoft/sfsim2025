@@ -8,9 +8,9 @@
 
 
 typedef struct {
-  list_t *points;
-  list_t *edges;
-  list_t *faces;
+  list_t points;
+  list_t edges;
+  list_t faces;
   vector_t center;
 } rigid_body_t;
 
@@ -49,10 +49,10 @@ bool edge_planes(rigid_body_t *body, edge_t edge1, rigid_body_t *other, edge_t e
 
 double best_edge_pair(rigid_body_t *body, rigid_body_t *other, int *edge1_index, int *edge2_index);
 
-list_t *penetration_candidates(plane_t p, rigid_body_t *body);
+list_t penetration_candidates(plane_t p, rigid_body_t *body);
 
 plane_t separating_plane(rigid_body_t *body, rigid_body_t *other, double *distance);
 
-list_t *contact_points(rigid_body_t *body, rigid_body_t *other, double *distance, vector_t *normal);
+list_t contact_points(rigid_body_t *body, rigid_body_t *other, double *distance, vector_t *normal);
 
 rigid_body_t *transform_body(rigid_body_t *body, quaternion_t q, vector_t t);

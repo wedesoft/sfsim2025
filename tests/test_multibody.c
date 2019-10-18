@@ -125,11 +125,11 @@ static MunitResult test_normal_vectors(const MunitParameter params[], void *data
 }
 
 static MunitResult test_conditions_shape(const MunitParameter params[], void *data) {
-  list_t *contacts = make_list();
-  append_contact(contacts, contact(0, 1, vector(0, 0, 1), vector(0, 0, 2)));
-  list_t *bodies = make_list();
-  append_pointer(bodies, make_rigid_body(vector(0, 0, 0)));
-  append_pointer(bodies, make_rigid_body(vector(0, 0, 5)));
+  list_t contacts = make_list();
+  append_contact(&contacts, contact(0, 1, vector(0, 0, 1), vector(0, 0, 2)));
+  list_t bodies = make_list();
+  append_pointer(&bodies, make_rigid_body(vector(0, 0, 0)));
+  append_pointer(&bodies, make_rigid_body(vector(0, 0, 5)));
   large_matrix_t j = contact_conditions(contacts, bodies);
   munit_assert_int(j.rows, ==, 12);
   munit_assert_int(j.cols, ==, 3);
@@ -137,11 +137,11 @@ static MunitResult test_conditions_shape(const MunitParameter params[], void *da
 }
 
 static MunitResult test_conditions_content(const MunitParameter params[], void *data) {
-  list_t *contacts = make_list();
-  append_contact(contacts, contact(0, 1, vector(0, 0, 1), vector(0, 0, 2)));
-  list_t *bodies = make_list();
-  append_pointer(bodies, make_rigid_body(vector(0, 0, 0)));
-  append_pointer(bodies, make_rigid_body(vector(0, 0, 5)));
+  list_t contacts = make_list();
+  append_contact(&contacts, contact(0, 1, vector(0, 0, 1), vector(0, 0, 2)));
+  list_t bodies = make_list();
+  append_pointer(&bodies, make_rigid_body(vector(0, 0, 0)));
+  append_pointer(&bodies, make_rigid_body(vector(0, 0, 5)));
   large_matrix_t j = contact_conditions(contacts, bodies);
   // negative identity matrix
   munit_assert_double(j.data[ 0], ==, -1); munit_assert_double(j.data[ 1], ==,  0); munit_assert_double(j.data[ 2], ==,  0);
@@ -164,7 +164,7 @@ static MunitResult test_conditions_content(const MunitParameter params[], void *
 
 static MunitResult test_speed_vector_size(const MunitParameter params[], void *data) {
   state_t *s = state(vector(0, 0, 0), vector(1, 2, 3), quaternion(1, 0, 0, 0), vector(2, 3, 5));
-  list_t *lst = make_list(); append_pointer(lst, s); append_pointer(lst, s);
+  list_t lst = make_list(); append_pointer(&lst, s); append_pointer(&lst, s);
   large_vector_t v = speed_vector(lst);
   munit_assert_int(v.rows, ==, 12);
   return MUNIT_OK;
@@ -172,7 +172,7 @@ static MunitResult test_speed_vector_size(const MunitParameter params[], void *d
 
 static MunitResult test_speed_vector_content(const MunitParameter params[], void *data) {
   state_t *s = state(vector(0, 0, 0), vector(1, 2, 3), quaternion(1, 0, 0, 0), vector(2, 3, 5));
-  list_t *lst = make_list(); append_pointer(lst, s);
+  list_t lst = make_list(); append_pointer(&lst, s);
   large_vector_t v = speed_vector(lst);
   munit_assert_double(v.data[0], ==, 1);
   munit_assert_double(v.data[1], ==, 2);

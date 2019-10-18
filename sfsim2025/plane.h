@@ -21,6 +21,6 @@ static inline plane_t negative_plane(plane_t p) {
   return plane(p.point, vector_negative(p.normal));
 }
 
-list_t *plane_coordinates(plane_t plane, list_t *vectors);
+list_t plane_coordinates(plane_t plane, list_t vectors);
 
-list_t *plane_points(plane_t plane, list_t *coordinates);
+list_t plane_points(plane_t plane, list_t coordinates);

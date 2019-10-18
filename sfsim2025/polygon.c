@@ -27,20 +27,20 @@ static inline bool further(coordinate_t a, coordinate_t b, coordinate_t c) {
 
 // Compute convex hull of 2D point cloud and return resulting polygon in counter clockwise order.
 // https://www.tutorialspoint.com/Jarvis-March-Algorithm
-list_t *convex_hull(list_t *polygon) {
-  list_t *result = make_list();
-  if (polygon->size == 0) return result;
+list_t convex_hull(list_t polygon) {
+  list_t result = make_list();
+  if (polygon.size == 0) return result;
   coordinate_t start = coordinate(DBL_MAX, DBL_MAX);
-  for (int i=0; i<polygon->size; i++) {
+  for (int i=0; i<polygon.size; i++) {
     coordinate_t current = get_coordinate(polygon)[i];
     if (current.u < start.u || (current.u == start.u && current.v > start.v))
       start = current;  // Find leftmost (and then bottommost) start point.
   };
   coordinate_t current = start;
-  append_coordinate(result, current);
+  append_coordinate(&result, current);
   while (true) {
     coordinate_t next = current;
-    for (int i=0; i<polygon->size; i++) {
+    for (int i=0; i<polygon.size; i++) {
       coordinate_t point = get_coordinate(polygon)[i];
       if (coordinate_eq(point, current)) continue;  // Skip current point.
       if (coordinate_eq(next, current))
@@ -54,7 +54,7 @@ list_t *convex_hull(list_t *polygon) {
       };
     };
     if (coordinate_eq(next, start)) break;  // Finish when getting back to the start point.
-    append_coordinate(result, next);
+    append_coordinate(&result, next);
     current = next;
   };
   return result;
@@ -68,9 +68,9 @@ static inline bool side(coordinate_t a, coordinate_t b, coordinate_t p) {
 }
 
 // Check whether point is inside polygon (must be specified in counter clockwise order!).
-bool inside(list_t *points, coordinate_t point) {
-  for (int i=0; i<points->size; i++) {
-    int j = i < points->size - 1 ? i + 1 : 0;
+bool inside(list_t points, coordinate_t point) {
+  for (int i=0; i<points.size; i++) {
+    int j = i < points.size - 1 ? i + 1 : 0;
     if (side(get_coordinate(points)[i], get_coordinate(points)[j], point))
       return false;
   };
@@ -79,32 +79,32 @@ bool inside(list_t *points, coordinate_t point) {
 
 // Return pointcloud defining intersection of two convex counter clockwise polygons.
 // https://www.swtestacademy.com/intersection-convex-polygons-algorithm/
-list_t *intersection(list_t *a, list_t *b) {
-  list_t *result = make_list();
-  for (int i=0; i<a->size; i++) {
+list_t intersection(list_t a, list_t b) {
+  list_t result = make_list();
+  for (int i=0; i<a.size; i++) {
     coordinate_t p = get_coordinate(a)[i];
     if (inside(b, p))  // Find points of a which are inside b.
-      append_coordinate(result, p);
+      append_coordinate(&result, p);
   };
-  for (int i=0; i<b->size; i++) {
+  for (int i=0; i<b.size; i++) {
     coordinate_t p = get_coordinate(b)[i];
     if (inside(a, p))  // Find points of b which are inside a.
-      append_coordinate(result, p);
+      append_coordinate(&result, p);
   };
-  for (int i=0; i<a->size; i++) {
-    int i2 = i < a->size - 1 ? i + 1 : 0;
+  for (int i=0; i<a.size; i++) {
+    int i2 = i < a.size - 1 ? i + 1 : 0;
     coordinate_t p = get_coordinate(a)[i];
     coordinate_t p2 = get_coordinate(a)[i2];
     coordinate_t r = coordinate_difference(p2, p);
-    for (int j=0; j<b->size; j++) {
-      int j2 = j < b->size - 1 ? j + 1 : 0;
+    for (int j=0; j<b.size; j++) {
+      int j2 = j < b.size - 1 ? j + 1 : 0;
       coordinate_t q = get_coordinate(b)[j];
       coordinate_t q2 = get_coordinate(b)[j2];
       coordinate_t s = coordinate_difference(q2, q);
       if (side(p, p2, q) != side(p, p2, q2) && side(q, q2, p) != side(q, q2, p2)) {  // Find intersection of edges of a and b.
         // https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
         double t = cross_product_coords(coordinate_difference(q, p), s) / cross_product_coords(r, s);
-        append_coordinate(result, coordinate(p.u + t * r.u, p.v + t * r.v));
+        append_coordinate(&result, coordinate(p.u + t * r.u, p.v + t * r.v));
       };
     };
   };
