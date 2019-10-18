@@ -51,3 +51,8 @@ void append_contact(list_t *list, contact_t value) {
   grow_list(list, sizeof(contact_t), true);
   ((contact_t *)list->element)[list->size++] = value;
 }
+
+void append_body_info(list_t *list, body_info_t value) {
+  grow_list(list, sizeof(body_info_t), true);
+  ((body_info_t *)list->element)[list->size++] = value;
+}

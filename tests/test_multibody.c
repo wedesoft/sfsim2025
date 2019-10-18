@@ -185,10 +185,59 @@ static MunitResult test_speed_vector_content(const MunitParameter params[], void
 
 static MunitResult test_external_forces_size(const MunitParameter params[], void *data) {
   state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(2, 3, 5));
-  list_t lst = make_list(); append_pointer(&lst, s); append_pointer(&lst, s);
-  matrix_t inertia[] = {diagonal(3, 5, 7), diagonal(5, 7, 11)};
-  large_vector_t f = external_forces(lst, inertia);
+  list_t states = make_list(); append_pointer(&states, s); append_pointer(&states, s);
+  body_info_t b = body_info(1.0, diagonal(2, 3, 5), vector(0, 0, 0), vector(0, 0, 0));
+  list_t body_infos = make_list(); append_body_info(&body_infos, b); append_body_info(&body_infos, b);
+  large_vector_t f = external_forces(states, body_infos);
   munit_assert_int(f.rows, ==, 12);
+  return MUNIT_OK;
+}
+
+static MunitResult test_force(const MunitParameter params[], void *data) {
+  state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  list_t states = make_list(); append_pointer(&states, s);
+  body_info_t b = body_info(1.0, diagonal(2, 3, 5), vector(3, 5, 7), vector(0, 0, 0));
+  list_t body_infos = make_list(); append_body_info(&body_infos, b);
+  large_vector_t f = external_forces(states, body_infos);
+  munit_assert_double(f.data[0], ==, 3);
+  munit_assert_double(f.data[1], ==, 5);
+  munit_assert_double(f.data[2], ==, 7);
+  return MUNIT_OK;
+}
+
+static MunitResult test_torque(const MunitParameter params[], void *data) {
+  state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  list_t states = make_list(); append_pointer(&states, s);
+  body_info_t b = body_info(1.0, diagonal(2, 3, 5), vector(0, 0, 0), vector(3, 5, 7));
+  list_t body_infos = make_list(); append_body_info(&body_infos, b);
+  large_vector_t f = external_forces(states, body_infos);
+  munit_assert_double(f.data[3], ==, 3);
+  munit_assert_double(f.data[4], ==, 5);
+  munit_assert_double(f.data[5], ==, 7);
+  return MUNIT_OK;
+}
+
+static MunitResult test_coriolis(const MunitParameter params[], void *data) {
+  state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(1, 1, 1));
+  list_t states = make_list(); append_pointer(&states, s);
+  body_info_t b = body_info(1.0, diagonal(1, 2, 4), vector(0, 0, 0), vector(0, 0, 0));
+  list_t body_infos = make_list(); append_body_info(&body_infos, b);
+  large_vector_t f = external_forces(states, body_infos);
+  munit_assert_double(f.data[3], ==, -2);
+  munit_assert_double(f.data[4], ==,  3);
+  munit_assert_double(f.data[5], ==, -1);
+  return MUNIT_OK;
+}
+
+static MunitResult test_consider_orientation(const MunitParameter params[], void *data) {
+  state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion_rotation(M_PI / 2, vector(1, 0, 0)), vector(1, 1, 1));
+  list_t states = make_list(); append_pointer(&states, s);
+  body_info_t b = body_info(1.0, diagonal(1, 2, 4), vector(0, 0, 0), vector(0, 0, 0));
+  list_t body_infos = make_list(); append_body_info(&body_infos, b);
+  large_vector_t f = external_forces(states, body_infos);
+  munit_assert_double_equal(f.data[3],  2, 6);
+  munit_assert_double_equal(f.data[4],  1, 6);
+  munit_assert_double_equal(f.data[5], -3, 6);
   return MUNIT_OK;
 }
 
@@ -213,5 +262,9 @@ MunitTest test_multibody[] = {
   {"/speed_vector_size"         , test_speed_vector_size         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/speed_vector_content"      , test_speed_vector_content      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/external_forces_size"      , test_external_forces_size      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/force"                     , test_force                     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/torque"                    , test_torque                    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/coriolis"                  , test_coriolis                  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/consider_orientation"      , test_consider_orientation      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                         , NULL                           , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

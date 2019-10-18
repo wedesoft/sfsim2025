@@ -117,8 +117,21 @@ large_vector_t velocity_vector(list_t states) {
   return result;
 }
 
-large_vector_t external_forces(list_t states, matrix_t inertia[]) {
+large_vector_t external_forces(list_t states, list_t body_infos) {
   int n = states.size;
   large_vector_t result = allocate_large_vector(6 * n);
+  double *p = result.data;
+  for (int i=0; i<n; i++) {
+    state_t *state = get_pointer(states)[i];
+    body_info_t info = get_body_info(body_infos)[i];
+    *p++ = info.force.x;
+    *p++ = info.force.y;
+    *p++ = info.force.z;
+    matrix_t inertia = rotate_matrix(state->orientation, info.inertia);
+    vector_t coriolis = vector_negative(cross_product(state->rotation, matrix_vector_dot(inertia, state->rotation)));
+    *p++ = info.torque.x + coriolis.x;
+    *p++ = info.torque.y + coriolis.y;
+    *p++ = info.torque.z + coriolis.z;
+  };
   return result;
 }

@@ -17,4 +17,4 @@ large_matrix_t contact_conditions(list_t contacts, list_t bodies);
 
 large_vector_t velocity_vector(list_t states);
 
-large_vector_t external_forces(list_t states, matrix_t inertia[]);
+large_vector_t external_forces(list_t states, list_t body_infos);

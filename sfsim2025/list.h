@@ -1,5 +1,6 @@
 #pragma once
 #include <GL/gl.h>
+#include "body_info.h"
 #include "contact.h"
 #include "coordinate.h"
 #include "edge.h"
@@ -63,4 +64,10 @@ void append_contact(list_t *list, contact_t contact);
 
 static inline contact_t *get_contact(list_t list) {
   return (contact_t *)list.element;
+}
+
+void append_body_info(list_t *list, body_info_t value);
+
+static inline body_info_t *get_body_info(list_t list) {
+  return (body_info_t *)list.element;
 }
