@@ -1,15 +1,7 @@
 #pragma once
 #include <gc.h>
-#include "vector.h"
-#include "quaternion.h"
+#include "state.h"
 
-
-typedef struct {
-  vector_t position;
-  vector_t speed;
-  quaternion_t orientation;
-  vector_t rotation;
-} state_t;
 
 typedef struct {
   double mass;
@@ -17,16 +9,6 @@ typedef struct {
   vector_t force;
   vector_t torque;
 } body_info_t;
-
-// Create a state vector.
-static inline state_t *state(vector_t position, vector_t speed, quaternion_t orientation, vector_t rotation) {
-  state_t *result = GC_MALLOC_ATOMIC(sizeof(state_t));
-  result->position = position;
-  result->speed = speed;
-  result->orientation = orientation;
-  result->rotation = rotation;
-  return result;
-}
 
 void *runge_kutta(void *y0, double dt, void *f(double, double, void *, void *), void *add(void *, void *),
                   void *scale(void *, double), void *data);

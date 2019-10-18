@@ -12,6 +12,7 @@
 #include "test_polygon.h"
 #include "test_quaternion.h"
 #include "test_rigid_body.h"
+#include "test_state.h"
 #include "test_vector.h"
 
 
@@ -26,6 +27,7 @@ static MunitSuite test_sfsim[] = {
   {"/plane"       , test_plane       , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/polygon"     , test_polygon     , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/rigid_body"  , test_rigid_body  , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/state"       , test_state       , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/mechanics"   , test_mechanics   , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/contact"     , test_contact     , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/multibody"   , test_multibody   , NULL, 1, MUNIT_SUITE_OPTION_NONE},
