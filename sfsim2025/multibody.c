@@ -99,3 +99,19 @@ large_matrix_t contact_conditions(list_t *contacts, list_t *bodies) {
   };
   return result;
 }
+
+large_vector_t speed_vector(list_t *states) {
+  int n = states->size;
+  large_vector_t result = allocate_large_vector(6 * n);
+  double *p = result.data;
+  for (int i=0; i<n; i++) {
+    state_t *s = get_pointer(states)[i];
+    *p++ = s->speed.x;
+    *p++ = s->speed.y;
+    *p++ = s->speed.z;
+    *p++ = s->rotation.x;
+    *p++ = s->rotation.y;
+    *p++ = s->rotation.z;
+  };
+  return result;
+}

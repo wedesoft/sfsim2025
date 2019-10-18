@@ -162,6 +162,27 @@ static MunitResult test_conditions_content(const MunitParameter params[], void *
   return MUNIT_OK;
 }
 
+static MunitResult test_speed_vector_size(const MunitParameter params[], void *data) {
+  state_t *s = state(vector(0, 0, 0), vector(1, 2, 3), quaternion(1, 0, 0, 0), vector(2, 3, 5));
+  list_t *lst = make_list(); append_pointer(lst, s); append_pointer(lst, s);
+  large_vector_t v = speed_vector(lst);
+  munit_assert_int(v.rows, ==, 12);
+  return MUNIT_OK;
+}
+
+static MunitResult test_speed_vector_content(const MunitParameter params[], void *data) {
+  state_t *s = state(vector(0, 0, 0), vector(1, 2, 3), quaternion(1, 0, 0, 0), vector(2, 3, 5));
+  list_t *lst = make_list(); append_pointer(lst, s);
+  large_vector_t v = speed_vector(lst);
+  munit_assert_double(v.data[0], ==, 1);
+  munit_assert_double(v.data[1], ==, 2);
+  munit_assert_double(v.data[2], ==, 3);
+  munit_assert_double(v.data[3], ==, 2);
+  munit_assert_double(v.data[4], ==, 3);
+  munit_assert_double(v.data[5], ==, 5);
+  return MUNIT_OK;
+}
+
 MunitTest test_multibody[] = {
   {"/state_adapter_shape1"      , test_state_adapter_shape1      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/state_adapter_shape2"      , test_state_adapter_shape2      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -180,5 +201,7 @@ MunitTest test_multibody[] = {
   {"/normal_vectors"            , test_normal_vectors            , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/conditions_shape"          , test_conditions_shape          , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/conditions_content"        , test_conditions_content        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/speed_vector_size"         , test_speed_vector_size         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/speed_vector_content"      , test_speed_vector_content      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                         , NULL                           , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
