@@ -101,6 +101,7 @@ large_matrix_t contact_conditions(list_t contacts, list_t bodies) {
 }
 
 // Create generalized velocity vector.
+// https://people.mpi-inf.mpg.de/~schoemer/publications/VRST98.pdf
 large_vector_t velocity_vector(list_t states) {
   int n = states.size;
   large_vector_t result = allocate_large_vector(6 * n);
@@ -117,6 +118,8 @@ large_vector_t velocity_vector(list_t states) {
   return result;
 }
 
+// Vector of external forces and coriolis force.
+// https://people.mpi-inf.mpg.de/~schoemer/publications/VRST98.pdf
 large_vector_t external_forces(list_t states, list_t body_infos) {
   int n = states.size;
   large_vector_t result = allocate_large_vector(6 * n);
