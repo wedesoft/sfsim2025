@@ -19,3 +19,5 @@ static inline large_vector_t large_vector(int rows, double *data) {
   memcpy(result.data, data, rows * sizeof(double));
   return result;
 }
+
+large_vector_t large_vector_add(large_vector_t a, large_vector_t b);

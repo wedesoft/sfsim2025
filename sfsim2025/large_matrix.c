@@ -54,3 +54,23 @@ large_matrix_t large_inverse(large_matrix_t a) {
   clapack_dgetri(CblasRowMajor, a.rows, result.data, a.rows, ipiv);
   return result;
 }
+
+large_vector_t large_matrix_vector_dot(large_matrix_t m, large_vector_t v) {
+  assert(m.cols == v.rows);
+  large_vector_t result = allocate_large_vector(m.rows);
+  double *r = result.data;
+  double *p0 = m.data;
+  for (int j=0; j<m.rows; j++) {
+    double cell = 0;
+    double *p = p0;
+    double *q = v.data;
+    for (int i=0; i<m.cols; i++) {
+      cell += *p * * q;
+      p++;
+      q++;
+    };
+    *r++ = cell;
+    p0 += m.cols;
+  };
+  return result;
+}

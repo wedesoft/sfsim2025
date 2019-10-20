@@ -1,9 +1,30 @@
+#include <stdio.h>
 #include "sfsim2025/body_info.h"
 #include "sfsim2025/list.h"
 #include "sfsim2025/mechanics.h"
 #include "sfsim2025/multibody.h"
 #include "sfsim2025/rigid_body.h"
 #include "sfsim2025/state.h"
+
+large_matrix_t t(large_matrix_t m) {
+  return large_transpose(m);
+}
+
+large_matrix_t x(large_matrix_t a, large_matrix_t b) {
+  return large_matrix_dot(a, b);
+}
+
+large_matrix_t inv(large_matrix_t m) {
+  return large_inverse(m);
+}
+
+large_vector_t xx(large_matrix_t m, large_vector_t v) {
+  return large_matrix_vector_dot(m, v);
+}
+
+large_vector_t add(large_vector_t a, large_vector_t b) {
+  return large_vector_add(a, b);
+}
 
 int main(void) {
   GC_INIT();
@@ -29,5 +50,8 @@ int main(void) {
   append_body_info(&body_infos, info1);
   append_body_info(&body_infos, info2);
   large_vector_t f_ext = external_forces(states, body_infos);
+  large_matrix_t a = x(x(x(x(t(n), t(j)), inv(m)), j), n);
+  large_vector_t b = xx(x(t(n), t(j)), add(u, xx(inv(m), f_ext)));
+  printf("%f * x + %f >= 0; x >= 0\n", a.data[0], b.data[0]);
   return 0;
 }

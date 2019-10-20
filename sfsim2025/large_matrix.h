@@ -1,6 +1,7 @@
 #pragma once
 #include <string.h>
 #include <gc.h>
+#include "large_vector.h"
 
 
 typedef struct {
@@ -26,3 +27,5 @@ large_matrix_t large_matrix_dot(large_matrix_t a, large_matrix_t b);
 large_matrix_t large_transpose(large_matrix_t a);
 
 large_matrix_t large_inverse(large_matrix_t a);
+
+large_vector_t large_matrix_vector_dot(large_matrix_t m, large_vector_t v);

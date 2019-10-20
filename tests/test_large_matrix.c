@@ -39,10 +39,21 @@ static MunitResult test_inverse(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_vector_dot(const MunitParameter params[], void *data) {
+  large_matrix_t a = large_matrix(2, 3, (double []){2, 3, 5, 7, 11, 13});
+  large_vector_t v = large_vector(3, (double []){2, 3, 5});
+  large_vector_t r = large_matrix_vector_dot(a, v);
+  munit_assert_int(r.rows, ==, 2);
+  munit_assert_double(r.data[0], ==,  38);
+  munit_assert_double(r.data[1], ==, 112);
+  return MUNIT_OK;
+}
+
 MunitTest test_large_matrix[] = {
-  {"/create"   , test_create   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/dot"      , test_dot      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/transpose", test_transpose, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/inverse"  , test_inverse  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {NULL        , NULL          , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
+  {"/create"    , test_create    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/dot"       , test_dot       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/transpose" , test_transpose , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/inverse"   , test_inverse   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/vector_dot", test_vector_dot, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {NULL         , NULL           , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
