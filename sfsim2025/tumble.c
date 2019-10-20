@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
   GC_INIT();
   glutInit(&argc, argv);
   SDL_Init(SDL_INIT_VIDEO);
-  SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+  SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 2);
   SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 1);
   SDL_Window *window = SDL_CreateWindow("tumble", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480,
                                         SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
   glViewport(0, 0, 640, 480);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  gluPerspective(65.0, (GLfloat)1024/(GLfloat)768, 1.0, 20.0);
+  gluPerspective(65.0, (GLfloat)640/(GLfloat)480, 1.0, 20.0);
   s = state(vector(0, 0, -4), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.4, 0.1, 4));
   clock_gettime(CLOCK_REALTIME, &t0);
   bool quit = false;
