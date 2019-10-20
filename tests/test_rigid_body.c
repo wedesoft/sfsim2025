@@ -9,7 +9,7 @@ static rigid_body_t *make_tetrahedron(double scale, double z) {
   //    /   \ |  ---+---->
   //   /     \|    /|   x
   // 0--------1
-  rigid_body_t *result = make_rigid_body(vector(0, 0, z));
+  rigid_body_t *result = make_rigid_body();
   add_point(result, vector(0, 0, z));
   add_point(result, vector(scale, 0, z));
   add_point(result, vector(0, scale, z));
@@ -44,7 +44,7 @@ static rigid_body_t *make_cube(double x, double y, double z) {
   // |       | 5    ----+----->
   // |       |/        /|   x
   // 0-------1        / |
-  rigid_body_t *result = make_rigid_body(vector(x + 1, y + 1, z + 1));
+  rigid_body_t *result = make_rigid_body();
   add_point(result, vector(0 + x, 0 + y, 0 + z));
   add_point(result, vector(2 + x, 0 + y, 0 + z));
   add_point(result, vector(0 + x, 0 + y, 2 + z));
@@ -67,7 +67,7 @@ static rigid_body_t *make_rotated_cube1(double z) {
   //    \   /
   //     \ /
   //      0
-  rigid_body_t *result = make_rigid_body(vector(1, 1, 1 + z));
+  rigid_body_t *result = make_rigid_body();
   add_point(result, vector(1, 0, 0 + z));
   add_point(result, vector(2, 0, 1 + z));
   add_point(result, vector(0, 0, 1 + z));
@@ -87,7 +87,7 @@ static rigid_body_t *make_rotated_cube2(double z) {
   // 6-------2   /   ----+----->
   //  \       \ /       /|   x
   //   4-------0
-  rigid_body_t *result = make_rigid_body(vector(1, 1, 1 + z));
+  rigid_body_t *result = make_rigid_body();
   add_point(result, vector(2, 1, 0 + z));
   add_point(result, vector(2, 2, 1 + z));
   add_point(result, vector(2, 0, 1 + z));
@@ -101,29 +101,28 @@ static rigid_body_t *make_rotated_cube2(double z) {
 }
 
 static MunitResult test_create(const MunitParameter params[], void *data) {
-  munit_assert_int(make_rigid_body(vector(1, 2, 3))->points.size, ==, 0);
-  munit_assert_int(make_rigid_body(vector(1, 2, 3))->edges.size, ==, 0);
-  munit_assert_int(make_rigid_body(vector(1, 2, 3))->faces.size, ==, 0);
-  munit_assert_true(vector_eq(make_rigid_body(vector(1, 2, 3))->center, vector(1, 2, 3)));
+  munit_assert_int(make_rigid_body()->points.size, ==, 0);
+  munit_assert_int(make_rigid_body()->edges.size, ==, 0);
+  munit_assert_int(make_rigid_body()->faces.size, ==, 0);
   return MUNIT_OK;
 }
 
 static MunitResult test_add_point(const MunitParameter params[], void *data) {
-  rigid_body_t *body = make_rigid_body(vector(0, 0, 0));
+  rigid_body_t *body = make_rigid_body();
   add_point(body, vector(2, 3, 5));
   munit_assert_int(body->points.size, ==, 1);
   return MUNIT_OK;
 }
 
 static MunitResult test_add_face(const MunitParameter params[], void *data) {
-  rigid_body_t *body = make_rigid_body(vector(0, 0, 0));
+  rigid_body_t *body = make_rigid_body();
   add_face(body, face(0, 1, 2));
   munit_assert_int(body->faces.size, ==, 1);
   return MUNIT_OK;
 }
 
 static MunitResult test_face_edges(const MunitParameter params[], void *data) {
-  rigid_body_t *body = make_rigid_body(vector(0, 0, 0));
+  rigid_body_t *body = make_rigid_body();
   add_face(body, face(0, 1, 2));
   munit_assert_int(body->edges.size, ==, 3);
   munit_assert_int(get_edge(body->edges)[0].a, ==, 0);
@@ -136,7 +135,7 @@ static MunitResult test_face_edges(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_existing_edge(const MunitParameter params[], void *data) {
-  rigid_body_t *body = make_rigid_body(vector(0, 0, 0));
+  rigid_body_t *body = make_rigid_body();
   add_face(body, face(0, 1, 2));
   add_face(body, face(2, 1, 4));
   munit_assert_int(body->edges.size, ==, 5);
@@ -414,15 +413,6 @@ static MunitResult test_transform(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
-static MunitResult test_transform_center(const MunitParameter params[], void *data) {
-  rigid_body_t *body = make_rigid_body(vector(1, 2, 3));
-  rigid_body_t *result = transform_body(body, quaternion(1, 0, 0, 0), vector(2, 3, 4));
-  munit_assert_double(result->center.x, ==, 3);
-  munit_assert_double(result->center.y, ==, 5);
-  munit_assert_double(result->center.z, ==, 7);
-  return MUNIT_OK;
-}
-
 MunitTest test_rigid_body[] = {
   {"/create"           , test_create           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/add_point"        , test_add_point        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -451,6 +441,5 @@ MunitTest test_rigid_body[] = {
   {"/contact_points2"  , test_contact_points2  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/no_contact"       , test_no_contact       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/transform"        , test_transform        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/transform_center" , test_transform_center , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                , NULL                  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

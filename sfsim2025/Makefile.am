@@ -1,4 +1,4 @@
-noinst_PROGRAMS = tumble contact
+noinst_PROGRAMS = tumble contacts
 
 lib_LTLIBRARIES = libsfsim2025.la
 
@@ -16,7 +16,7 @@ tumble_CFLAGS = $(GLEW_CFLAGS) $(GL_CFLAGS) $(ATLAS_CFLAGS) $(BOEHM_CFLAGS) $(SD
 tumble_LDFLAGS =
 tumble_LDADD = libsfsim2025.la $(GLEW_LIBS) $(GL_LIBS) $(BOEHM_LIBS) $(SDL_LIBS) -lm
 
-contact_SOURCES = contact.c
-contact_CFLAGS = $(ATLAS_CFLAGS) $(BOEHM_CFLAGS)
-contact_LDFLAGS =
-contact_LDADD = libsfsim2025.la $(BOEHM_LIBS) -lm
+contacts_SOURCES = contacts.c
+contacts_CFLAGS = $(ATLAS_CFLAGS) $(BOEHM_CFLAGS)
+contacts_LDFLAGS =
+contacts_LDADD = libsfsim2025.la $(BOEHM_LIBS) -lm

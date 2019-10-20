@@ -11,10 +11,9 @@ typedef struct {
   list_t points;
   list_t edges;
   list_t faces;
-  vector_t center;
 } rigid_body_t;
 
-rigid_body_t *make_rigid_body(vector_t center);
+rigid_body_t *make_rigid_body(void);
 
 void add_point(rigid_body_t *body, vector_t point);
 

@@ -67,8 +67,8 @@ large_matrix_t contact_normals(int k, vector_t normals[]) {
 
 // Create matrix of contact conditions.
 // https://people.mpi-inf.mpg.de/~schoemer/publications/VRST98.pdf
-large_matrix_t contact_conditions(list_t contacts, list_t bodies) {
-  int rows = 6 * bodies.size;
+large_matrix_t contact_conditions(list_t contacts, list_t states) {
+  int rows = 6 * states.size;
   int columns = 3 * contacts.size;
   large_matrix_t result = allocate_large_matrix(rows, columns);
   memset(result.data, 0, rows * columns * sizeof(double));
@@ -79,7 +79,7 @@ large_matrix_t contact_conditions(list_t contacts, list_t bodies) {
       *p = -1; p += columns + 1;
       *p = -1; p += columns + 1;
       *p = -1; p += columns - 2;
-      vector_t r_i = vector_subtract(contact.point, ((rigid_body_t *)get_pointer(bodies)[contact.i])->center);
+      vector_t r_i = vector_subtract(contact.point, ((state_t *)get_pointer(states)[contact.i])->position);
       matrix_t m_i = matrix_negative(cross_product_matrix(r_i));
       p[0] = m_i.m11; p[1] = m_i.m12; p[2] = m_i.m13; p += columns;
       p[0] = m_i.m21; p[1] = m_i.m22; p[2] = m_i.m23; p += columns;
@@ -90,7 +90,7 @@ large_matrix_t contact_conditions(list_t contacts, list_t bodies) {
       *p = 1; p += columns + 1;
       *p = 1; p += columns + 1;
       *p = 1; p += columns - 2;
-      vector_t r_j = vector_subtract(contact.point, ((rigid_body_t *)get_pointer(bodies)[contact.j])->center);
+      vector_t r_j = vector_subtract(contact.point, ((state_t *)get_pointer(states)[contact.j])->position);
       matrix_t m_j = cross_product_matrix(r_j);
       p[0] = m_j.m11; p[1] = m_j.m12; p[2] = m_j.m13; p += columns;
       p[0] = m_j.m21; p[1] = m_j.m22; p[2] = m_j.m23; p += columns;
