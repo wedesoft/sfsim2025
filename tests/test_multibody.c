@@ -150,10 +150,9 @@ static MunitResult test_normal_vectors(const MunitParameter params[], void *data
 static MunitResult test_conditions_shape(const MunitParameter params[], void *data) {
   list_t contacts = make_list();
   append_contact(&contacts, contact(0, 1, vector(0, 0, 1), vector(0, 0, 2)));
-  list_t bodies = make_list();
-  append_pointer(&bodies, make_rigid_body(vector(0, 0, 0)));
-  append_pointer(&bodies, make_rigid_body(vector(0, 0, 5)));
-  large_matrix_t j = contact_conditions(contacts, bodies);
+  state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(2, 3, 5));
+  list_t states = make_list(); append_pointer(&states, s); append_pointer(&states, s);
+  large_matrix_t j = contact_conditions(contacts, states);
   munit_assert_int(j.rows, ==, 12);
   munit_assert_int(j.cols, ==, 3);
   return MUNIT_OK;
@@ -163,9 +162,10 @@ static MunitResult test_conditions_content(const MunitParameter params[], void *
   list_t contacts = make_list();
   append_contact(&contacts, contact(0, 1, vector(0, 0, 1), vector(0, 0, 2)));
   list_t bodies = make_list();
-  append_pointer(&bodies, make_rigid_body(vector(0, 0, 0)));
-  append_pointer(&bodies, make_rigid_body(vector(0, 0, 5)));
-  large_matrix_t j = contact_conditions(contacts, bodies);
+  state_t *s1 = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(2, 3, 5));
+  state_t *s2 = state(vector(0, 0, 5), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(2, 3, 5));
+  list_t states = make_list(); append_pointer(&states, s1); append_pointer(&states, s2);
+  large_matrix_t j = contact_conditions(contacts, states);
   // negative identity matrix
   munit_assert_double(j.data[ 0], ==, -1); munit_assert_double(j.data[ 1], ==,  0); munit_assert_double(j.data[ 2], ==,  0);
   munit_assert_double(j.data[ 3], ==,  0); munit_assert_double(j.data[ 4], ==, -1); munit_assert_double(j.data[ 5], ==,  0);
