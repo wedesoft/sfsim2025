@@ -80,10 +80,10 @@ large_matrix_t contact_conditions(list_t contacts, list_t states) {
       *p = -1; p += columns + 1;
       *p = -1; p += columns - 2;
       vector_t r_i = vector_subtract(contact.point, ((state_t *)get_pointer(states)[contact.i])->position);
-      matrix_t m_i = matrix_negative(cross_product_matrix(r_i));
-      p[0] = m_i.m11; p[1] = m_i.m12; p[2] = m_i.m13; p += columns;
-      p[0] = m_i.m21; p[1] = m_i.m22; p[2] = m_i.m23; p += columns;
-      p[0] = m_i.m31; p[1] = m_i.m32; p[2] = m_i.m33; p += columns;
+      matrix_t m_i = cross_product_matrix(r_i);
+      p[0] = -m_i.m11; p[1] = -m_i.m12; p[2] = -m_i.m13; p += columns;
+      p[0] = -m_i.m21; p[1] = -m_i.m22; p[2] = -m_i.m23; p += columns;
+      p[0] = -m_i.m31; p[1] = -m_i.m32; p[2] = -m_i.m33; p += columns;
     };
     {
       double *p = &result.data[k * 3 + contact.j * columns * 6];
