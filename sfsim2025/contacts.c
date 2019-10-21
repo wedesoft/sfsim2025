@@ -35,7 +35,7 @@ int main(void) {
   append_pointer(&states, s1);
   append_pointer(&states, s2);
 
-  body_info_t info1 = body_info(1.0, inertia_cuboid(1.0, 1, 0.4, 0.2), vector(0, 0, -10), vector(0, 0, 0));
+  body_info_t info1 = body_info(1.0, inertia_cuboid(1.0, 1, 0.4, 0.2), vector(0, 0, -9.81), vector(0, 0, 0));
   body_info_t info2 = body_info(6e+24, inertia_cuboid(6e+24, 6370e+3, 6370e+3, 6370e+3), vector(0, 0, 0), vector(0, 0, 0));
   list_t body_infos = make_list();
   append_body_info(&body_infos, info1);

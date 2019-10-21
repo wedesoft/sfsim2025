@@ -3,6 +3,7 @@
 #include "test_contact.h"
 #include "test_large_matrix.h"
 #include "test_large_vector.h"
+#include "test_linear_complementary.h"
 #include "test_list.h"
 #include "test_matrix.h"
 #include "test_matrix43.h"
@@ -17,21 +18,22 @@
 
 
 static MunitSuite test_sfsim[] = {
-  {"/list"        , test_list        , NULL, 1, MUNIT_SUITE_OPTION_NONE},
-  {"/vector"      , test_vector      , NULL, 1, MUNIT_SUITE_OPTION_NONE},
-  {"/matrix"      , test_matrix      , NULL, 1, MUNIT_SUITE_OPTION_NONE},
-  {"/matrix43"    , test_matrix43    , NULL, 1, MUNIT_SUITE_OPTION_NONE},
-  {"/large_vector", test_large_vector, NULL, 1, MUNIT_SUITE_OPTION_NONE},
-  {"/large_matrix", test_large_matrix, NULL, 1, MUNIT_SUITE_OPTION_NONE},
-  {"/quaternion"  , test_quaternion  , NULL, 1, MUNIT_SUITE_OPTION_NONE},
-  {"/plane"       , test_plane       , NULL, 1, MUNIT_SUITE_OPTION_NONE},
-  {"/polygon"     , test_polygon     , NULL, 1, MUNIT_SUITE_OPTION_NONE},
-  {"/rigid_body"  , test_rigid_body  , NULL, 1, MUNIT_SUITE_OPTION_NONE},
-  {"/state"       , test_state       , NULL, 1, MUNIT_SUITE_OPTION_NONE},
-  {"/mechanics"   , test_mechanics   , NULL, 1, MUNIT_SUITE_OPTION_NONE},
-  {"/contact"     , test_contact     , NULL, 1, MUNIT_SUITE_OPTION_NONE},
-  {"/multibody"   , test_multibody   , NULL, 1, MUNIT_SUITE_OPTION_NONE},
-  {NULL           , NULL             , NULL, 0, MUNIT_SUITE_OPTION_NONE}
+  {"/list"                , test_list                , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/vector"              , test_vector              , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/matrix"              , test_matrix              , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/matrix43"            , test_matrix43            , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/large_vector"        , test_large_vector        , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/large_matrix"        , test_large_matrix        , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/quaternion"          , test_quaternion          , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/plane"               , test_plane               , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/polygon"             , test_polygon             , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/rigid_body"          , test_rigid_body          , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/state"               , test_state               , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/mechanics"           , test_mechanics           , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/contact"             , test_contact             , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/multibody"           , test_multibody           , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/linear_complementary", test_linear_complementary, NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {NULL                   , NULL                     , NULL, 0, MUNIT_SUITE_OPTION_NONE}
 };
 
 static const MunitSuite test_suite[] = {
