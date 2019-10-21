@@ -41,9 +41,11 @@ int main(void) {
   append_body_info(&body_infos, info1);
   append_body_info(&body_infos, info2);
 
-  contact_t c = contact(0, 1, vector(0, 0, -1), vector(0, 0, 6370e+3));
+  contact_t c1 = contact(0, 1, vector(0, 0, -1), vector(-1, 0, 6370e+3));
+  contact_t c2 = contact(0, 1, vector(0, 0, -1), vector(+1, 0, 6370e+3));
   list_t contacts = make_list();
-  append_contact(&contacts, c);
+  append_contact(&contacts, c1);
+  append_contact(&contacts, c2);
 
   large_matrix_t n = contact_normals(contacts);
   large_matrix_t j = contact_conditions(contacts, states);
@@ -52,6 +54,7 @@ int main(void) {
   large_vector_t f_ext = external_forces(states, body_infos);
   large_matrix_t a = x(x(x(x(t(n), t(j)), inv(m)), j), n);
   large_vector_t b = xx(x(t(n), t(j)), add(u, xx(inv(m), f_ext)));
-  printf("%f * x + %f >= 0; x >= 0\n", a.data[0], b.data[0]);
+  printf("[%5.2f %5.2f]     [%5.2f]\n", a.data[0], a.data[1], b.data[0]);
+  printf("[%5.2f %5.2f] x + [%5.2f] >= 0, x >=0\n", a.data[2], a.data[3], b.data[1]);
   return 0;
 }
