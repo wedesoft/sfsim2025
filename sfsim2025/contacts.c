@@ -28,6 +28,7 @@ large_vector_t add(large_vector_t a, large_vector_t b) {
 
 int main(void) {
   GC_INIT();
+
   state_t *s1 = state(vector(0, 0, 6370e+3 + 0.1), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   list_t states = make_list();
@@ -40,12 +41,11 @@ int main(void) {
   append_body_info(&body_infos, info1);
   append_body_info(&body_infos, info2);
 
-  vector_t normal = vector(0, 0, -1);
-  contact_t c = contact(0, 1, normal, vector(0, 0, 6370e+3));
+  contact_t c = contact(0, 1, vector(0, 0, -1), vector(0, 0, 6370e+3));
   list_t contacts = make_list();
   append_contact(&contacts, c);
 
-  large_matrix_t n = contact_normals(1, &normal);
+  large_matrix_t n = contact_normals(contacts);
   large_matrix_t j = contact_conditions(contacts, states);
   large_matrix_t m = generalized_mass(body_infos, states);
   large_vector_t u = velocity_vector(states);

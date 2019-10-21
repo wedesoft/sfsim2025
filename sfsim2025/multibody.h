@@ -11,7 +11,7 @@ large_matrix_t state_adapter(list_t states);
 
 large_matrix_t generalized_mass(list_t body_infos, list_t states);
 
-large_matrix_t contact_normals(int k, vector_t normals[]);
+large_matrix_t contact_normals(list_t contacts);
 
 large_matrix_t contact_conditions(list_t contacts, list_t states);
 

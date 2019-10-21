@@ -56,17 +56,18 @@ large_matrix_t generalized_mass(list_t body_infos, list_t states) {
 
 // Create matrix of contact normals for k contacts.
 // https://people.mpi-inf.mpg.de/~schoemer/publications/VRST98.pdf
-large_matrix_t contact_normals(int k, vector_t normals[]) {
+large_matrix_t contact_normals(list_t contacts) {
+  int k = contacts.size;
   int rows = 3 * k;
   int columns = k;
   large_matrix_t result = allocate_large_matrix(rows, columns);
   memset(result.data, 0, rows * columns * sizeof(double));
   double *p = result.data;
   for (int i=0; i<k; i++) {
-    vector_t *normal = &normals[i];
-    *p = normal->x; p += columns;
-    *p = normal->y; p += columns;
-    *p = normal->z; p += columns;
+    vector_t normal = get_contact(contacts)[i].normal;
+    *p = normal.x; p += columns;
+    *p = normal.y; p += columns;
+    *p = normal.z; p += columns;
     p++;
   };
   return result;

@@ -146,24 +146,29 @@ static MunitResult test_rotate_inertia(const MunitParameter params[], void *data
 }
 
 static MunitResult test_contact_normals_shape(const MunitParameter params[], void *data) {
-  vector_t normal = vector(1, 2, 3);
-  large_matrix_t n = contact_normals(1, &normal);
+  list_t contacts = make_list();
+  append_contact(&contacts, contact(0, 1, vector(1, 2, 3), vector(0, 0, 0)));
+  large_matrix_t n = contact_normals(contacts);
   munit_assert_int(n.rows, ==, 3);
   munit_assert_int(n.cols, ==, 1);
   return MUNIT_OK;
 }
 
 static MunitResult test_contact_normals_shape2(const MunitParameter params[], void *data) {
-  vector_t normals[] = {vector(1, 2, 3), vector(4, 5, 6)};
-  large_matrix_t n = contact_normals(2, normals);
+  list_t contacts = make_list();
+  append_contact(&contacts, contact(0, 1, vector(1, 2, 3), vector(1, 0, 0)));
+  append_contact(&contacts, contact(0, 1, vector(4, 5, 6), vector(3, 0, 0)));
+  large_matrix_t n = contact_normals(contacts);
   munit_assert_int(n.rows, ==, 6);
   munit_assert_int(n.cols, ==, 2);
   return MUNIT_OK;
 }
 
 static MunitResult test_normal_vectors(const MunitParameter params[], void *data) {
-  vector_t normals[] = {vector(1, 2, 3), vector(4, 5, 6)};
-  large_matrix_t n = contact_normals(2, normals);
+  list_t contacts = make_list();
+  append_contact(&contacts, contact(0, 1, vector(1, 2, 3), vector(1, 0, 0)));
+  append_contact(&contacts, contact(0, 1, vector(4, 5, 6), vector(3, 0, 0)));
+  large_matrix_t n = contact_normals(contacts);
   munit_assert_double(n.data[0], ==, 1); munit_assert_double(n.data[2], ==, 2); munit_assert_double(n.data[ 4], ==, 3);
   munit_assert_double(n.data[7], ==, 4); munit_assert_double(n.data[9], ==, 5); munit_assert_double(n.data[11], ==, 6);
   return MUNIT_OK;
