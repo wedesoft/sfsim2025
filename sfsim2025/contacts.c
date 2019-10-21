@@ -47,9 +47,6 @@ int main(void) {
 
   large_matrix_t n = contact_normals(1, &normal);
   large_matrix_t j = contact_conditions(contacts, states);
-  double mass[] = {1.0, 6e+24};
-  matrix_t inertia[] = {info1.inertia, info2.inertia};
-  quaternion_t orientation[] = {s1->orientation, s2->orientation};
   large_matrix_t m = generalized_mass(body_infos, states);
   large_vector_t u = velocity_vector(states);
   large_vector_t f_ext = external_forces(states, body_infos);
