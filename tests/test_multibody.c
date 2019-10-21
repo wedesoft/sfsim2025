@@ -60,30 +60,35 @@ static MunitResult test_state_adapter_orientation2(const MunitParameter params[]
 }
 
 static MunitResult test_mass_shape(const MunitParameter params[], void *data) {
-  double mass = 10.0;
-  matrix_t inertia = diagonal(2, 3, 5);
-  quaternion_t orientation = quaternion(1, 0, 0, 0);
-  large_matrix_t m = generalized_mass(1, &mass, &inertia, &orientation);
+  list_t body_infos = make_list();
+  append_body_info(&body_infos, body_info(10.0, diagonal(2, 3, 5), vector(0, 0, 0), vector(0, 0, 0)));
+  list_t states = make_list();
+  append_pointer(&states, state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
+  large_matrix_t m = generalized_mass(body_infos, states);
   munit_assert_int(m.rows, ==, 6);
   munit_assert_int(m.cols, ==, 6);
   return MUNIT_OK;
 }
 
 static MunitResult test_mass_shape2(const MunitParameter params[], void *data) {
-  double mass[] = {10.0, 20.0};
-  matrix_t inertia[] = {diagonal(2, 3, 5), diagonal(3, 5, 7)};
-  quaternion_t orientation[] = {quaternion(1, 0, 0, 0), quaternion(1, 0, 0, 0)};
-  large_matrix_t m = generalized_mass(2, mass, inertia, orientation);
+  list_t body_infos = make_list();
+  append_body_info(&body_infos, body_info(10.0, diagonal(2, 3, 5), vector(0, 0, 0), vector(0, 0, 0)));
+  append_body_info(&body_infos, body_info(20.0, diagonal(3, 5, 7), vector(0, 0, 0), vector(0, 0, 0)));
+  list_t states = make_list();
+  append_pointer(&states, state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
+  append_pointer(&states, state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
+  large_matrix_t m = generalized_mass(body_infos, states);
   munit_assert_int(m.rows, ==, 12);
   munit_assert_int(m.cols, ==, 12);
   return MUNIT_OK;
 }
 
 static MunitResult test_mass_diagonal(const MunitParameter params[], void *data) {
-  double mass = 10.0;
-  matrix_t inertia = diagonal(2, 3, 5);
-  quaternion_t orientation = quaternion(1, 0, 0, 0);
-  large_matrix_t m = generalized_mass(1, &mass, &inertia, &orientation);
+  list_t body_infos = make_list();
+  append_body_info(&body_infos, body_info(10.0, diagonal(2, 3, 5), vector(0, 0, 0), vector(0, 0, 0)));
+  list_t states = make_list();
+  append_pointer(&states, state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
+  large_matrix_t m = generalized_mass(body_infos, states);
   munit_assert_double(m.data[ 0], ==, 10); munit_assert_double(m.data[ 1], ==,  0); munit_assert_double(m.data[ 2], ==,  0);
   munit_assert_double(m.data[ 6], ==,  0); munit_assert_double(m.data[ 7], ==, 10); munit_assert_double(m.data[ 8], ==,  0);
   munit_assert_double(m.data[12], ==,  0); munit_assert_double(m.data[13], ==,  0); munit_assert_double(m.data[14], ==, 10);
@@ -91,19 +96,24 @@ static MunitResult test_mass_diagonal(const MunitParameter params[], void *data)
 }
 
 static MunitResult test_mass_diagonal2(const MunitParameter params[], void *data) {
-  double mass[] = {10.0, 20.0};
-  matrix_t inertia[] = {diagonal(2, 3, 5), diagonal(3, 5, 7)};
+  list_t body_infos = make_list();
+  append_body_info(&body_infos, body_info(10.0, diagonal(2, 3, 5), vector(0, 0, 0), vector(0, 0, 0)));
+  append_body_info(&body_infos, body_info(20.0, diagonal(3, 5, 7), vector(0, 0, 0), vector(0, 0, 0)));
+  list_t states = make_list();
+  append_pointer(&states, state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
+  append_pointer(&states, state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
   quaternion_t orientation[] = {quaternion(1, 0, 0, 0), quaternion(1, 0, 0, 0)};
-  large_matrix_t m = generalized_mass(2, mass, inertia, orientation);
+  large_matrix_t m = generalized_mass(body_infos, states);
   munit_assert_double(m.data[78], ==, 20);
   return MUNIT_OK;
 }
 
 static MunitResult test_mass_inertia(const MunitParameter params[], void *data) {
-  double mass = 10.0;
-  matrix_t inertia = diagonal(2, 3, 5);
-  quaternion_t orientation = quaternion(1, 0, 0, 0);
-  large_matrix_t m = generalized_mass(1, &mass, &inertia, &orientation);
+  list_t body_infos = make_list();
+  append_body_info(&body_infos, body_info(10.0, diagonal(2, 3, 5), vector(0, 0, 0), vector(0, 0, 0)));
+  list_t states = make_list();
+  append_pointer(&states, state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
+  large_matrix_t m = generalized_mass(body_infos, states);
   munit_assert_double(m.data[21], ==, 2); munit_assert_double(m.data[22], ==, 0); munit_assert_double(m.data[23], ==, 0);
   munit_assert_double(m.data[27], ==, 0); munit_assert_double(m.data[28], ==, 3); munit_assert_double(m.data[29], ==, 0);
   munit_assert_double(m.data[33], ==, 0); munit_assert_double(m.data[34], ==, 0); munit_assert_double(m.data[35], ==, 5);
@@ -111,19 +121,24 @@ static MunitResult test_mass_inertia(const MunitParameter params[], void *data) 
 }
 
 static MunitResult test_mass_inertia2(const MunitParameter params[], void *data) {
-  double mass[] = {10.0, 20.0};
-  matrix_t inertia[] = {diagonal(2, 3, 5), diagonal(3, 5, 7)};
+  list_t body_infos = make_list();
+  append_body_info(&body_infos, body_info(10.0, diagonal(2, 3, 5), vector(0, 0, 0), vector(0, 0, 0)));
+  append_body_info(&body_infos, body_info(20.0, diagonal(3, 5, 7), vector(0, 0, 0), vector(0, 0, 0)));
+  list_t states = make_list();
+  append_pointer(&states, state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
+  append_pointer(&states, state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
   quaternion_t orientation[] = {quaternion(1, 0, 0, 0), quaternion(1, 0, 0, 0)};
-  large_matrix_t m = generalized_mass(2, mass, inertia, orientation);
+  large_matrix_t m = generalized_mass(body_infos, states);
   munit_assert_double(m.data[117], ==, 3);
   return MUNIT_OK;
 }
 
 static MunitResult test_rotate_inertia(const MunitParameter params[], void *data) {
-  double mass = 10.0;
-  matrix_t inertia = diagonal(2, 3, 5);
-  quaternion_t orientation = quaternion_rotation(M_PI / 2, vector(1, 0, 0));
-  large_matrix_t m = generalized_mass(1, &mass, &inertia, &orientation);
+  list_t body_infos = make_list();
+  append_body_info(&body_infos, body_info(10.0, diagonal(2, 3, 5), vector(0, 0, 0), vector(0, 0, 0)));
+  list_t states = make_list();
+  append_pointer(&states, state(vector(0, 0, 0), vector(0, 0, 0), quaternion_rotation(M_PI / 2, vector(1, 0, 0)), vector(0, 0, 0)));
+  large_matrix_t m = generalized_mass(body_infos, states);
   munit_assert_double_equal(m.data[21], 2, 6);
   munit_assert_double_equal(m.data[28], 5, 6);
   munit_assert_double_equal(m.data[35], 3, 6);

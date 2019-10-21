@@ -9,7 +9,7 @@
 
 large_matrix_t state_adapter(list_t states);
 
-large_matrix_t generalized_mass(int n, double mass[], matrix_t inertia[], quaternion_t orientation[]);
+large_matrix_t generalized_mass(list_t body_infos, list_t states);
 
 large_matrix_t contact_normals(int k, vector_t normals[]);
 

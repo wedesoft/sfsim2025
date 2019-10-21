@@ -30,18 +30,22 @@ large_matrix_t state_adapter(list_t states) {
 
 // Create generalized mass matrix for n rigid bodies.
 // https://people.mpi-inf.mpg.de/~schoemer/publications/VRST98.pdf
-large_matrix_t generalized_mass(int n, double mass[], matrix_t inertia[], quaternion_t orientation[]) {
+large_matrix_t generalized_mass(list_t body_infos, list_t states) {
+  assert(body_infos.size == states.size);
+  int n = body_infos.size;
   int rows = 6 * n;
   int columns = 6 * n;
   large_matrix_t result = allocate_large_matrix(rows, columns);
   memset(result.data, 0, rows * columns * sizeof(double));
   double *p = result.data;
   for (int l=0; l<n; l++) {
-    p[0] = mass[l]; p += columns;
-    p[1] = mass[l]; p += columns;
-    p[2] = mass[l]; p += columns;
+    body_info_t body_info = get_body_info(body_infos)[l];
+    state_t *state = get_pointer(states)[l];
+    p[0] = body_info.mass; p += columns;
+    p[1] = body_info.mass; p += columns;
+    p[2] = body_info.mass; p += columns;
     p += 3;
-    matrix_t i = rotate_matrix(orientation[l], inertia[l]);
+    matrix_t i = rotate_matrix(state->orientation, body_info.inertia);
     p[0] =  i.m11; p[1] = i.m12; p[2] = i.m13; p += columns;
     p[0] =  i.m21; p[1] = i.m22; p[2] = i.m23; p += columns;
     p[0] =  i.m31; p[1] = i.m32; p[2] = i.m33; p += columns;
