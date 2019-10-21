@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "multibody.h"
 #include "matrix43.h"
 
@@ -123,6 +124,7 @@ large_vector_t velocity_vector(list_t states) {
 // Vector of external forces and coriolis force.
 // https://people.mpi-inf.mpg.de/~schoemer/publications/VRST98.pdf
 large_vector_t external_forces(list_t states, list_t body_infos) {
+  assert(states.size == body_infos.size);
   int n = states.size;
   large_vector_t result = allocate_large_vector(6 * n);
   double *p = result.data;
