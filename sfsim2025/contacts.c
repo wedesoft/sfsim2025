@@ -32,7 +32,7 @@ int main(void) {
   state_t *s1 = state(vector(0, 0, 6370e+3 + 0.1), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   body_info_t info2 = body_info(6e+24, inertia_cuboid(6e+24, 6370e+3, 6370e+3, 6370e+3), vector(0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  vector_t normal = vector(0, 0, 1);
+  vector_t normal = vector(0, 0, -1);
   contact_t c = contact(0, 1, normal, vector(0, 0, 6370e+3));
   list_t contacts = make_list();
   append_contact(&contacts, c);
