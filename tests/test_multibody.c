@@ -4,24 +4,27 @@
 
 
 static MunitResult test_state_adapter_shape1(const MunitParameter params[], void *data) {
-  quaternion_t q = quaternion(1, 2, 3, 4);
-  large_matrix_t s = state_adapter(1, &q);
+  state_t *s1 = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 2, 3, 4), vector(0, 0, 0));
+  list_t states = make_list(); append_pointer(&states, s1);
+  large_matrix_t s = state_adapter(states);
   munit_assert_int(s.rows, ==, 7);
   munit_assert_int(s.cols, ==, 6);
   return MUNIT_OK;
 }
 
 static MunitResult test_state_adapter_shape2(const MunitParameter params[], void *data) {
-  quaternion_t q[] = {quaternion(1, 2, 3, 4), quaternion(5, 6, 7, 8)};
-  large_matrix_t s = state_adapter(2, q);
+  state_t *s1 = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 2, 3, 4), vector(0, 0, 0));
+  list_t states = make_list(); append_pointer(&states, s1); append_pointer(&states, s1);
+  large_matrix_t s = state_adapter(states);
   munit_assert_int(s.rows, ==, 14);
   munit_assert_int(s.cols, ==, 12);
   return MUNIT_OK;
 }
 
 static MunitResult test_state_adapter_identity(const MunitParameter params[], void *data) {
-  quaternion_t q = quaternion(1, 2, 3, 4);
-  large_matrix_t s = state_adapter(1, &q);
+  state_t *s1 = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 2, 3, 4), vector(0, 0, 0));
+  list_t states = make_list(); append_pointer(&states, s1);
+  large_matrix_t s = state_adapter(states);
   munit_assert_double(s.data[ 0], ==, 1); munit_assert_double(s.data[ 1], ==, 0); munit_assert_double(s.data[ 2], ==, 0);
   munit_assert_double(s.data[ 6], ==, 0); munit_assert_double(s.data[ 7], ==, 1); munit_assert_double(s.data[ 8], ==, 0);
   munit_assert_double(s.data[12], ==, 0); munit_assert_double(s.data[13], ==, 0); munit_assert_double(s.data[14], ==, 1);
@@ -29,15 +32,17 @@ static MunitResult test_state_adapter_identity(const MunitParameter params[], vo
 }
 
 static MunitResult test_state_adapter_identity2(const MunitParameter params[], void *data) {
-  quaternion_t q[] = {quaternion(1, 2, 3, 4), quaternion(5, 6, 7, 8)};
-  large_matrix_t s = state_adapter(2, q);
+  state_t *s1 = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 2, 3, 4), vector(0, 0, 0));
+  list_t states = make_list(); append_pointer(&states, s1); append_pointer(&states, s1);
+  large_matrix_t s = state_adapter(states);
   munit_assert_double(s.data[ 90], ==, 1);
   return MUNIT_OK;
 }
 
 static MunitResult test_state_adapter_orientation(const MunitParameter params[], void *data) {
-  quaternion_t q = quaternion(1, 2, 3, 4);
-  large_matrix_t s = state_adapter(1, &q);
+  state_t *s1 = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 2, 3, 4), vector(0, 0, 0));
+  list_t states = make_list(); append_pointer(&states, s1);
+  large_matrix_t s = state_adapter(states);
   munit_assert_double(s.data[21], ==, -1.0); munit_assert_double(s.data[22], ==, -1.5); munit_assert_double(s.data[23], ==, -2.0);
   munit_assert_double(s.data[27], ==,  0.5); munit_assert_double(s.data[28], ==,  2.0); munit_assert_double(s.data[29], ==, -1.5);
   munit_assert_double(s.data[33], ==, -2.0); munit_assert_double(s.data[34], ==,  0.5); munit_assert_double(s.data[35], ==,  1.0);
@@ -46,8 +51,10 @@ static MunitResult test_state_adapter_orientation(const MunitParameter params[],
 }
 
 static MunitResult test_state_adapter_orientation2(const MunitParameter params[], void *data) {
-  quaternion_t q[] = {quaternion(1, 2, 3, 4), quaternion(5, 6, 7, 8)};
-  large_matrix_t s = state_adapter(2, q);
+  state_t *s1 = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 2, 3, 4), vector(0, 0, 0));
+  state_t *s2 = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(5, 6, 7, 8), vector(0, 0, 0));
+  list_t states = make_list(); append_pointer(&states, s1); append_pointer(&states, s2);
+  large_matrix_t s = state_adapter(states);
   munit_assert_double(s.data[129], ==, -3.0);
   return MUNIT_OK;
 }

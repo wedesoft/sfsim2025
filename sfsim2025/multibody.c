@@ -4,18 +4,20 @@
 
 // Create adapter matrix for position and orientation changes of n bodies.
 // https://people.mpi-inf.mpg.de/~schoemer/publications/VRST98.pdf
-large_matrix_t state_adapter(int n, quaternion_t q[]) {
+large_matrix_t state_adapter(list_t states) {
+  int n = states.size;
   int rows = 7 * n;
   int columns = 6 * n;
   large_matrix_t result = allocate_large_matrix(rows, columns);
   memset(result.data, 0, rows * columns * sizeof(double));
   double *p = result.data;
   for (int l=0; l<n; l++) {
+    state_t *s = get_pointer(states)[l];
     p[0] = 1; p += columns;
     p[1] = 1; p += columns;
     p[2] = 1; p += columns;
     p += 3;
-    matrix43_t o = quaternion_matrix(q[l]);
+    matrix43_t o = quaternion_matrix(s->orientation);
     p[0] =  o.m11; p[1] = o.m12; p[2] = o.m13; p += columns;
     p[0] =  o.m21; p[1] = o.m22; p[2] = o.m23; p += columns;
     p[0] =  o.m31; p[1] = o.m32; p[2] = o.m33; p += columns;
