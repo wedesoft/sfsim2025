@@ -48,7 +48,7 @@ static MunitResult test_two_contacts(const MunitParameter params[], void *data) 
 }
 
 static MunitResult test_nonzero_speed(const MunitParameter params[], void *data) {
-  body_info_t info1 = body_info(1.0, inertia_cuboid(1.0, 1, 0.4, 0.2), vector(0, 0, 0), vector(0, 0, 0));
+  body_info_t info1 = body_info(2.0, inertia_cuboid(1.0, 1, 0.4, 0.2), vector(0, 0, 0), vector(0, 0, 0));
   body_info_t info2 = body_info(6e+24, inertia_cuboid(6e+24, 6370e+3, 6370e+3, 6370e+3), vector(0, 0, 0), vector(0, 0, 0));
   list_t body_infos = make_list(); append_body_info(&body_infos, info1); append_body_info(&body_infos, info2);
   state_t *s1 = state(vector(0, 0, 6370e+3 + 0.1), vector(0, 0, -3), quaternion(1, 0, 0, 0), vector(0, 0, 0));
@@ -60,7 +60,7 @@ static MunitResult test_nonzero_speed(const MunitParameter params[], void *data)
   frictionless_case(body_infos, states, contacts, &a, &b, 0.5);
   munit_assert_int(a.rows, ==, 1);
   munit_assert_int(a.cols, ==, 1);
-  munit_assert_double_equal(a.data[0], 1.0, 6);
+  munit_assert_double_equal(a.data[0], 0.5, 6);
   munit_assert_int(b.rows, ==, 1);
   munit_assert_double_equal(b.data[0], -5.0, 6);
   return MUNIT_OK;
