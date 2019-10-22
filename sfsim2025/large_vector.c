@@ -12,3 +12,12 @@ large_vector_t large_vector_add(large_vector_t a, large_vector_t b) {
     *p++ = *q++ + *r++;
   return result;
 }
+
+large_vector_t large_vector_scale(large_vector_t a, double s) {
+  large_vector_t result = allocate_large_vector(a.rows);
+  double *p = result.data;
+  double *q = a.data;
+  for (int i=0; i<result.rows; i++)
+    *p++ = *q++ * s;
+  return result;
+}

@@ -14,7 +14,7 @@ static MunitResult test_one_contact(const MunitParameter params[], void *data) {
   contact_t c = contact(0, 1, vector(0, 0, -1), vector(0, 0, 6370e+3));
   list_t contacts = make_list(); append_contact(&contacts, c);
   large_matrix_t a; large_vector_t b;
-  frictionless_case(body_infos, states, contacts, &a, &b);
+  frictionless_case(body_infos, states, contacts, &a, &b, 1);
   munit_assert_int(a.rows, ==, 1);
   munit_assert_int(a.cols, ==, 1);
   munit_assert_double_equal(a.data[0], 1.0, 6);
@@ -34,7 +34,7 @@ static MunitResult test_two_contacts(const MunitParameter params[], void *data) 
   contact_t c2 = contact(0, 1, vector(0, 0, -1), vector(+1, 0, 6370e+3));
   list_t contacts = make_list(); append_contact(&contacts, c1); append_contact(&contacts, c2);
   large_matrix_t a; large_vector_t b;
-  frictionless_case(body_infos, states, contacts, &a, &b);
+  frictionless_case(body_infos, states, contacts, &a, &b, 0.5);
   munit_assert_int(a.rows, ==, 2);
   munit_assert_int(a.cols, ==, 2);
   munit_assert_double_equal(a.data[0],  12.54, 2);
@@ -42,8 +42,8 @@ static MunitResult test_two_contacts(const MunitParameter params[], void *data) 
   munit_assert_double_equal(a.data[2], -10.54, 2);
   munit_assert_double_equal(a.data[3],  12.54, 2);
   munit_assert_int(b.rows, ==, 2);
-  munit_assert_double_equal(b.data[0], -9.81, 2);
-  munit_assert_double_equal(b.data[1], -9.81, 2);
+  munit_assert_double_equal(b.data[0], -4.90, 2);
+  munit_assert_double_equal(b.data[1], -4.90, 2);
   return MUNIT_OK;
 }
 
