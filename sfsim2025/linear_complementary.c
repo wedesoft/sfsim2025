@@ -10,7 +10,7 @@ void frictionless_case(list_t body_infos, list_t states, list_t contacts, large_
   large_matrix_t n_t = large_transpose(n);
   large_matrix_t j_t = large_transpose(j);
   large_matrix_t m_i = large_inverse(m);
-  *a = large_matrix_dot(large_matrix_dot(large_matrix_dot(large_matrix_dot(n_t, j_t), m_i), j), n);
-  *b = large_matrix_vector_dot(large_matrix_dot(n_t, j_t),
-                               large_vector_add(u, large_vector_scale(large_matrix_vector_dot(m_i, f_ext), dt)));
+  large_matrix_t n_t_j_t = large_matrix_dot(n_t, j_t);
+  *a = large_matrix_dot(large_matrix_dot(large_matrix_dot(n_t_j_t, m_i), j), n);
+  *b = large_matrix_vector_dot(n_t_j_t, large_vector_add(u, large_vector_scale(large_matrix_vector_dot(m_i, f_ext), dt)));
 }

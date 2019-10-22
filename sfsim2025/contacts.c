@@ -52,6 +52,6 @@ int main(void) {
   large_vector_t f_ext = external_forces(states, body_infos);
   large_matrix_t a = x(x(x(x(t(n), t(j)), inv(m)), j), n);
   large_vector_t b = xx(x(t(n), t(j)), add(u, xx(inv(m), f_ext)));
-  printf("[%5.2f] x + [%5.2f]\n", a.data[0], b.data[0]);
+  printf("[%5.2f] x + [%5.2f] >= 0, x >= 0\n", a.data[0], b.data[0]);
   return 0;
 }
