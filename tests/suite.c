@@ -2,6 +2,7 @@
 #include "munit.h"
 #include "test_contact.h"
 #include "test_large_matrix.h"
+#include "test_lemke.h"
 #include "test_large_vector.h"
 #include "test_linear_complementary.h"
 #include "test_list.h"
@@ -33,6 +34,7 @@ static MunitSuite test_sfsim[] = {
   {"/contact"             , test_contact             , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/multibody"           , test_multibody           , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/linear_complementary", test_linear_complementary, NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/lemke"               , test_lemke               , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {NULL                   , NULL                     , NULL, 0, MUNIT_SUITE_OPTION_NONE}
 };
 
