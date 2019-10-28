@@ -1,6 +1,7 @@
 #include <gc.h>
 #include "munit.h"
 #include "test_contact.h"
+#include "test_joint.h"
 #include "test_large_matrix.h"
 #include "test_lemke.h"
 #include "test_large_vector.h"
@@ -35,6 +36,7 @@ static MunitSuite test_sfsim[] = {
   {"/multibody"           , test_multibody           , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/linear_complementary", test_linear_complementary, NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/lemke"               , test_lemke               , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/joint"               , test_joint               , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {NULL                   , NULL                     , NULL, 0, MUNIT_SUITE_OPTION_NONE}
 };
 
