@@ -35,3 +35,23 @@ large_vector_t speed_vector(state_t *state1, state_t *state2) {
   result.data[11] = state2->rotation.z;
   return result;
 }
+
+large_matrix_t ball_in_socket(state_t *state1, state_t *state2, vector_t r1, vector_t r2) {
+  large_matrix_t result = allocate_large_matrix(3, 12);
+  memset(result.data, 0, result.rows * result.cols * sizeof(double));
+  double *p0 = result.data;
+  *p0 = 1; p0 += 13; *p0 = 1; p0 += 13; *p0 = 1; p0 += 13;
+  matrix_t rot1 = matrix_negative(cross_product_matrix(rotate_vector(state1->orientation, r1)));
+  double *p1 = result.data + 3;
+  *p1++ = rot1.m11; *p1++ = rot1.m12; *p1++ = rot1.m13; p1 += 9;
+  *p1++ = rot1.m21; *p1++ = rot1.m22; *p1++ = rot1.m23; p1 += 9;
+  *p1++ = rot1.m31; *p1++ = rot1.m32; *p1++ = rot1.m33; p1 += 9;
+  double *p2 = result.data + 6;
+  *p2 = -1; p2 += 13; *p2 = -1; p2 += 13; *p2 = -1; p2 += 13;
+  matrix_t rot2 = cross_product_matrix(rotate_vector(state2->orientation, r2));
+  double *p3 = result.data + 9;
+  *p3++ = rot2.m11; *p3++ = rot2.m12; *p3++ = rot2.m13; p3 += 9;
+  *p3++ = rot2.m21; *p3++ = rot2.m22; *p3++ = rot2.m23; p3 += 9;
+  *p3++ = rot2.m31; *p3++ = rot2.m32; *p3++ = rot2.m33; p3 += 9;
+  return result;
+}
