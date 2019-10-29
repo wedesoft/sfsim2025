@@ -140,6 +140,14 @@ static MunitResult test_inertia_cuboid(const MunitParameter params[], void *data
   return MUNIT_OK;
 }
 
+static MunitResult test_inertia_sphere(const MunitParameter params[], void *data) {
+  matrix_t result = inertia_sphere(5, 3);
+  munit_assert_double(result.m11, ==, 18); munit_assert_double(result.m12, ==,  0); munit_assert_double(result.m13, ==,  0);
+  munit_assert_double(result.m21, ==,  0); munit_assert_double(result.m22, ==, 18); munit_assert_double(result.m23, ==,  0);
+  munit_assert_double(result.m31, ==,  0); munit_assert_double(result.m32, ==,  0); munit_assert_double(result.m33, ==, 18);
+  return MUNIT_OK;
+}
+
 MunitTest test_mechanics[] = {
   {"/runge_kutta"         , test_runge_kutta         , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/position_change"     , test_position_change     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -153,5 +161,6 @@ MunitTest test_mechanics[] = {
   {"/inertia_unit_cube"   , test_inertia_unit_cube   , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/heavy_cube"          , test_heavy_cube          , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/inertia_cuboid"      , test_inertia_cuboid      , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/inertia_sphere"      , test_inertia_sphere      , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                   , NULL                     , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

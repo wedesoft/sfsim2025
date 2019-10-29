@@ -20,3 +20,9 @@ static inline matrix_t inertia_cuboid(double mass, double width, double height, 
   double depth2 = depth * depth;
   return matrix_scale(diagonal(height2 + depth2, width2 + depth2, width2 + height2), mass / 12);
 }
+
+// Compute inertial matrix of solid sphere.
+static inline matrix_t inertia_sphere(double mass, double radius) {
+  double i = 2.0 / 5.0 * mass * radius * radius;
+  return diagonal(i, i, i);
+}
