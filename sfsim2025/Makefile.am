@@ -1,4 +1,4 @@
-noinst_PROGRAMS = tumble
+noinst_PROGRAMS = tumble pendulum
 
 lib_LTLIBRARIES = libsfsim2025.la
 
@@ -16,3 +16,8 @@ tumble_SOURCES = tumble.c
 tumble_CFLAGS = $(GLEW_CFLAGS) $(GL_CFLAGS) $(ATLAS_CFLAGS) $(BOEHM_CFLAGS) $(SDL_CFLAGS)
 tumble_LDFLAGS =
 tumble_LDADD = libsfsim2025.la $(GLEW_LIBS) $(GL_LIBS) $(BOEHM_LIBS) $(SDL_LIBS) -lm
+
+pendulum_SOURCES = pendulum.c
+pendulum_CFLAGS = $(GLEW_CFLAGS) $(GL_CFLAGS) $(ATLAS_CFLAGS) $(BOEHM_CFLAGS) $(SDL_CFLAGS)
+pendulum_LDFLAGS =
+pendulum_LDADD = libsfsim2025.la $(GLEW_LIBS) $(GL_LIBS) $(BOEHM_LIBS) $(SDL_LIBS) -lm
