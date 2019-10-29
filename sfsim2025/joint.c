@@ -18,3 +18,20 @@ large_matrix_t joint_mass(body_info_t info1, body_info_t info2, state_t *state1,
   *p++ = inertia2.m31; *p++ = inertia2.m32; *p++ = inertia2.m33; p += 12;
   return result;
 }
+
+large_vector_t speed_vector(state_t *state1, state_t *state2) {
+  large_vector_t result = allocate_large_vector(12);
+  result.data[ 0] = state1->speed.x;
+  result.data[ 1] = state1->speed.y;
+  result.data[ 2] = state1->speed.z;
+  result.data[ 3] = state1->rotation.x;
+  result.data[ 4] = state1->rotation.y;
+  result.data[ 5] = state1->rotation.z;
+  result.data[ 6] = state2->speed.x;
+  result.data[ 7] = state2->speed.y;
+  result.data[ 8] = state2->speed.z;
+  result.data[ 9] = state2->rotation.x;
+  result.data[10] = state2->rotation.y;
+  result.data[11] = state2->rotation.z;
+  return result;
+}

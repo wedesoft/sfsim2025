@@ -26,8 +26,21 @@ static MunitResult test_rotate_inertia(const MunitParameter params[], void *data
   return MUNIT_OK;
 }
 
+static MunitResult test_speed_vector(const MunitParameter params[], void *data) {
+  state_t *s1 = state(vector(0, 0, 0), vector(2, 3,  5), quaternion(1, 0, 0, 0), vector(3, 5,  7));
+  state_t *s2 = state(vector(0, 0, 0), vector(5, 7, 11), quaternion(1, 0, 0, 0), vector(7, 11, 13));
+  large_vector_t u = speed_vector(s1, s2);
+  munit_assert_int(u.rows, ==, 12);
+  munit_assert_double(u.data[0], ==, 2); munit_assert_double(u.data[ 1], ==,  3); munit_assert_double(u.data[ 2], ==,  5);
+  munit_assert_double(u.data[3], ==, 3); munit_assert_double(u.data[ 4], ==,  5); munit_assert_double(u.data[ 5], ==,  7);
+  munit_assert_double(u.data[6], ==, 5); munit_assert_double(u.data[ 7], ==,  7); munit_assert_double(u.data[ 8], ==, 11);
+  munit_assert_double(u.data[9], ==, 7); munit_assert_double(u.data[10], ==, 11); munit_assert_double(u.data[11], ==, 13);
+  return MUNIT_OK;
+}
+
 MunitTest test_joint[] = {
   {"/mass_matrix"   , test_mass_matrix   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/rotate_inertia", test_rotate_inertia, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/speed_vector"  , test_speed_vector  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL             , NULL               , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
 };
