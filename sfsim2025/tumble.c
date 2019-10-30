@@ -13,6 +13,7 @@ double w = 2.0;
 double h = 0.4;
 double d = 1.0;
 
+
 void display() {
   glClear(GL_COLOR_BUFFER_BIT);
   glMatrixMode(GL_MODELVIEW);
