@@ -35,14 +35,14 @@ void display() {
 void step() {
   double dt = 0.01;
   body_info_t info1 = body_info(5.9742e+24, inertia_sphere(5.9742e+24, 6370000), vector(0, 0, 0), vector(0, 0, 0));
-  body_info_t info2 = body_info(1.0, inertia_cuboid(1.0, w, h, d), vector(0, -1, 0), vector(0, 0, 0));
+  body_info_t info2 = body_info(1.0, inertia_cuboid(1.0, w, h, d), vector(0, -9.81, 0), vector(0, 0, 0));
   double dt_div_mass = dt / info2.mass;
   large_matrix_t j = ball_in_socket(s1, s2, vector(0, 6370002, 0), vector(0, 1, 0));
   large_matrix_t m = joint_mass(info1, info2, s1, s2);
   large_vector_t u = speed_vector(s1, s2);
   large_matrix_t d = large_inverse(large_matrix_dot(large_matrix_dot(j, large_inverse(m)), large_transpose(j)));
   large_vector_t v = large_matrix_vector_dot(j, u);
-  large_vector_t l = large_vector_scale(large_matrix_vector_dot(d, v), -1);
+  large_vector_t l = large_vector_negative(large_matrix_vector_dot(d, v));
   large_vector_t p = large_matrix_vector_dot(large_transpose(j), l);
   vector_t impulse = vector(p.data[6], p.data[7], p.data[8]);
   vector_t rot = vector(p.data[9], p.data[10], p.data[11]);

@@ -23,3 +23,5 @@ static inline large_vector_t large_vector(int rows, double *data) {
 large_vector_t large_vector_add(large_vector_t a, large_vector_t b);
 
 large_vector_t large_vector_scale(large_vector_t a, double s);
+
+large_vector_t large_vector_negative(large_vector_t a);
