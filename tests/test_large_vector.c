@@ -40,10 +40,20 @@ static MunitResult test_negative(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_to_large(const MunitParameter params[], void *data) {
+  large_vector_t result = to_large_vector(vector(2, 3, 5));
+  munit_assert_int(result.rows, ==, 3);
+  munit_assert_double(result.data[0], ==, 2);
+  munit_assert_double(result.data[1], ==, 3);
+  munit_assert_double(result.data[2], ==, 5);
+  return MUNIT_OK;
+}
+
 MunitTest test_large_vector[] = {
   {"/create"  , test_create  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/add"     , test_add     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/scale"   , test_scale   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/negative", test_negative, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/to_large", test_to_large, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL       , NULL         , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
