@@ -42,8 +42,7 @@ void step() {
   large_matrix_t m = joint_mass(info1, info2, s1, s2);
   large_vector_t u = speed_vector(s1, s2);
   large_matrix_t d = large_inverse(large_matrix_dot(large_matrix_dot(j, large_inverse(m)), large_transpose(j)));
-  vector_t b = vector_subtract(vector_add(s1->position, rotate_vector(s1->orientation, jnt.r1)),
-                               vector_add(s2->position, rotate_vector(s2->orientation, jnt.r2)));
+  vector_t b = ball_in_socket_correction(s1, s2, jnt);
   large_vector_t v = large_vector_add(large_matrix_vector_dot(j, u), to_large_vector(vector_scale(b, 1.0)));
   large_vector_t l = large_vector_negative(large_matrix_vector_dot(d, v));
   large_vector_t p = large_matrix_vector_dot(large_transpose(j), l);

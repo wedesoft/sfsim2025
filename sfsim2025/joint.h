@@ -20,3 +20,5 @@ large_matrix_t joint_mass(body_info_t info1, body_info_t info2, state_t *state1,
 large_vector_t speed_vector(state_t *state1, state_t *state2);
 
 large_matrix_t ball_in_socket_jacobian(state_t *state1, state_t *state2, joint_t joint);
+
+vector_t ball_in_socket_correction(state_t *state1, state_t *state2, joint_t joint);

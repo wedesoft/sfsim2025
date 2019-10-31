@@ -38,6 +38,7 @@ large_vector_t speed_vector(state_t *state1, state_t *state2) {
 }
 
 // Construct Jacobian for ball-in-socket joint.
+// http://image.diku.dk/kenny/download/erleben.05.thesis.pdf
 large_matrix_t ball_in_socket_jacobian(state_t *state1, state_t *state2, joint_t joint) {
   large_matrix_t result = allocate_large_matrix(3, 12);
   memset(result.data, 0, result.rows * result.cols * sizeof(double));
@@ -56,4 +57,11 @@ large_matrix_t ball_in_socket_jacobian(state_t *state1, state_t *state2, joint_t
   *p3++ = rot2.m21; *p3++ = rot2.m22; *p3++ = rot2.m23; p3 += 9;
   *p3++ = rot2.m31; *p3++ = rot2.m32; *p3++ = rot2.m33; p3 += 9;
   return result;
+}
+
+// Compute error correction term for ball-in-socket joint.
+// http://image.diku.dk/kenny/download/erleben.05.thesis.pdf
+vector_t ball_in_socket_correction(state_t *state1, state_t *state2, joint_t joint) {
+  return vector_subtract(vector_add(state1->position, rotate_vector(state1->orientation, joint.r1)),
+                         vector_add(state2->position, rotate_vector(state2->orientation, joint.r2)));
 }
