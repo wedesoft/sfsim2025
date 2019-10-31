@@ -37,13 +37,14 @@ void step() {
   body_info_t info1 = body_info(5.9742e+24, inertia_sphere(5.9742e+24, 6370000), vector(0, 0, 0), vector(0, 0, 0));
   body_info_t info2 = body_info(1.0, inertia_cuboid(1.0, w, h, d), vector(0, -9.81, 0), vector(0, 0, 0));
   double dt_div_mass = dt / info2.mass;
-  large_matrix_t j = ball_in_socket(s1, s2, vector(0, 6370002, 0), vector(0, 1, 0));
+  joint_t jnt = joint(vector(0, 6370002, 0), vector(0, 1, 0));
+  large_matrix_t j = ball_in_socket_jacobian(s1, s2, jnt);
   large_matrix_t m = joint_mass(info1, info2, s1, s2);
   large_vector_t u = speed_vector(s1, s2);
   large_matrix_t d = large_inverse(large_matrix_dot(large_matrix_dot(j, large_inverse(m)), large_transpose(j)));
-  vector_t b = vector_subtract(vector_add(s1->position, rotate_vector(s1->orientation, vector(0, 6370002, 0))),
-                               vector_add(s2->position, rotate_vector(s2->orientation, vector(0, 1, 0))));
-  large_vector_t v = large_vector_add(large_matrix_vector_dot(j, u), to_large_vector(b));
+  vector_t b = vector_subtract(vector_add(s1->position, rotate_vector(s1->orientation, jnt.r1)),
+                               vector_add(s2->position, rotate_vector(s2->orientation, jnt.r2)));
+  large_vector_t v = large_vector_add(large_matrix_vector_dot(j, u), to_large_vector(vector_scale(b, 1.0)));
   large_vector_t l = large_vector_negative(large_matrix_vector_dot(d, v));
   large_vector_t p = large_matrix_vector_dot(large_transpose(j), l);
   vector_t impulse = vector(p.data[6], p.data[7], p.data[8]);
