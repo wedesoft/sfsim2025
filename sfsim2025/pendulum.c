@@ -11,7 +11,7 @@
 state_t *s1;
 state_t *s2;
 
-double w = 0.1;
+double w = 0.3;
 double h = 2.0;
 double d = 0.1;
 
@@ -36,23 +36,17 @@ void step() {
   double dt = 0.01;
   body_info_t info1 = body_info(5.9742e+24, inertia_sphere(5.9742e+24, 6370000), vector(0, 0, 0), vector(0, 0, 0));
   body_info_t info2 = body_info(1.0, inertia_cuboid(1.0, w, h, d), vector(0, -9.81, 0), vector(0, 0, 0));
-  double dt_div_mass = dt / info2.mass;
   joint_t jnt = joint(vector(0, 6370002, 0), vector(0, 1, 0));
   large_matrix_t j = ball_in_socket_jacobian(s1, s2, jnt);
-  large_matrix_t m = joint_mass(info1, info2, s1, s2);
-  large_vector_t u = speed_vector(s1, s2);
-  large_matrix_t d = large_inverse(large_matrix_dot(large_matrix_dot(j, large_inverse(m)), large_transpose(j)));
-  vector_t b = ball_in_socket_correction(s1, s2, jnt);
-  large_vector_t v = large_vector_add(large_matrix_vector_dot(j, u), to_large_vector(vector_scale(b, 1.0)));
-  large_vector_t l = large_vector_negative(large_matrix_vector_dot(d, v));
-  large_vector_t p = large_matrix_vector_dot(large_transpose(j), l);
-  vector_t impulse = vector(p.data[6], p.data[7], p.data[8]);
-  vector_t rot = vector(p.data[9], p.data[10], p.data[11]);
+  large_vector_t b = ball_in_socket_correction(s1, s2, jnt);
+  vector_t p1; vector_t p2; vector_t t1; vector_t t2;
+  correcting_impulse(info1, info2, s1, s2, j, b, &p1, &p2, &t1, &t2);
+  double dt_div_mass = dt / info2.mass;
   matrix_t inertia = rotate_matrix(s2->orientation, info2.inertia);
   s2 = state(vector_add(s2->position, vector_scale(s2->speed, dt)),
-             vector_add(s2->speed, vector_add(vector_scale(impulse, 1.0 / info2.mass), vector_scale(info2.force, dt_div_mass))),
+             vector_add(s2->speed, vector_add(vector_scale(p2, 1.0 / info2.mass), vector_scale(info2.force, dt_div_mass))),
              quaternion_add(s2->orientation, quaternion_product(vector_to_quaternion(vector_scale(s2->rotation, 0.5 * dt)), s2->orientation)),
-             vector_add(s2->rotation, matrix_vector_dot(inverse(inertia), rot)));
+             vector_add(s2->rotation, matrix_vector_dot(inverse(inertia), t2)));
 }
 
 int main(int argc, char *argv[]) {

@@ -1,4 +1,5 @@
 #include "sfsim2025/joint.h"
+#include "sfsim2025/mechanics.h"
 #include "test_joint.h"
 #include "test_helper.h"
 
@@ -56,25 +57,48 @@ static MunitResult test_ball_jacobian(const MunitParameter params[], void *data)
 static MunitResult test_ball_correction(const MunitParameter params[], void *data) {
   state_t *s1 = state(vector(-4, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector( 5, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  vector_t b = ball_in_socket_correction(s1, s2, joint(vector(2, 0, 0), vector(-3, 0, 0)));
-  munit_assert_double(b.x, ==, -4);
+  large_vector_t b = ball_in_socket_correction(s1, s2, joint(vector(2, 0, 0), vector(-3, 0, 0)));
+  munit_assert_int(b.rows, ==, 3);
+  munit_assert_double_equal(b.data[0], -4, 6);
+  munit_assert_double_equal(b.data[1],  0, 6);
+  munit_assert_double_equal(b.data[2],  0, 6);
   return MUNIT_OK;
 }
 
 static MunitResult test_rotate_correction(const MunitParameter params[], void *data) {
   state_t *s1 = state(vector(-4, 0, 0), vector(0, 0, 0), quaternion_rotation(M_PI, vector(0, 0, 1)), vector(0, 0, 0));
   state_t *s2 = state(vector( 5, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  vector_t b = ball_in_socket_correction(s1, s2, joint(vector(2, 0, 0), vector(-3, 0, 0)));
-  munit_assert_double(b.x, ==, -8);
+  large_vector_t b = ball_in_socket_correction(s1, s2, joint(vector(2, 0, 0), vector(-3, 0, 0)));
+  munit_assert_int(b.rows, ==, 3);
+  munit_assert_double_equal(b.data[0], -8, 6);
+  munit_assert_double_equal(b.data[1],  0, 6);
+  munit_assert_double_equal(b.data[2],  0, 6);
+  return MUNIT_OK;
+}
+
+static MunitResult test_correcting_impulse(const MunitParameter params[], void *data) {
+  body_info_t info1 = body_info(5.9722e+24, inertia_sphere(5.9722e+24, 6370000), vector(0, 0, 0), vector(0, 0, 0));
+  body_info_t info2 = body_info(1.0, inertia_cuboid(1.0, 0.1, 2, 0.1), vector(0, -9.81, 0), vector(0, 0, 0));
+  state_t *s1 = state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  state_t *s2 = state(vector(0, 1, 0), vector(0, -0.01, 0), quaternion_rotation(0, vector(0, 0, 1)), vector(0, 0, 0));
+  joint_t jnt = joint(vector(0, 6370002, 0), vector(0, 1, 0));
+  large_matrix_t j = ball_in_socket_jacobian(s1, s2, jnt);
+  large_vector_t b = ball_in_socket_correction(s1, s2, jnt);
+  vector_t p1; vector_t t1; vector_t p2; vector_t t2;
+  correcting_impulse(info1, info2, s1, s2, j, b, &p1, &p2, &t1, &t2);
+  munit_assert_double_equal(p2.x, 0.0 , 6);
+  munit_assert_double_equal(p2.y, 0.01, 6);
+  munit_assert_double_equal(p2.z, 0.0 , 6);
   return MUNIT_OK;
 }
 
 MunitTest test_joint[] = {
-  {"/mass_matrix"      , test_mass_matrix      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/rotate_inertia"   , test_rotate_inertia   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/speed_vector"     , test_speed_vector     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/ball_jacobian"    , test_ball_jacobian    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/ball_correction"  , test_ball_correction  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/rotate_correction", test_rotate_correction, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {NULL                , NULL                  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
+  {"/mass_matrix"       , test_mass_matrix       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/rotate_inertia"    , test_rotate_inertia    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/speed_vector"      , test_speed_vector      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/ball_jacobian"     , test_ball_jacobian     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/ball_correction"   , test_ball_correction   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/rotate_correction" , test_rotate_correction , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/correcting_impulse", test_correcting_impulse, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {NULL                 , NULL                   , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

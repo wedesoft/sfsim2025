@@ -21,4 +21,7 @@ large_vector_t speed_vector(state_t *state1, state_t *state2);
 
 large_matrix_t ball_in_socket_jacobian(state_t *state1, state_t *state2, joint_t joint);
 
-vector_t ball_in_socket_correction(state_t *state1, state_t *state2, joint_t joint);
+large_vector_t ball_in_socket_correction(state_t *state1, state_t *state2, joint_t joint);
+
+void correcting_impulse(body_info_t info1, body_info_t info2, state_t *state1, state_t *state2, large_matrix_t j, large_vector_t b,
+                        vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2);
