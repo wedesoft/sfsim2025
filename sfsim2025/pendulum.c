@@ -32,8 +32,8 @@ void display() {
   glFlush();
 }
 
-void step() {
-  double dt = 0.01;
+void *pendulum_change(double t, double dt, void *s_, void *data_) {
+  state_t *s2 = s_;
   body_info_t info1 = body_info(5.9742e+24, inertia_sphere(5.9742e+24, 6370000), vector(0, 0, 0), vector(0, 0, 0));
   body_info_t info2 = body_info(1.0, inertia_cuboid(1.0, w, h, d), vector(0, -9.81, 0), vector(0, 0, 0));
   joint_t jnt = joint(vector(0, 6370002, 0), vector(0, 1, 0));
@@ -43,10 +43,19 @@ void step() {
   correcting_impulse(info1, info2, s1, s2, j, b, &p1, &p2, &t1, &t2);
   double dt_div_mass = dt / info2.mass;
   matrix_t inertia = rotate_matrix(s2->orientation, info2.inertia);
-  s2 = state(vector_add(s2->position, vector_scale(s2->speed, dt)),
-             vector_add(s2->speed, vector_add(vector_scale(p2, 1.0 / info2.mass), vector_scale(info2.force, dt_div_mass))),
-             quaternion_add(s2->orientation, quaternion_product(vector_to_quaternion(vector_scale(s2->rotation, 0.5 * dt)), s2->orientation)),
-             vector_add(s2->rotation, matrix_vector_dot(inverse(inertia), t2)));
+  state_t *result =
+    state(vector_scale(s2->speed, dt),
+          vector_add(vector_scale(p2, 1.0 / info2.mass), vector_scale(info2.force, dt_div_mass)),
+          quaternion_product(vector_to_quaternion(vector_scale(s2->rotation, 0.5 * dt)), s2->orientation),
+          matrix_vector_dot(inverse(inertia), t2));
+  return result;
+}
+
+void step() {
+  double dt = 0.001;
+  for (int i=0; i<10; i++) {
+    s2 = runge_kutta(s2, dt, pendulum_change, add_states, scale_state, NULL);
+  };
 }
 
 int main(int argc, char *argv[]) {

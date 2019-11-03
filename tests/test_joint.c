@@ -86,9 +86,12 @@ static MunitResult test_correcting_impulse(const MunitParameter params[], void *
   large_vector_t b = ball_in_socket_correction(s1, s2, jnt);
   vector_t p1; vector_t t1; vector_t p2; vector_t t2;
   correcting_impulse(info1, info2, s1, s2, j, b, &p1, &p2, &t1, &t2);
-  munit_assert_double_equal(p2.x, 0.0 , 6);
-  munit_assert_double_equal(p2.y, 0.01, 6);
-  munit_assert_double_equal(p2.z, 0.0 , 6);
+  munit_assert_double_equal(p1.x,  0.0 , 6);
+  munit_assert_double_equal(p1.y, -0.01, 6);
+  munit_assert_double_equal(p1.z,  0.0 , 6);
+  munit_assert_double_equal(p2.x,  0.0 , 6);
+  munit_assert_double_equal(p2.y,  0.01, 6);
+  munit_assert_double_equal(p2.z,  0.0 , 6);
   return MUNIT_OK;
 }
 
