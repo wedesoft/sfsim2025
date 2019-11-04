@@ -1,10 +1,11 @@
 #pragma once
 #include <GL/gl.h>
-#include "body_info.h"
+#include "body.h"
 #include "contact.h"
 #include "coordinate.h"
 #include "edge.h"
 #include "face.h"
+#include "forces.h"
 #include "vector.h"
 
 
@@ -66,8 +67,14 @@ static inline contact_t *get_contact(list_t list) {
   return (contact_t *)list.element;
 }
 
-void append_body_info(list_t *list, body_info_t value);
+void append_body(list_t *list, body_t value);
 
-static inline body_info_t *get_body_info(list_t list) {
-  return (body_info_t *)list.element;
+static inline body_t *get_body(list_t list) {
+  return (body_t *)list.element;
+}
+
+void append_forces(list_t *list, forces_t value);
+
+static inline forces_t *get_forces(list_t list) {
+  return (forces_t *)list.element;
 }

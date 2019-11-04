@@ -41,7 +41,7 @@ static MunitResult test_runge_kutta(const MunitParameter params[], void *data) {
 
 static MunitResult test_position_change(const MunitParameter params[], void *data) {
   state_t *s = state(vector(0, 0, 0), vector(1, 2, 3), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  body_info_t info = { .mass = 2.0, .inertia = diagonal(1, 1, 1), .force = vector(0, 0, 0), .torque = vector(0, 0, 0) };
+  body_info_t info = body_info(body(2.0, diagonal(1, 1, 1)), forces(vector(0, 0, 0), vector(0, 0, 0)));
   state_t *ds = state_change(0, 2, s, &info);
   munit_assert_double(ds->position.x, ==, 2);
   munit_assert_double(ds->position.y, ==, 4);
@@ -51,7 +51,7 @@ static MunitResult test_position_change(const MunitParameter params[], void *dat
 
 static MunitResult test_speed_change(const MunitParameter params[], void *data) {
   state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  body_info_t info = { .mass = 2.0, .inertia = diagonal(1, 1, 1), .force = vector(1, 2, 3), .torque = vector(0, 0, 0) };
+  body_info_t info = body_info(body(2.0, diagonal(1, 1, 1)), forces(vector(1, 2, 3), vector(0, 0, 0)));
   state_t *ds = state_change(0, 4, s, &info);
   munit_assert_double(ds->speed.x, ==, 2);
   munit_assert_double(ds->speed.y, ==, 4);
@@ -61,7 +61,7 @@ static MunitResult test_speed_change(const MunitParameter params[], void *data) 
 
 static MunitResult test_rotation(const MunitParameter params[], void *data) {
   state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  body_info_t info = { .mass = 1.0, .inertia = diagonal(1, 2, 2), .force = vector(1, 2, 3), .torque = vector(1, 2, 3) };
+  body_info_t info = body_info(body(1.0, diagonal(1, 2, 2)), forces(vector(1, 2, 3), vector(1, 2, 3)));
   state_t *ds = state_change(0, 2, s, &info);
   munit_assert_double(ds->rotation.x, ==, 2);
   munit_assert_double(ds->rotation.y, ==, 2);
@@ -71,7 +71,7 @@ static MunitResult test_rotation(const MunitParameter params[], void *data) {
 
 static MunitResult test_orientation_change(const MunitParameter params[], void *data) {
   state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.1, 0.2, 0.3));
-  body_info_t info = { .mass = 1.0, .inertia = diagonal(1, 1, 1), .force = vector(1, 2, 3), .torque = vector(1, 2, 3) };
+  body_info_t info = body_info(body(1.0, diagonal(1, 1, 1)), forces(vector(1, 2, 3), vector(1, 2, 3)));
   state_t *ds = state_change(0, 2, s, &info);
   munit_assert_double_equal(ds->orientation.b, 0.1, 6);
   return MUNIT_OK;
@@ -79,7 +79,7 @@ static MunitResult test_orientation_change(const MunitParameter params[], void *
 
 static MunitResult test_euler(const MunitParameter params[], void *data) {
   state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(1, 1, 1));
-  body_info_t info = { .mass = 1.0, .inertia = diagonal(1, 2, 4), .force = vector(0, 0, 0), .torque = vector(0, 0, 0) };
+  body_info_t info = body_info(body(1.0, diagonal(1, 2, 4)), forces(vector(0, 0, 0), vector(0, 0, 0)));
   state_t *ds = state_change(0, 2, s, &info);
   munit_assert_double(ds->rotation.x, ==, -4.0);
   munit_assert_double(ds->rotation.y, ==,  3.0);
@@ -89,7 +89,7 @@ static MunitResult test_euler(const MunitParameter params[], void *data) {
 
 static MunitResult test_consider_orientation(const MunitParameter params[], void *data) {
   state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(-1, 0, 0, 0), vector(0.1, 0.2, 0.3));
-  body_info_t info = { .mass = 1.0, .inertia = diagonal(1, 1, 1), .force = vector(1, 2, 3), .torque = vector(1, 2, 3) };
+  body_info_t info = body_info(body(1.0, diagonal(1, 1, 1)), forces(vector(1, 2, 3), vector(1, 2, 3)));
   state_t *ds = state_change(0, 2, s, &info);
   munit_assert_double_equal(ds->orientation.b, -0.1, 6);
   return MUNIT_OK;

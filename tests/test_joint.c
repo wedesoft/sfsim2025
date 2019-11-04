@@ -5,10 +5,10 @@
 
 
 static MunitResult test_mass_matrix(const MunitParameter params[], void *data) {
-  body_info_t info1 = body_info(2, diagonal(3, 5, 7), vector(0, 0, 0), vector(0, 0, 0));
-  body_info_t info2 = body_info(3, diagonal(5, 7, 9), vector(0, 0, 0), vector(0, 0, 0));
+  body_t body1 = body(2, diagonal(3, 5, 7));
+  body_t body2 = body(3, diagonal(5, 7, 9));
   state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  large_matrix_t m = joint_mass(info1, info2, s, s);
+  large_matrix_t m = joint_mass(body1, body2, s, s);
   munit_assert_int(m.rows, ==, 12);
   munit_assert_int(m.cols, ==, 12);
   munit_assert_double(m.data[  0], ==, 2); munit_assert_double(m.data[ 13], ==, 2); munit_assert_double(m.data[ 26], ==, 2);
@@ -19,10 +19,10 @@ static MunitResult test_mass_matrix(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_rotate_inertia(const MunitParameter params[], void *data) {
-  body_info_t info1 = body_info(2, diagonal(3, 5, 7), vector(0, 0, 0), vector(0, 0, 0));
-  body_info_t info2 = body_info(3, diagonal(5, 7, 9), vector(0, 0, 0), vector(0, 0, 0));
+  body_t body1 = body(2, diagonal(3, 5, 7));
+  body_t body2 = body(3, diagonal(5, 7, 9));
   state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion_rotation(M_PI / 2, vector(1, 0, 0)), vector(0, 0, 0));
-  large_matrix_t m = joint_mass(info1, info2, s, s);
+  large_matrix_t m = joint_mass(body1, body2, s, s);
   munit_assert_double(m.data[ 39], ==, 3); munit_assert_double(m.data[ 52], ==, 7); munit_assert_double(m.data[ 65], ==, 5);
   return MUNIT_OK;
 }
@@ -77,15 +77,15 @@ static MunitResult test_rotate_correction(const MunitParameter params[], void *d
 }
 
 static MunitResult test_correcting_impulse(const MunitParameter params[], void *data) {
-  body_info_t info1 = body_info(5.9722e+24, inertia_sphere(5.9722e+24, 6370000), vector(0, 0, 0), vector(0, 0, 0));
-  body_info_t info2 = body_info(1.0, inertia_cuboid(1.0, 0.1, 2, 0.1), vector(0, -9.81, 0), vector(0, 0, 0));
+  body_t body1 = body(5.9722e+24, inertia_sphere(5.9722e+24, 6370000));
+  body_t body2 = body(1.0, inertia_cuboid(1.0, 0.1, 2, 0.1));
   state_t *s1 = state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector(0, 1, 0), vector(0, -0.01, 0), quaternion_rotation(0, vector(0, 0, 1)), vector(0, 0, 0));
   joint_t jnt = joint(vector(0, 6370002, 0), vector(0, 1, 0));
   large_matrix_t j = ball_in_socket_jacobian(s1, s2, jnt);
   large_vector_t b = ball_in_socket_correction(s1, s2, jnt);
   vector_t p1; vector_t t1; vector_t p2; vector_t t2;
-  correcting_impulse(info1, info2, s1, s2, j, b, &p1, &p2, &t1, &t2);
+  correcting_impulse(body1, body2, s1, s2, j, b, &p1, &p2, &t1, &t2);
   munit_assert_double_equal(p1.x,  0.0 , 6);
   munit_assert_double_equal(p1.y, -0.01, 6);
   munit_assert_double_equal(p1.z,  0.0 , 6);

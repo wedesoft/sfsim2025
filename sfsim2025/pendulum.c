@@ -34,21 +34,22 @@ void display() {
 
 void *pendulum_change(double t, double dt, void *s_, void *data_) {
   state_t *s2 = s_;
-  body_info_t info1 = body_info(5.9742e+24, inertia_sphere(5.9742e+24, 6370000), vector(0, 0, 0), vector(0, 0, 0));
-  body_info_t info2 = body_info(1.0, inertia_cuboid(1.0, w, h, d), vector(0, -9.81, 0), vector(0, 0, 0));
+  body_t body1 = body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000));
+  body_t body2 = body(1.0, inertia_cuboid(1.0, w, h, d));
+  forces_t forces2 = forces(vector(0, -9.81, 0), vector(0, 0, 0));
   joint_t jnt = joint(vector(0, 6370002, 0), vector(0, 1, 0));
   large_matrix_t j = ball_in_socket_jacobian(s1, s2, jnt);
   large_vector_t b = ball_in_socket_correction(s1, s2, jnt);
   vector_t p1; vector_t p2; vector_t t1; vector_t t2;
-  correcting_impulse(info1, info2, s1, s2, j, b, &p1, &p2, &t1, &t2);
-  double dt_div_mass = dt / info2.mass;
-  matrix_t inertia = rotate_matrix(s2->orientation, info2.inertia);
+  correcting_impulse(body1, body2, s1, s2, j, b, &p1, &p2, &t1, &t2);
+  double dt_div_mass = dt / body2.mass;
+  matrix_t inertia = rotate_matrix(s2->orientation, body2.inertia);
   vector_t coriolis = vector_negative(cross_product(s2->rotation, matrix_vector_dot(inertia, s2->rotation)));
   state_t *result =
     state(vector_scale(s2->speed, dt),
-          vector_add(vector_scale(p2, 1.0 / info2.mass), vector_scale(info2.force, dt_div_mass)),
+          vector_add(vector_scale(p2, 1.0 / body2.mass), vector_scale(forces2.force, dt_div_mass)),
           quaternion_product(vector_to_quaternion(vector_scale(s2->rotation, 0.5 * dt)), s2->orientation),
-          matrix_vector_dot(inverse(inertia), vector_add(t2, coriolis)));
+          matrix_vector_dot(inverse(inertia), vector_add(vector_add(t2, coriolis), forces2.torque)));
   return result;
 }
 

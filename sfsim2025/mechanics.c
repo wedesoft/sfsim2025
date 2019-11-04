@@ -21,14 +21,14 @@ void *runge_kutta(void *y0, double dt, void *f(double, double, void *, void *), 
 void *state_change(double t, double dt, void *s_, void *data_) {
   state_t *s = s_;
   body_info_t *data = data_;
-  double dt_div_mass = dt / data->mass;
+  double dt_div_mass = dt / data->body.mass;
   vector_t position_change = vector_scale(s->speed, dt);
-  vector_t speed_change = vector_scale(data->force, dt_div_mass);
+  vector_t speed_change = vector_scale(data->forces.force, dt_div_mass);
   // https://www.cl.cam.ac.uk/techreports/UCAM-CL-TR-683.pdf section 2.3.3
   quaternion_t orientation_change = quaternion_product(vector_to_quaternion(vector_scale(s->rotation, 0.5 * dt)), s->orientation);
-  matrix_t inertia = rotate_matrix(s->orientation, data->inertia);
+  matrix_t inertia = rotate_matrix(s->orientation, data->body.inertia);
   vector_t coriolis = vector_negative(cross_product(s->rotation, matrix_vector_dot(inertia, s->rotation)));
-  vector_t rotation_change = vector_scale(matrix_vector_dot(inverse(inertia), vector_add(data->torque, coriolis)), dt);
+  vector_t rotation_change = vector_scale(matrix_vector_dot(inverse(inertia), vector_add(data->forces.torque, coriolis)), dt);
   // https://physics.stackexchange.com/questions/412181/eulers-equation-for-rigid-body-rotation-applied-to-inertia-frame
   state_t *result = state(position_change, speed_change, orientation_change, rotation_change);
   return result;

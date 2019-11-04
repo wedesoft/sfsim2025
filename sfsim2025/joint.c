@@ -3,17 +3,17 @@
 
 
 // Create mass and inertia matrix for a pair of bodies.
-large_matrix_t joint_mass(body_info_t info1, body_info_t info2, state_t *state1, state_t *state2) {
+large_matrix_t joint_mass(body_t body1, body_t body2, state_t *state1, state_t *state2) {
   large_matrix_t result = allocate_large_matrix(12, 12);
   memset(result.data, 0, result.rows * result.cols * sizeof(double));
   double *p = result.data;
-  *p = info1.mass; p += 13; *p = info1.mass; p += 13; *p = info1.mass; p += 13;
-  matrix_t inertia1 = rotate_matrix(state1->orientation, info1.inertia);
+  *p = body1.mass; p += 13; *p = body1.mass; p += 13; *p = body1.mass; p += 13;
+  matrix_t inertia1 = rotate_matrix(state1->orientation, body1.inertia);
   *p++ = inertia1.m11; *p++ = inertia1.m12; *p++ = inertia1.m13; p += 9;
   *p++ = inertia1.m21; *p++ = inertia1.m22; *p++ = inertia1.m23; p += 9;
   *p++ = inertia1.m31; *p++ = inertia1.m32; *p++ = inertia1.m33; p += 12;
-  *p = info2.mass; p += 13; *p = info2.mass; p += 13; *p = info2.mass; p += 13;
-  matrix_t inertia2 = rotate_matrix(state2->orientation, info2.inertia);
+  *p = body2.mass; p += 13; *p = body2.mass; p += 13; *p = body2.mass; p += 13;
+  matrix_t inertia2 = rotate_matrix(state2->orientation, body2.inertia);
   *p++ = inertia2.m11; *p++ = inertia2.m12; *p++ = inertia2.m13; p += 9;
   *p++ = inertia2.m21; *p++ = inertia2.m22; *p++ = inertia2.m23; p += 9;
   *p++ = inertia2.m31; *p++ = inertia2.m32; *p++ = inertia2.m33; p += 12;
@@ -67,9 +67,9 @@ large_vector_t ball_in_socket_correction(state_t *state1, state_t *state2, joint
                                          vector_add(state2->position, rotate_vector(state2->orientation, joint.r2))));
 }
 
-void correcting_impulse(body_info_t info1, body_info_t info2, state_t *state1, state_t *state2, large_matrix_t j, large_vector_t b,
+void correcting_impulse(body_t body1, body_t body2, state_t *state1, state_t *state2, large_matrix_t j, large_vector_t b,
                         vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2) {
-  large_matrix_t m = joint_mass(info1, info2, state1, state2);
+  large_matrix_t m = joint_mass(body1, body2, state1, state2);
   large_vector_t u = speed_vector(state1, state2);
   large_matrix_t denominator = large_matrix_dot(large_matrix_dot(j, large_inverse(m)), large_transpose(j));
   large_vector_t nominator = large_vector_add(large_matrix_vector_dot(j, u), b);

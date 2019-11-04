@@ -52,7 +52,12 @@ void append_contact(list_t *list, contact_t value) {
   ((contact_t *)list->element)[list->size++] = value;
 }
 
-void append_body_info(list_t *list, body_info_t value) {
-  grow_list(list, sizeof(body_info_t), true);
-  ((body_info_t *)list->element)[list->size++] = value;
+void append_body(list_t *list, body_t value) {
+  grow_list(list, sizeof(body_t), true);
+  ((body_t *)list->element)[list->size++] = value;
+}
+
+void append_forces(list_t *list, forces_t value) {
+  grow_list(list, sizeof(forces_t), true);
+  ((forces_t *)list->element)[list->size++] = value;
 }

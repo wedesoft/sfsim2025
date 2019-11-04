@@ -1,11 +1,21 @@
 #pragma once
 #include <gc.h>
-#include "body_info.h"
+#include "body.h"
+#include "forces.h"
 #include "state.h"
 
 
 void *runge_kutta(void *y0, double dt, void *f(double, double, void *, void *), void *add(void *, void *),
                   void *scale(void *, double), void *data);
+
+typedef struct {
+  body_t body;
+  forces_t forces;
+} body_info_t;
+
+static inline body_info_t body_info(body_t body, forces_t forces) {
+  return (body_info_t){.body = body, .forces = forces};
+}
 
 void *state_change(double t, double dt, void *s_, void *data_);
 

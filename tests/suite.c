@@ -3,14 +3,11 @@
 #include "test_contact.h"
 #include "test_joint.h"
 #include "test_large_matrix.h"
-#include "test_lemke.h"
 #include "test_large_vector.h"
-#include "test_linear_complementary.h"
 #include "test_list.h"
 #include "test_matrix.h"
 #include "test_matrix43.h"
 #include "test_mechanics.h"
-#include "test_multibody.h"
 #include "test_plane.h"
 #include "test_polygon.h"
 #include "test_quaternion.h"
@@ -33,9 +30,6 @@ static MunitSuite test_sfsim[] = {
   {"/state"               , test_state               , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/mechanics"           , test_mechanics           , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/contact"             , test_contact             , NULL, 1, MUNIT_SUITE_OPTION_NONE},
-  {"/multibody"           , test_multibody           , NULL, 1, MUNIT_SUITE_OPTION_NONE},
-  {"/linear_complementary", test_linear_complementary, NULL, 1, MUNIT_SUITE_OPTION_NONE},
-  {"/lemke"               , test_lemke               , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/joint"               , test_joint               , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {NULL                   , NULL                     , NULL, 0, MUNIT_SUITE_OPTION_NONE}
 };

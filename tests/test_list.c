@@ -182,19 +182,35 @@ static MunitResult test_get_contact(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
-static MunitResult test_append_body_info(const MunitParameter params[], void *data) {
-  body_info_t b = body_info(1.0, diagonal(2, 3, 5), vector(0, 0, 0), vector(0, 0, 0));
+static MunitResult test_append_body(const MunitParameter params[], void *data) {
+  body_t b = body(1.0, diagonal(2, 3, 5));
   list_t list = make_list();
-  append_body_info(&list, b);
+  append_body(&list, b);
   munit_assert_int(list.size, ==, 1);
   return MUNIT_OK;
 }
 
-static MunitResult test_get_body_info(const MunitParameter params[], void *data) {
-  body_info_t b = body_info(1.0, diagonal(2, 3, 5), vector(0, 0, 0), vector(0, 0, 0));
+static MunitResult test_get_body(const MunitParameter params[], void *data) {
+  body_t b = body(1.0, diagonal(2, 3, 5));
   list_t list = make_list();
-  append_body_info(&list, b);
-  munit_assert_double(get_body_info(list)[0].mass, ==, 1);
+  append_body(&list, b);
+  munit_assert_double(get_body(list)[0].mass, ==, 1);
+  return MUNIT_OK;
+}
+
+static MunitResult test_append_forces(const MunitParameter params[], void *data) {
+  forces_t f = forces(vector(2, 3, 5), vector(3, 5, 7));
+  list_t list = make_list();
+  append_forces(&list, f);
+  munit_assert_int(list.size, ==, 1);
+  return MUNIT_OK;
+}
+
+static MunitResult test_get_forces(const MunitParameter params[], void *data) {
+  forces_t f = forces(vector(2, 3, 5), vector(3, 5, 7));
+  list_t list = make_list();
+  append_forces(&list, f);
+  munit_assert_double(get_forces(list)[0].force.x, ==, 2);
   return MUNIT_OK;
 }
 
@@ -222,7 +238,9 @@ MunitTest test_list[] = {
   {"/get_coordinate"   , test_get_coordinate   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/append_contact"   , test_append_contact   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/get_contact"      , test_get_contact      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/append_body_info" , test_append_body_info , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/get_body_info"    , test_get_body_info    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/append_body"      , test_append_body      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/get_body"         , test_get_body         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/append_forces"    , test_append_forces    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/get_forces"       , test_get_forces       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                , NULL                  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
