@@ -43,11 +43,12 @@ void *pendulum_change(double t, double dt, void *s_, void *data_) {
   correcting_impulse(info1, info2, s1, s2, j, b, &p1, &p2, &t1, &t2);
   double dt_div_mass = dt / info2.mass;
   matrix_t inertia = rotate_matrix(s2->orientation, info2.inertia);
+  vector_t coriolis = vector_negative(cross_product(s2->rotation, matrix_vector_dot(inertia, s2->rotation)));
   state_t *result =
     state(vector_scale(s2->speed, dt),
           vector_add(vector_scale(p2, 1.0 / info2.mass), vector_scale(info2.force, dt_div_mass)),
           quaternion_product(vector_to_quaternion(vector_scale(s2->rotation, 0.5 * dt)), s2->orientation),
-          matrix_vector_dot(inverse(inertia), t2));
+          matrix_vector_dot(inverse(inertia), vector_add(t2, coriolis)));
   return result;
 }
 
