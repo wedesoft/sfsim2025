@@ -14,6 +14,7 @@
 #include "test_rigid_body.h"
 #include "test_state.h"
 #include "test_vector.h"
+#include "test_world.h"
 
 
 static MunitSuite test_sfsim[] = {
@@ -31,6 +32,7 @@ static MunitSuite test_sfsim[] = {
   {"/mechanics"           , test_mechanics           , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/contact"             , test_contact             , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/joint"               , test_joint               , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/world"               , test_world               , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {NULL                   , NULL                     , NULL, 0, MUNIT_SUITE_OPTION_NONE}
 };
 

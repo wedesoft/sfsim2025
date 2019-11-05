@@ -54,7 +54,7 @@ void *pendulum_change(double t, double dt, void *s_, void *data_) {
 }
 
 void step() {
-  double dt = 0.002;
+  double dt = 0.001;
   for (int i=0; i<10; i++) {
     s2 = runge_kutta(s2, dt, pendulum_change, add_states, scale_state, NULL);
   };
