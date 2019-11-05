@@ -6,6 +6,7 @@
 #include "edge.h"
 #include "face.h"
 #include "forces.h"
+#include "joint.h"
 #include "vector.h"
 
 
@@ -109,4 +110,13 @@ static inline void append_forces(list_t *list, forces_t value) {
 
 static inline forces_t *get_forces(list_t list) {
   return (forces_t *)list.element;
+}
+
+static inline void append_joint(list_t *list, joint_t value) {
+  grow_list(list, sizeof(joint_t), true);
+  ((joint_t *)list->element)[list->size++] = value;
+}
+
+static inline joint_t *get_joint(list_t list) {
+  return (joint_t *)list.element;
 }

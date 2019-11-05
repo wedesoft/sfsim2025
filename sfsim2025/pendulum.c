@@ -37,7 +37,7 @@ void *pendulum_change(double t, double dt, void *s_, void *data_) {
   body_t body1 = body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000));
   body_t body2 = body(1.0, inertia_cuboid(1.0, w, h, d));
   forces_t forces2 = forces(vector(0, -9.81, 0), vector(0, 0, 0));
-  joint_t jnt = joint(vector(0, 6370002, 0), vector(0, 1, 0));
+  joint_t jnt = joint(0, 1, vector(0, 6370002, 0), vector(0, 1, 0));
   large_matrix_t j = ball_in_socket_jacobian(s1, s2, jnt);
   large_vector_t b = ball_in_socket_correction(s1, s2, jnt);
   vector_t p1; vector_t p2; vector_t t1; vector_t t2;

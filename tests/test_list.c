@@ -214,6 +214,23 @@ static MunitResult test_get_forces(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_append_joint(const MunitParameter params[], void *data) {
+  joint_t f = joint(1, 2, vector(2, 3, 5), vector(3, 5, 7));
+  list_t list = make_list();
+  append_joint(&list, f);
+  munit_assert_int(list.size, ==, 1);
+  return MUNIT_OK;
+}
+
+static MunitResult test_get_joint(const MunitParameter params[], void *data) {
+  joint_t f = joint(1, 2, vector(2, 3, 5), vector(3, 5, 7));
+  list_t list = make_list();
+  append_joint(&list, f);
+  munit_assert_int(get_joint(list)[0].i, ==, 1);
+  munit_assert_int(get_joint(list)[0].j, ==, 2);
+  return MUNIT_OK;
+}
+
 MunitTest test_list[] = {
   {"/zero_size"        , test_zero_size        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/append_gluint"    , test_append_gluint    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -242,5 +259,7 @@ MunitTest test_list[] = {
   {"/get_body"         , test_get_body         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/append_forces"    , test_append_forces    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/get_forces"       , test_get_forces       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/append_joint"     , test_append_joint     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/get_joint"        , test_get_joint        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                , NULL                  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
