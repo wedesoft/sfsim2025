@@ -17,3 +17,5 @@ static inline world_t *make_world(void) {
   result->joints = make_list();
   return result;
 }
+
+void *scale_world(void *world_, double scale);
