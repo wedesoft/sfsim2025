@@ -49,12 +49,12 @@ void *pendulum_change(double t, double dt, void *s_, void *data_) {
     state(vector_scale(s2->speed, dt),
           vector_add(vector_scale(p2, 1.0 / body2.mass), vector_scale(forces2.force, dt_div_mass)),
           quaternion_product(vector_to_quaternion(vector_scale(s2->rotation, 0.5 * dt)), s2->orientation),
-          matrix_vector_dot(inverse(inertia), vector_add(vector_add(t2, coriolis), forces2.torque)));
+          matrix_vector_dot(inverse(inertia), vector_add(t2, vector_scale(vector_add(coriolis, forces2.torque), dt))));
   return result;
 }
 
 void step() {
-  double dt = 0.001;
+  double dt = 0.002;
   for (int i=0; i<10; i++) {
     s2 = runge_kutta(s2, dt, pendulum_change, add_states, scale_state, NULL);
   };
