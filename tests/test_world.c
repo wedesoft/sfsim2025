@@ -43,6 +43,17 @@ static MunitResult test_scale_copies_joints(const MunitParameter params[], void 
   return MUNIT_OK;
 }
 
+static MunitResult test_scale_states(const MunitParameter params[], void *data) {
+  world_t *world = make_world();
+  append_pointer(&world->states, state(vector(2, 3, 5), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
+  world_t *scaled = scale_world(world, 2.0);
+  munit_assert_int(scaled->states.size, ==, 1);
+  munit_assert_double(((state_t *)get_pointer(scaled->states)[0])->position.x, ==,  4);
+  munit_assert_double(((state_t *)get_pointer(scaled->states)[0])->position.y, ==,  6);
+  munit_assert_double(((state_t *)get_pointer(scaled->states)[0])->position.z, ==, 10);
+  return MUNIT_OK;
+}
+
 MunitTest test_world[] = {
   {"/create"             , test_create             , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/no_bodies_initially", test_no_bodies_initially, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -50,5 +61,6 @@ MunitTest test_world[] = {
   {"/no_joints_initially", test_no_joints_initially, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/scale_copies_bodies", test_scale_copies_bodies, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/scale_copies_joints", test_scale_copies_joints, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/scale_states"       , test_scale_states       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                  , NULL                    , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
