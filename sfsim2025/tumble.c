@@ -5,9 +5,11 @@
 #include <SDL_opengl.h>
 #include <GL/glut.h>
 #include "sfsim2025/mechanics.h"
+#include "sfsim2025/world.h"
 
 
-static state_t *s = 0;
+static world_t *world = 0;
+world_info_t info;
 struct timespec t0;
 double w = 2.0;
 double h = 0.4;
@@ -17,6 +19,7 @@ double d = 1.0;
 void display() {
   glClear(GL_COLOR_BUFFER_BIT);
   glMatrixMode(GL_MODELVIEW);
+  state_t *s = get_pointer(world->states)[0];
   matrix_t r = rotation_matrix(s->orientation);
   double m[16] = {
     r.m11, r.m21, r.m31, 0,
@@ -34,8 +37,7 @@ void step() {
   struct timespec t1;
   clock_gettime(CLOCK_REALTIME, &t1);
   double elapsed = fmin(t1.tv_sec - t0.tv_sec + (t1.tv_nsec - t0.tv_nsec) * 1e-9, 0.1);
-  body_info_t data = body_info(body(1, inertia_cuboid(1, w, h, d)), forces(vector(0, 0, 0), vector(0, 0, 0)));
-  s = runge_kutta(s, elapsed, state_change, add_states, scale_state, &data);
+  world = runge_kutta(world, elapsed, world_change, add_worlds, scale_world, &info);
   t0 = t1;
 }
 
@@ -53,7 +55,11 @@ int main(int argc, char *argv[]) {
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   gluPerspective(65.0, (GLfloat)640/(GLfloat)480, 1.0, 20.0);
-  s = state(vector(0, 0, -4), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.4, 0.1, 4));
+  world = make_world();
+  append_pointer(&world->states, state(vector(0, 0, -4), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.4, 0.1, 4)));
+  info = make_world_info();
+  append_body(&info.bodies, body(1, inertia_cuboid(1, w, h, d)));
+  append_forces(&info.forces, forces(vector(0, 0, 0), vector(0, 0, 0)));
   clock_gettime(CLOCK_REALTIME, &t0);
   bool quit = false;
   while (!quit) {
