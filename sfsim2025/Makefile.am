@@ -6,7 +6,7 @@ pkginclude_HEADERS = body.h contact.h coordinate.h edge.h face.h forces.h joint.
 										 matrix43.h mechanics.h plane.h polygon.h quaternion.h rigid_body.h state.h vector.h world.h
 
 libsfsim2025_la_SOURCES = joint.c large_matrix.c large_vector.c list.c matrix.c mechanics.c plane.c polygon.c quaternion.c \
-													rigid_body.c vector.c world.c
+													rigid_body.c state.c vector.c world.c
 libsfsim2025_la_CFLAGS = $(GLEW_CFLAGS) $(GL_CFLAGS) $(ATLAS_CFLAGS) $(BOEHM_CFLAGS)
 libsfsim2025_la_LDFLAGS =
 libsfsim2025_la_LIBADD = $(GLEW_LIBS) $(GL_LIBS) -llapack_atlas $(ATLAS_LIBS) $(BOEHM_LIBS) -lm

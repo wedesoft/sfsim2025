@@ -20,3 +20,7 @@ static inline state_t *state(vector_t position, vector_t speed, quaternion_t ori
   result->rotation = rotation;
   return result;
 }
+
+void *add_states(void *a_, void *b_);
+
+void *scale_state(void *s_, double scale);

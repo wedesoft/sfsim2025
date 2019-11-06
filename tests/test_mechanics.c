@@ -95,27 +95,6 @@ static MunitResult test_consider_orientation(const MunitParameter params[], void
   return MUNIT_OK;
 }
 
-static MunitResult test_add_states(const MunitParameter params[], void *data) {
-  state_t *s1 = state(vector(1, 0, 0), vector(3, 0, 0), quaternion(-1, 0, 0, 0), vector(0.4, 0, 0));
-  state_t *s2 = state(vector(2, 0, 0), vector(4, 0, 0), quaternion( 2, 0, 0, 0), vector(0.1, 0, 0));
-  state_t *result = add_states(s1, s2);
-  munit_assert_double(result->position.x, ==, 3);
-  munit_assert_double(result->speed.x, ==, 7);
-  munit_assert_double(result->orientation.a, ==, 1);
-  munit_assert_double(result->rotation.x, ==, 0.5);
-  return MUNIT_OK;
-}
-
-static MunitResult test_scale_state(const MunitParameter params[], void *data) {
-  state_t *s = state(vector(1, 0, 0), vector(2, 0, 0), quaternion(-1, 0, 0, 0), vector(0.5, 0, 0));
-  state_t *result = scale_state(s, 2);
-  munit_assert_double(result->position.x, ==, 2);
-  munit_assert_double(result->speed.x, ==, 4);
-  munit_assert_double(result->orientation.a, ==, -2);
-  munit_assert_double(result->rotation.x, ==, 1.0);
-  return MUNIT_OK;
-}
-
 static MunitResult test_inertia_unit_cube(const MunitParameter params[], void *data) {
   matrix_t result = inertia_cuboid(6, 1, 1, 1);
   munit_assert_double(result.m11, ==, 1); munit_assert_double(result.m12, ==, 0); munit_assert_double(result.m13, ==, 0);
@@ -156,8 +135,6 @@ MunitTest test_mechanics[] = {
   {"/orientation_change"  , test_orientation_change  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/euler"               , test_euler               , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/consider_orientation", test_consider_orientation, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/add_states"          , test_add_states          , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/scale_state"         , test_scale_state         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/inertia_unit_cube"   , test_inertia_unit_cube   , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/heavy_cube"          , test_heavy_cube          , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/inertia_cuboid"      , test_inertia_cuboid      , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},

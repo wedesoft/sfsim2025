@@ -19,3 +19,5 @@ static inline world_t *make_world(void) {
 }
 
 void *scale_world(void *world_, double scale);
+
+void *add_worlds(void *a_, void *b_);

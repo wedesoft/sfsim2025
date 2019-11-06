@@ -19,10 +19,6 @@ static inline body_info_t body_info(body_t body, forces_t forces) {
 
 void *state_change(double t, double dt, void *s_, void *data_);
 
-void *add_states(void *a_, void *b_);
-
-void *scale_state(void *s_, double scale);
-
 // Compute inertial matrix of cuboid.
 static inline matrix_t inertia_cuboid(double mass, double width, double height, double depth) {
   double width2 = width * width;
