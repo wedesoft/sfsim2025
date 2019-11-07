@@ -81,7 +81,7 @@ static MunitResult test_correcting_impulse(const MunitParameter params[], void *
   body_t body2 = body(1.0, inertia_cuboid(1.0, 0.1, 2, 0.1));
   state_t *s1 = state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector(0, 1, 0), vector(0, -0.01, 0), quaternion_rotation(0, vector(0, 0, 1)), vector(0, 0, 0));
-  joint_t jnt = joint(0, 0, vector(0, 6370002, 0), vector(0, 1, 0));
+  joint_t jnt = joint(0, 1, vector(0, 6370002, 0), vector(0, 1, 0));
   large_matrix_t j = ball_in_socket_jacobian(s1, s2, jnt);
   large_vector_t b = ball_in_socket_correction(s1, s2, jnt);
   vector_t p1; vector_t t1; vector_t p2; vector_t t2;

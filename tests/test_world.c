@@ -140,6 +140,12 @@ static MunitResult test_consider_orientation(const MunitParameter params[], void
   return MUNIT_OK;
 }
 
+static MunitResult test_has_joints(const MunitParameter params[], void *data) {
+  world_t *world = make_world();
+  munit_assert_int(world->joints.size, ==, 0);
+  return MUNIT_OK;
+}
+
 MunitTest test_world[] = {
   {"/create"              , test_create              , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/no_states_initially" , test_no_states_initially , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -151,5 +157,6 @@ MunitTest test_world[] = {
   {"/orientation_change"  , test_orientation_change  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/newton_euler"        , test_newton_euler        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/consider_orientation", test_consider_orientation, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/has_joints"          , test_has_joints          , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                   , NULL                     , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
