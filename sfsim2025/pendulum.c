@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
   glLoadIdentity();
   gluPerspective(65.0, (GLfloat)640/(GLfloat)480, 1.0, 20.0);
   s1 = state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  s2 = state(vector(1, 2, 0), vector(0, 0, 0), quaternion_rotation(M_PI / 2, vector(0, 0, 1)), vector(0, 0, 0));
+  s2 = state(vector(1, 2, 0), vector(0, 0, 0), quaternion_rotation(M_PI / 2, vector(0, 0, 1)), vector(1, 0, 0));
   bool quit = false;
   while (!quit) {
 		SDL_Event e;
