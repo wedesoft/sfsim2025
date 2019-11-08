@@ -127,6 +127,18 @@ static MunitResult test_inertia_sphere(const MunitParameter params[], void *data
   return MUNIT_OK;
 }
 
+static MunitResult test_predict_speed(const MunitParameter params[], void *data) {
+  body_t b = body(0.25, diagonal(1, 1, 1));
+  state_t *s = state(vector(1, 2, 3), vector(3, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  forces_t f = forces(vector(1, 0, 0), vector(0, 0, 0));
+  vector_t p = vector(0, 0, 0);
+  state_t *result = predict(s, b, f, vector(0, 0, 0), vector(0, 0, 0), 0.5);
+  munit_assert_double(result->speed.x, ==, 5);
+  munit_assert_double(result->speed.y, ==, 0);
+  munit_assert_double(result->speed.z, ==, 0);
+  return MUNIT_OK;
+}
+
 MunitTest test_mechanics[] = {
   {"/runge_kutta"         , test_runge_kutta         , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/position_change"     , test_position_change     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -139,5 +151,6 @@ MunitTest test_mechanics[] = {
   {"/heavy_cube"          , test_heavy_cube          , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/inertia_cuboid"      , test_inertia_cuboid      , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/inertia_sphere"      , test_inertia_sphere      , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/predict_speed"       , test_predict_speed       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                   , NULL                     , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

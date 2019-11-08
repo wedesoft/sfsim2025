@@ -33,3 +33,9 @@ void *state_change(double t, double dt, void *s_, void *data_) {
   state_t *result = state(position_change, speed_change, orientation_change, rotation_change);
   return result;
 }
+
+// Predict speed and rotation for next time step.
+state_t *predict(state_t *s, body_t b, forces_t f, vector_t p, vector_t t, double dt) {
+  vector_t speed = vector_add(s->speed, vector_scale(f.force, dt / b.mass));
+  return state(s->position, speed, s->orientation, s->rotation);
+}
