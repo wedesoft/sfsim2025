@@ -23,19 +23,18 @@ void *state_change(double t, double dt, void *s_, void *data_) {
   body_info_t *data = data_;
   double dt_div_mass = dt / data->body.mass;
   vector_t position_change = vector_scale(s->speed, dt);
-  vector_t speed_change = vector_scale(data->forces.force, dt_div_mass);
+  vector_t speed_change_ = speed_change(data->forces, data->body, dt);
   // https://www.cl.cam.ac.uk/techreports/UCAM-CL-TR-683.pdf section 2.3.3
   quaternion_t orientation_change = quaternion_product(vector_to_quaternion(vector_scale(s->rotation, 0.5 * dt)), s->orientation);
-  matrix_t inertia = rotate_matrix(s->orientation, data->body.inertia);
-  vector_t coriolis = vector_negative(cross_product(s->rotation, matrix_vector_dot(inertia, s->rotation)));
-  vector_t rotation_change = vector_scale(matrix_vector_dot(inverse(inertia), vector_add(data->forces.torque, coriolis)), dt);
+  vector_t rotation_change_ = rotation_change(s, data->forces, data->body, dt);
   // https://physics.stackexchange.com/questions/412181/eulers-equation-for-rigid-body-rotation-applied-to-inertia-frame
-  state_t *result = state(position_change, speed_change, orientation_change, rotation_change);
+  state_t *result = state(position_change, speed_change_, orientation_change, rotation_change_);
   return result;
 }
 
 // Predict speed and rotation for next time step.
 state_t *predict(state_t *s, body_t b, forces_t f, vector_t p, vector_t t, double dt) {
-  vector_t speed = vector_add(s->speed, vector_scale(f.force, dt / b.mass));
-  return state(s->position, speed, s->orientation, s->rotation);
+  vector_t speed = vector_add(s->speed, speed_change(f, b, dt));
+  vector_t rotation = vector_add(s->rotation, rotation_change(s, f, b, dt));
+  return state(s->position, speed, s->orientation, rotation);
 }

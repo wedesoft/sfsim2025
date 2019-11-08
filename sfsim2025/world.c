@@ -36,12 +36,10 @@ void *world_change(double t, double dt, void *world_, void *data_) {
     body_t b = get_body(data->bodies)[i];
     forces_t f = get_forces(data->forces)[i];
     vector_t position_change = vector_scale(s->speed, dt);
-    vector_t speed_change = vector_scale(f.force, dt / b.mass);
+    vector_t speed_change_ = speed_change(f, b, dt);
     quaternion_t orientation_change = quaternion_product(vector_to_quaternion(vector_scale(s->rotation, 0.5 * dt)), s->orientation);
-    matrix_t inertia = rotate_matrix(s->orientation, b.inertia);
-    vector_t coriolis = vector_negative(cross_product(s->rotation, matrix_vector_dot(inertia, s->rotation)));
-    vector_t rotation_change = vector_scale(matrix_vector_dot(inverse(inertia), vector_add(f.torque, coriolis)), dt);
-    append_pointer(&result->states, state(position_change, speed_change, orientation_change, rotation_change));
+    vector_t rotation_change_ = rotation_change(s, f, b, dt);
+    append_pointer(&result->states, state(position_change, speed_change_, orientation_change, rotation_change_));
   };
   return result;
 }
