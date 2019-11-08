@@ -41,15 +41,17 @@ void *pendulum_change(double t, double dt, void *s_, void *data_) {
   large_matrix_t j = ball_in_socket_jacobian(s1, s2, jnt);
   large_vector_t b = ball_in_socket_correction(s1, s2, jnt);
   vector_t p1; vector_t p2; vector_t t1; vector_t t2;
-  correcting_impulse(body1, body2, s1, s2, j, b, &p1, &p2, &t1, &t2);
+  p2 = vector(0, 0, 0); t2 = vector(0, 0, 0);
+  state_t *ps2 = predict(s2, body2, forces2, p2, t2, dt);
+  correcting_impulse(body1, body2, s1, ps2, j, b, &p1, &p2, &t1, &t2);
   double dt_div_mass = dt / body2.mass;
   matrix_t inertia = rotate_matrix(s2->orientation, body2.inertia);
   vector_t coriolis = vector_negative(cross_product(s2->rotation, matrix_vector_dot(inertia, s2->rotation)));
   state_t *result =
     state(vector_scale(s2->speed, dt),
-          vector_add(vector_scale(p2, 1.0 / body2.mass), vector_scale(forces2.force, dt_div_mass)),
+          speed_change(forces2, body2, p2, dt),
           quaternion_product(vector_to_quaternion(vector_scale(s2->rotation, 0.5 * dt)), s2->orientation),
-          matrix_vector_dot(inverse(inertia), vector_add(t2, vector_scale(vector_add(coriolis, forces2.torque), dt))));
+          rotation_change(s2, forces2, body2, t2, dt));
   return result;
 }
 

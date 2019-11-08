@@ -141,6 +141,17 @@ static MunitResult test_predict_speed(const MunitParameter params[], void *data)
   return MUNIT_OK;
 }
 
+static MunitResult test_consider_linear_impulse(const MunitParameter params[], void *data) {
+  body_t b = body(0.25, diagonal(1, 1, 1));
+  state_t *s = state(vector(1, 2, 3), vector(3, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  forces_t f = forces(vector(0, 0, 0), vector(0, 0, 0));
+  state_t *result = predict(s, b, f, vector(1, 0, 0), vector(0, 0, 0), 0.5);
+  munit_assert_double(result->speed.x, ==, 7);
+  munit_assert_double(result->speed.y, ==, 0);
+  munit_assert_double(result->speed.z, ==, 0);
+  return MUNIT_OK;
+}
+
 static MunitResult test_predict_rotation(const MunitParameter params[], void *data) {
   body_t b = body(1, diagonal(1, 1, 1));
   state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(2, 0, 0));
@@ -156,19 +167,32 @@ static MunitResult test_predict_rotation(const MunitParameter params[], void *da
   return MUNIT_OK;
 }
 
+static MunitResult test_consider_angular_impulse(const MunitParameter params[], void *data) {
+  body_t b = body(1, diagonal(1, 1, 1));
+  state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(2, 0, 0));
+  forces_t f = forces(vector(0, 0, 0), vector(0, 0, 0));
+  state_t *result = predict(s, b, f, vector(0, 0, 0), vector(3, 0, 0), 0.5);
+  munit_assert_double(result->rotation.x, ==, 5);
+  munit_assert_double(result->rotation.y, ==, 0);
+  munit_assert_double(result->rotation.z, ==, 0);
+  return MUNIT_OK;
+}
+
 MunitTest test_mechanics[] = {
-  {"/runge_kutta"         , test_runge_kutta         , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
-  {"/position_change"     , test_position_change     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/speed_change"        , test_speed_change        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/rotation"            , test_rotation            , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/orientation_change"  , test_orientation_change  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/euler"               , test_euler               , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/consider_orientation", test_consider_orientation, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/inertia_unit_cube"   , test_inertia_unit_cube   , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
-  {"/heavy_cube"          , test_heavy_cube          , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
-  {"/inertia_cuboid"      , test_inertia_cuboid      , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
-  {"/inertia_sphere"      , test_inertia_sphere      , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
-  {"/predict_speed"       , test_predict_speed       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/predict_rotation"    , test_predict_rotation    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {NULL                   , NULL                     , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
+  {"/runge_kutta"             , test_runge_kutta             , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/position_change"         , test_position_change         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/speed_change"            , test_speed_change            , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/rotation"                , test_rotation                , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/orientation_change"      , test_orientation_change      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/euler"                   , test_euler                   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/consider_orientation"    , test_consider_orientation    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/inertia_unit_cube"       , test_inertia_unit_cube       , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/heavy_cube"              , test_heavy_cube              , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/inertia_cuboid"          , test_inertia_cuboid          , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/inertia_sphere"          , test_inertia_sphere          , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/predict_speed"           , test_predict_speed           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/consider_linear_impulse" , test_consider_linear_impulse , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/predict_rotation"        , test_predict_rotation        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/consider_angular_impulse", test_consider_angular_impulse, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {NULL                       , NULL                         , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

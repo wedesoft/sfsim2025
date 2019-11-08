@@ -140,9 +140,26 @@ static MunitResult test_consider_orientation(const MunitParameter params[], void
   return MUNIT_OK;
 }
 
-static MunitResult test_has_joints(const MunitParameter params[], void *data) {
+static world_info_t world_info5(void) {
+  world_info_t result = make_world_info();
+  append_body(&result.bodies, body(1.0, diagonal(1, 1, 1)));
+  append_forces(&result.forces, forces(vector(0, 0, 0), vector(0, 0, 0)));
+  append_body(&result.bodies, body(1.0, diagonal(1, 1, 1)));
+  append_forces(&result.forces, forces(vector(0, 0, 0), vector(0, 0, 0)));
+  append_joint(&result.joints, joint(0, 1, vector(2, 0, 0), vector(-2, 0, 0)));
+  return result;
+}
+
+static MunitResult test_joint(const MunitParameter params[], void *data) {
   world_t *world = make_world();
-  munit_assert_int(world->joints.size, ==, 0);
+  append_pointer(&world->states, state(vector(-2, 0, 0), vector(-1, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
+  append_pointer(&world->states, state(vector(+2, 0, 0), vector(+1, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
+  world_info_t info = world_info5();
+  world_t *changed = world_change(0, 1, world, &info);
+  state_t *result1 = get_pointer(changed->states)[0];
+  state_t *result2 = get_pointer(changed->states)[1];
+  munit_assert_double(result1->speed.x, ==, +1);
+  munit_assert_double(result2->speed.x, ==, -1);
   return MUNIT_OK;
 }
 
@@ -157,6 +174,6 @@ MunitTest test_world[] = {
   {"/orientation_change"  , test_orientation_change  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/newton_euler"        , test_newton_euler        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/consider_orientation", test_consider_orientation, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/has_joints"          , test_has_joints          , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/joint"               , test_joint               , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                   , NULL                     , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

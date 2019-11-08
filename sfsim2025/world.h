@@ -5,14 +5,12 @@
 
 typedef struct {
   list_t states;
-  list_t joints;
 } world_t;
 
 
 static inline world_t *make_world(void) {
   world_t *result = GC_MALLOC(sizeof(world_t));
   result->states = make_list();
-  result->joints = make_list();
   return result;
 }
 
@@ -34,4 +32,4 @@ static inline world_info_t make_world_info(void) {
   return result;
 }
 
-void *world_change(double t, double dt, void *world_, void *data_);
+void *world_change(double time, double dt, void *world_, void *data_);
