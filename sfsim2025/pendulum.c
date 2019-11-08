@@ -4,12 +4,11 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include <GL/glut.h>
-#include "sfsim2025/joint.h"
 #include "sfsim2025/mechanics.h"
+#include "sfsim2025/world.h"
 
 
-state_t *s1;
-state_t *s2;
+world_t *world;
 
 double w = 0.3;
 double h = 2.0;
@@ -19,6 +18,7 @@ double d = 0.1;
 void display() {
   glClear(GL_COLOR_BUFFER_BIT);
   glMatrixMode(GL_MODELVIEW);
+  state_t *s2 = get_pointer(world->states)[1];
   matrix_t r = rotation_matrix(s2->orientation);
   double m[16] = {
     r.m11, r.m21, r.m31, 0,
@@ -32,34 +32,15 @@ void display() {
   glFlush();
 }
 
-void *pendulum_change(double t, double dt, void *s_, void *data_) {
-  state_t *s2 = s_;
-  body_t body1 = body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000));
-  body_t body2 = body(1.0, inertia_cuboid(1.0, w, h, d));
-  forces_t forces2 = forces(vector(0, -9.81, 0), vector(0, 0, 0));
-  joint_t jnt = joint(0, 1, vector(0, 6370002, 0), vector(0, 1, 0));
-  large_matrix_t j = ball_in_socket_jacobian(s1, s2, jnt);
-  large_vector_t b = ball_in_socket_correction(s1, s2, jnt);
-  vector_t p1; vector_t p2; vector_t t1; vector_t t2;
-  p2 = vector(0, 0, 0); t2 = vector(0, 0, 0);
-  state_t *ps2 = predict(s2, body2, forces2, p2, t2, dt);
-  correcting_impulse(body1, body2, s1, ps2, j, b, &p1, &p2, &t1, &t2);
-  double dt_div_mass = dt / body2.mass;
-  matrix_t inertia = rotate_matrix(s2->orientation, body2.inertia);
-  vector_t coriolis = vector_negative(cross_product(s2->rotation, matrix_vector_dot(inertia, s2->rotation)));
-  state_t *result =
-    state(vector_scale(s2->speed, dt),
-          speed_change(forces2, body2, p2, dt),
-          quaternion_product(vector_to_quaternion(vector_scale(s2->rotation, 0.5 * dt)), s2->orientation),
-          rotation_change(s2, forces2, body2, t2, dt));
-  return result;
-}
-
 void step() {
-  double dt = 0.001;
-  for (int i=0; i<10; i++) {
-    s2 = runge_kutta(s2, dt, pendulum_change, add_states, scale_state, NULL);
-  };
+  double dt = 0.01;
+  world_info_t info = make_world_info();
+  append_body(&info.bodies, body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000)));
+  append_body(&info.bodies, body(1.0, inertia_cuboid(1.0, w, h, d)));
+  append_forces(&info.forces, forces(vector(0, 0, 0), vector(0, 0, 0)));
+  append_forces(&info.forces, forces(vector(0, -9.81, 0), vector(0, 0, 0)));
+  append_joint(&info.joints, joint(0, 1, vector(0, 6370002, 0), vector(0, 1, 0)));
+  world = runge_kutta(world, dt, world_change, add_worlds, scale_world, &info);
 }
 
 int main(int argc, char *argv[]) {
@@ -75,8 +56,9 @@ int main(int argc, char *argv[]) {
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   gluPerspective(65.0, (GLfloat)640/(GLfloat)480, 1.0, 20.0);
-  s1 = state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  s2 = state(vector(1, 2, 0), vector(0, 0, 0), quaternion_rotation(M_PI / 2, vector(0, 0, 1)), vector(1, 0, 0));
+  world = make_world();
+  append_pointer(&world->states, state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
+  append_pointer(&world->states, state(vector(1, 2, 0), vector(0, 0, 0), quaternion_rotation(M_PI / 2, vector(0, 0, 1)), vector(1, 0, 0)));
   bool quit = false;
   while (!quit) {
 		SDL_Event e;
