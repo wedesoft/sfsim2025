@@ -31,8 +31,8 @@ void *world_change(double time, double dt, void *world_, void *data_) {
   world_t *world = world_;
   world_t *result = make_world();
   world_info_t *data = data_;
-  vector_t p[world->states.size]; memset(p, sizeof(p), 0);
-  vector_t t[world->states.size]; memset(t, sizeof(t), 0);
+  vector_t p[world->states.size]; memset(p, 0, sizeof(p));
+  vector_t t[world->states.size]; memset(t, 0, sizeof(t));
   for (int k=0; k<data->joints.size; k++) {
     joint_t joint = get_joint(data->joints)[k];
     state_t *s1 = get_pointer(world->states)[joint.i];

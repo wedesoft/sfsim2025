@@ -9,6 +9,7 @@
 
 
 world_t *world;
+world_info_t info;
 
 double w = 0.3;
 double h = 2.0;
@@ -34,13 +35,7 @@ void display() {
 
 void step() {
   double dt = 0.01;
-  int n = 50;
-  world_info_t info = make_world_info();
-  append_body(&info.bodies, body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000)));
-  append_body(&info.bodies, body(1.0, inertia_cuboid(1.0, w, h, d)));
-  append_forces(&info.forces, forces(vector(0, 9.81, 0), vector(0, 0, 0)));
-  append_forces(&info.forces, forces(vector(0, -9.81, 0), vector(0, 0, 0)));
-  append_joint(&info.joints, joint(0, 1, vector(0, 6370002, 0), vector(0, 1, 0)));
+  int n = 100;
   for (int i=0; i<n; i++)
     world = runge_kutta(world, dt / n, world_change, add_worlds, scale_world, &info);
 }
@@ -61,6 +56,12 @@ int main(int argc, char *argv[]) {
   world = make_world();
   append_pointer(&world->states, state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
   append_pointer(&world->states, state(vector(1, 2, 0), vector(0, 0, 0), quaternion_rotation(M_PI / 2, vector(0, 0, 1)), vector(1, 0, 0)));
+  info = make_world_info();
+  append_body(&info.bodies, body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000)));
+  append_body(&info.bodies, body(1.0, inertia_cuboid(1.0, w, h, d)));
+  append_forces(&info.forces, forces(vector(0, 9.81, 0), vector(0, 0, 0)));
+  append_forces(&info.forces, forces(vector(0, -9.81, 0), vector(0, 0, 0)));
+  append_joint(&info.joints, joint(0, 1, vector(0, 6370002, 0), vector(0, 1, 0)));
   bool quit = false;
   while (!quit) {
 		SDL_Event e;
