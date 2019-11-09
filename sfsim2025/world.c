@@ -33,25 +33,26 @@ void *world_change(double time, double dt, void *world_, void *data_) {
   world_info_t *data = data_;
   vector_t p[world->states.size]; memset(p, 0, sizeof(p));
   vector_t t[world->states.size]; memset(t, 0, sizeof(t));
-  for (int k=0; k<data->joints.size; k++) {
-    joint_t joint = get_joint(data->joints)[k];
-    state_t *s1 = get_pointer(world->states)[joint.i];
-    state_t *s2 = get_pointer(world->states)[joint.j];
-    body_t body1 = get_body(data->bodies)[joint.i];
-    body_t body2 = get_body(data->bodies)[joint.j];
-    forces_t forces1 = get_forces(data->forces)[joint.i];
-    forces_t forces2 = get_forces(data->forces)[joint.j];
-    state_t *prediction1 = predict(s1, body1, forces1, p[joint.i], t[joint.i], dt);
-    state_t *prediction2 = predict(s2, body2, forces2, p[joint.j], t[joint.j], dt);
-    large_matrix_t j = ball_in_socket_jacobian(s1, s2, joint);
-    large_vector_t b = ball_in_socket_correction(s1, s2, joint);
-    vector_t p1; vector_t p2; vector_t t1; vector_t t2;
-    correcting_impulse(body1, body2, prediction1, prediction2, j, b, &p1, &p2, &t1, &t2);
-    p[joint.i] = vector_add(p[joint.i], p1);
-    p[joint.j] = vector_add(p[joint.j], p2);
-    t[joint.i] = vector_add(t[joint.i], t1);
-    t[joint.j] = vector_add(t[joint.j], t2);
-  };
+  for (int c=0; c<data->iterations; c++)
+    for (int k=0; k<data->joints.size; k++) {
+      joint_t joint = get_joint(data->joints)[k];
+      state_t *s1 = get_pointer(world->states)[joint.i];
+      state_t *s2 = get_pointer(world->states)[joint.j];
+      body_t body1 = get_body(data->bodies)[joint.i];
+      body_t body2 = get_body(data->bodies)[joint.j];
+      forces_t forces1 = get_forces(data->forces)[joint.i];
+      forces_t forces2 = get_forces(data->forces)[joint.j];
+      state_t *prediction1 = predict(s1, body1, forces1, p[joint.i], t[joint.i], dt);
+      state_t *prediction2 = predict(s2, body2, forces2, p[joint.j], t[joint.j], dt);
+      large_matrix_t j = ball_in_socket_jacobian(s1, s2, joint);
+      large_vector_t b = ball_in_socket_correction(s1, s2, joint);
+      vector_t p1; vector_t p2; vector_t t1; vector_t t2;
+      correcting_impulse(body1, body2, prediction1, prediction2, j, b, &p1, &p2, &t1, &t2);
+      p[joint.i] = vector_add(p[joint.i], p1);
+      p[joint.j] = vector_add(p[joint.j], p2);
+      t[joint.i] = vector_add(t[joint.i], t1);
+      t[joint.j] = vector_add(t[joint.j], t2);
+    };
   for (int i=0; i<world->states.size; i++) {
     state_t *s = get_pointer(world->states)[i];
     body_t b = get_body(data->bodies)[i];

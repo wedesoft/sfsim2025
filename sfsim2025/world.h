@@ -19,6 +19,7 @@ void *scale_world(void *world_, double scale);
 void *add_worlds(void *a_, void *b_);
 
 typedef struct {
+  int iterations;
   list_t bodies;
   list_t joints;
   list_t forces;
@@ -26,6 +27,7 @@ typedef struct {
 
 static inline world_info_t make_world_info(void) {
   world_info_t result;
+  result.iterations = 1;
   result.bodies = make_list();
   result.joints = make_list();
   result.forces = make_list();

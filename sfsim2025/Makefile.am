@@ -1,4 +1,4 @@
-noinst_PROGRAMS = tumble pendulum
+noinst_PROGRAMS = tumble pendulum chain
 
 lib_LTLIBRARIES = libsfsim2025.la
 
@@ -20,3 +20,8 @@ pendulum_SOURCES = pendulum.c
 pendulum_CFLAGS = $(GLEW_CFLAGS) $(GL_CFLAGS) $(ATLAS_CFLAGS) $(BOEHM_CFLAGS) $(SDL_CFLAGS)
 pendulum_LDFLAGS =
 pendulum_LDADD = libsfsim2025.la $(GLEW_LIBS) $(GL_LIBS) $(BOEHM_LIBS) $(SDL_LIBS) -lm
+
+chain_SOURCES = chain.c
+chain_CFLAGS = $(GLEW_CFLAGS) $(GL_CFLAGS) $(ATLAS_CFLAGS) $(BOEHM_CFLAGS) $(SDL_CFLAGS)
+chain_LDFLAGS =
+chain_LDADD = libsfsim2025.la $(GLEW_LIBS) $(GL_LIBS) $(BOEHM_LIBS) $(SDL_LIBS) -lm
