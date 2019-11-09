@@ -38,7 +38,7 @@ void display() {
 
 void step() {
   double dt = 0.01;
-  int iterations = 5;
+  int iterations = 4;
   for (int i=0; i<iterations; i++)
     world = runge_kutta(world, dt / iterations, world_change, add_worlds, scale_world, &info);
 }
@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
   for (int i=0; i<n; i++)
     append_pointer(&world->states, state(vector(1 + 2 * i, 2, 0), vector(0, 0, 0), quaternion_rotation(M_PI / 2, vector(0, 0, 1)), vector(0, 0, 0)));
   info = make_world_info();
-  info.iterations = 5;
+  info.iterations = 4;
   append_body(&info.bodies, body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000)));
   for (int i=0; i<n; i++)
     append_body(&info.bodies, body(1.0, inertia_cuboid(1.0, w, h, d)));
