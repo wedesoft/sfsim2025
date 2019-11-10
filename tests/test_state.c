@@ -53,11 +53,47 @@ static MunitResult test_impulse_changes_speed(const MunitParameter params[], voi
   return MUNIT_OK;
 }
 
+static MunitResult test_torque_changes_rotation(const MunitParameter params[], void *data) {
+  state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  body_t b = body(1, diagonal(1, 2, 2));
+  forces_t f = forces(vector(0, 0, 0), vector(1, 2, 3));
+  vector_t r = rotation_change(s, f, b, vector(0, 0, 0), 3);
+  munit_assert_double(r.x, ==, 3);
+  munit_assert_double(r.y, ==, 3);
+  munit_assert_double(r.z, ==, 4.5);
+  return MUNIT_OK;
+}
+
+static MunitResult test_angular_impulse(const MunitParameter params[], void *data) {
+  state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  body_t b = body(1, diagonal(1, 2, 2));
+  forces_t f = forces(vector(0, 0, 0), vector(0, 0, 0));
+  vector_t r = rotation_change(s, f, b, vector(1, 2, 3), 3);
+  munit_assert_double(r.x, ==, 1);
+  munit_assert_double(r.y, ==, 1);
+  munit_assert_double(r.z, ==, 1.5);
+  return MUNIT_OK;
+}
+
+static MunitResult test_euler(const MunitParameter params[], void *data) {
+  state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(1, 1, 1));
+  body_t b = body(1, diagonal(1, 2, 4));
+  forces_t f = forces(vector(0, 0, 0), vector(0, 0, 0));
+  vector_t r = rotation_change(s, f, b, vector(0, 0, 0), 2);
+  munit_assert_double(r.x, ==, -4);
+  munit_assert_double(r.y, ==,  3);
+  munit_assert_double(r.z, ==, -0.5);
+  return MUNIT_OK;
+}
+
 MunitTest test_state[] = {
-  {"/components"           , test_components           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/scale_state"          , test_scale_state          , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/add_states"           , test_add_states           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/force_changes_speed"  , test_force_changes_speed  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/impulse_changes_speed", test_impulse_changes_speed, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {NULL                    , NULL                      , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
+  {"/components"             , test_components             , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/scale_state"            , test_scale_state            , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/add_states"             , test_add_states             , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/force_changes_speed"    , test_force_changes_speed    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/impulse_changes_speed"  , test_impulse_changes_speed  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/torque_changes_rotation", test_torque_changes_rotation, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/angular_impulse"        , test_angular_impulse        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/euler"                  , test_euler                  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {NULL                      , NULL                        , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
