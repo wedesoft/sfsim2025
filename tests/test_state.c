@@ -86,6 +86,17 @@ static MunitResult test_euler(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_consider_orientation(const MunitParameter params[], void *data) {
+  state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion_rotation(M_PI / 2, vector(1, 0, 0)), vector(0, 0, 0));
+  body_t b = body(1, diagonal(1, 2, 4));
+  forces_t f = forces(vector(0, 0, 0), vector(1, 2, 3));
+  vector_t r = rotation_change(s, f, b, vector(0, 0, 0), 3);
+  munit_assert_double_equal(r.x, 3  , 6);
+  munit_assert_double_equal(r.y, 1.5, 6);
+  munit_assert_double_equal(r.z, 4.5, 6);
+  return MUNIT_OK;
+}
+
 MunitTest test_state[] = {
   {"/components"             , test_components             , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/scale_state"            , test_scale_state            , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -95,5 +106,6 @@ MunitTest test_state[] = {
   {"/torque_changes_rotation", test_torque_changes_rotation, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/angular_impulse"        , test_angular_impulse        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/euler"                  , test_euler                  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/consider_orientation"   , test_consider_orientation   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                      , NULL                        , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
