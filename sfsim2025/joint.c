@@ -69,14 +69,14 @@ large_matrix_t ball_in_socket_jacobian(state_t *state1, state_t *state2, joint_t
   memset(result.data, 0, result.rows * result.cols * sizeof(double));
   double *p0 = result.data;
   *p0 = 1; p0 += 13; *p0 = 1; p0 += 13; *p0 = 1; p0 += 13;
-  matrix_t rot1 = matrix_negative(cross_product_matrix(rotate_vector(state1->orientation, joint.r1)));
+  matrix_t rot1 = matrix_negative(cross_product_matrix(rotate_vector(state1->orientation, joint.ball_in_socket.r1)));
   double *p1 = result.data + 3;
   *p1++ = rot1.m11; *p1++ = rot1.m12; *p1++ = rot1.m13; p1 += 9;
   *p1++ = rot1.m21; *p1++ = rot1.m22; *p1++ = rot1.m23; p1 += 9;
   *p1++ = rot1.m31; *p1++ = rot1.m32; *p1++ = rot1.m33; p1 += 9;
   double *p2 = result.data + 6;
   *p2 = -1; p2 += 13; *p2 = -1; p2 += 13; *p2 = -1; p2 += 13;
-  matrix_t rot2 = cross_product_matrix(rotate_vector(state2->orientation, joint.r2));
+  matrix_t rot2 = cross_product_matrix(rotate_vector(state2->orientation, joint.ball_in_socket.r2));
   double *p3 = result.data + 9;
   *p3++ = rot2.m11; *p3++ = rot2.m12; *p3++ = rot2.m13; p3 += 9;
   *p3++ = rot2.m21; *p3++ = rot2.m22; *p3++ = rot2.m23; p3 += 9;
@@ -87,6 +87,6 @@ large_matrix_t ball_in_socket_jacobian(state_t *state1, state_t *state2, joint_t
 // Compute error correction term for ball-in-socket joint.
 // http://image.diku.dk/kenny/download/erleben.05.thesis.pdf
 large_vector_t ball_in_socket_correction(state_t *state1, state_t *state2, joint_t joint) {
-  return to_large_vector(vector_subtract(vector_add(state1->position, rotate_vector(state1->orientation, joint.r1)),
-                                         vector_add(state2->position, rotate_vector(state2->orientation, joint.r2))));
+  return to_large_vector(vector_subtract(vector_add(state1->position, rotate_vector(state1->orientation, joint.ball_in_socket.r1)),
+                                         vector_add(state2->position, rotate_vector(state2->orientation, joint.ball_in_socket.r2))));
 }

@@ -6,15 +6,22 @@
 #include "vector.h"
 
 
+typedef enum {BALL_IN_SOCKET} joint_type_t;
+
 typedef struct {
-  int i;
-  int j;
   vector_t r1;
   vector_t r2;
+} ball_in_socket_t;
+
+typedef struct {
+  joint_type_t joint_type;
+  int i;
+  int j;
+  ball_in_socket_t ball_in_socket;
 } joint_t;
 
 static inline joint_t ball_in_socket(int i, int j, vector_t r1, vector_t r2) {
-  return (joint_t){.i = i, .j = j, .r1 = r1, .r2 = r2};
+  return (joint_t){.joint_type = BALL_IN_SOCKET, .i = i, .j = j, .ball_in_socket.r1 = r1, .ball_in_socket.r2 = r2};
 }
 
 large_matrix_t joint_mass(body_t body1, body_t body2, state_t *state1, state_t *state2);

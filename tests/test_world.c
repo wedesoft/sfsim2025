@@ -146,7 +146,7 @@ static world_info_t world_info5(void) {
   append_forces(&result.forces, forces(vector(0, 0, 0), vector(0, 0, 0)));
   append_body(&result.bodies, body(1.0, diagonal(1, 1, 1)));
   append_forces(&result.forces, forces(vector(0, 0, 0), vector(0, 0, 0)));
-  append_joint(&result.joints, joint(0, 1, vector(2, 0, 0), vector(-2, 0, 0)));
+  append_joint(&result.joints, ball_in_socket(0, 1, vector(2, 0, 0), vector(-2, 0, 0)));
   return result;
 }
 

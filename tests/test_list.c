@@ -215,7 +215,7 @@ static MunitResult test_get_forces(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_append_joint(const MunitParameter params[], void *data) {
-  joint_t f = joint(1, 2, vector(2, 3, 5), vector(3, 5, 7));
+  joint_t f = ball_in_socket(1, 2, vector(2, 3, 5), vector(3, 5, 7));
   list_t list = make_list();
   append_joint(&list, f);
   munit_assert_int(list.size, ==, 1);
@@ -223,7 +223,7 @@ static MunitResult test_append_joint(const MunitParameter params[], void *data) 
 }
 
 static MunitResult test_get_joint(const MunitParameter params[], void *data) {
-  joint_t f = joint(1, 2, vector(2, 3, 5), vector(3, 5, 7));
+  joint_t f = ball_in_socket(1, 2, vector(2, 3, 5), vector(3, 5, 7));
   list_t list = make_list();
   append_joint(&list, f);
   munit_assert_int(get_joint(list)[0].i, ==, 1);
