@@ -27,3 +27,6 @@ void correcting_impulse(body_t body1, body_t body2, state_t *state1, state_t *st
 large_matrix_t ball_in_socket_jacobian(state_t *state1, state_t *state2, joint_t joint);
 
 large_vector_t ball_in_socket_correction(state_t *state1, state_t *state2, joint_t joint);
+
+void joint_impulse(body_t body1, body_t body2, joint_t joint, state_t *state1, state_t *state2,
+                   vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2);

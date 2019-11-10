@@ -102,6 +102,20 @@ static MunitResult test_indices(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_joint_impulse(const MunitParameter params[], void *data) {
+  body_t body1 = body(5.9722e+24, inertia_sphere(5.9722e+24, 6370000));
+  body_t body2 = body(1.0, inertia_cuboid(1.0, 0.1, 2, 0.1));
+  state_t *s1 = state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  state_t *s2 = state(vector(0, 1, 0), vector(0, -0.01, 0), quaternion_rotation(0, vector(0, 0, 1)), vector(0, 0, 0));
+  joint_t jnt = joint(0, 1, vector(0, 6370002, 0), vector(0, 1, 0));
+  vector_t p1; vector_t t1; vector_t p2; vector_t t2;
+  joint_impulse(body1, body2, jnt, s1, s2, &p1, &p2, &t1, &t2);
+  munit_assert_double_equal(p1.x,  0.0 , 6);
+  munit_assert_double_equal(p1.y, -0.01, 6);
+  munit_assert_double_equal(p1.z,  0.0 , 6);
+  return MUNIT_OK;
+}
+
 MunitTest test_joint[] = {
   {"/mass_matrix"       , test_mass_matrix       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/rotate_inertia"    , test_rotate_inertia    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -111,5 +125,6 @@ MunitTest test_joint[] = {
   {"/rotate_correction" , test_rotate_correction , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/correcting_impulse", test_correcting_impulse, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/indices"           , test_indices           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/joint_impulse"     , test_joint_impulse     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                 , NULL                   , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

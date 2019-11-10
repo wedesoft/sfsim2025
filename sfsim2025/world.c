@@ -44,10 +44,8 @@ void *world_change(double time, double dt, void *world_, void *data_) {
       forces_t forces2 = get_forces(data->forces)[joint.j];
       state_t *prediction1 = predict(s1, body1, forces1, p[joint.i], t[joint.i], dt);
       state_t *prediction2 = predict(s2, body2, forces2, p[joint.j], t[joint.j], dt);
-      large_matrix_t j = ball_in_socket_jacobian(s1, s2, joint);
-      large_vector_t b = ball_in_socket_correction(s1, s2, joint);
       vector_t p1; vector_t p2; vector_t t1; vector_t t2;
-      correcting_impulse(body1, body2, prediction1, prediction2, j, b, &p1, &p2, &t1, &t2);
+      joint_impulse(body1, body2, joint, prediction1, prediction2, &p1, &p2, &t1, &t2);
       p[joint.i] = vector_add(p[joint.i], p1);
       p[joint.j] = vector_add(p[joint.j], p2);
       t[joint.i] = vector_add(t[joint.i], t1);

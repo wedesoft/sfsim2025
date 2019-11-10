@@ -19,13 +19,13 @@ double d = 0.1;
 void display() {
   glClear(GL_COLOR_BUFFER_BIT);
   glMatrixMode(GL_MODELVIEW);
-  state_t *s2 = get_pointer(world->states)[1];
-  matrix_t r = rotation_matrix(s2->orientation);
+  state_t *s = get_pointer(world->states)[1];
+  matrix_t r = rotation_matrix(s->orientation);
   double m[16] = {
     r.m11, r.m21, r.m31, 0,
     r.m12, r.m22, r.m32, 0,
     r.m13, r.m23, r.m33, 0,
-    s2->position.x, s2->position.y - 1, s2->position.z - 4, 1
+    s->position.x, s->position.y - 1, s->position.z - 4, 1
   };
   glLoadMatrixd(m);
   glScalef(w, h, d);

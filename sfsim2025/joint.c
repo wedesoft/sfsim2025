@@ -38,6 +38,7 @@ large_vector_t speed_vector(state_t *state1, state_t *state2) {
   return result;
 }
 
+// Determine correcting impulse given the Jacobian and the error vector.
 void correcting_impulse(body_t body1, body_t body2, state_t *state1, state_t *state2, large_matrix_t j, large_vector_t b,
                         vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2) {
   large_matrix_t m = joint_mass(body1, body2, state1, state2);
@@ -51,6 +52,14 @@ void correcting_impulse(body_t body1, body_t body2, state_t *state1, state_t *st
   tau1->x = p.data[3]; tau1->y = p.data[ 4]; tau1->z = p.data[ 5];
   impulse2->x = p.data[6]; impulse2->y = p.data[7]; impulse2->z = p.data[8];
   tau2->x = p.data[9]; tau2->y = p.data[10]; tau2->z = p.data[11];
+}
+
+// Determine correcting impulse for a given joint.
+void joint_impulse(body_t body1, body_t body2, joint_t joint, state_t *state1, state_t *state2,
+                   vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2) {
+  large_matrix_t j = ball_in_socket_jacobian(state1, state2, joint);
+  large_vector_t b = ball_in_socket_correction(state1, state2, joint);
+  correcting_impulse(body1, body2, state1, state2, j, b, impulse1, impulse2, tau1, tau2);
 }
 
 // Construct Jacobian for ball-in-socket joint.
