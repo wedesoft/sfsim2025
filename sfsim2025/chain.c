@@ -68,9 +68,9 @@ int main(int argc, char *argv[]) {
   append_forces(&info.forces, forces(vector(0, n * 9.81, 0), vector(0, 0, 0)));
   for (int i=0; i<n; i++)
     append_forces(&info.forces, forces(vector(0, -9.81, 0), vector(0, 0, 0)));
-  append_joint(&info.joints, joint(0, 1, vector(0, 6370002, 0), vector(0, 1, 0)));
+  append_joint(&info.joints, ball_in_socket(0, 1, vector(0, 6370002, 0), vector(0, 1, 0)));
   for (int i=0; i<n-1; i++)
-    append_joint(&info.joints, joint(i + 1, i + 2, vector(0, -1, 0), vector(0, 1, 0)));
+    append_joint(&info.joints, ball_in_socket(i + 1, i + 2, vector(0, -1, 0), vector(0, 1, 0)));
   bool quit = false;
   while (!quit) {
 		SDL_Event e;

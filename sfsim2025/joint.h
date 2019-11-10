@@ -13,7 +13,7 @@ typedef struct {
   vector_t r2;
 } joint_t;
 
-static inline joint_t joint(int i, int j, vector_t r1, vector_t r2) {
+static inline joint_t ball_in_socket(int i, int j, vector_t r1, vector_t r2) {
   return (joint_t){.i = i, .j = j, .r1 = r1, .r2 = r2};
 }
 
