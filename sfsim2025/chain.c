@@ -37,8 +37,8 @@ void display() {
 }
 
 void step() {
-  double dt = 0.01;
-  int iterations = 4;
+  double dt = 0.04;
+  int iterations = 10;
   for (int i=0; i<iterations; i++)
     world = runge_kutta(world, dt / iterations, world_change, add_worlds, scale_world, &info);
 }
