@@ -33,9 +33,31 @@ static MunitResult test_add_states(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_force_changes_speed(const MunitParameter params[], void *data) {
+  forces_t f = forces(vector(2, 3, 5), vector(0, 0, 0));
+  body_t b = body(0.5, diagonal(1, 1, 1));
+  vector_t s = speed_change(f, b, vector(0, 0, 0), 3);
+  munit_assert_double(s.x, ==, 12);
+  munit_assert_double(s.y, ==, 18);
+  munit_assert_double(s.z, ==, 30);
+  return MUNIT_OK;
+}
+
+static MunitResult test_impulse_changes_speed(const MunitParameter params[], void *data) {
+  forces_t f = forces(vector(0, 0, 0), vector(0, 0, 0));
+  body_t b = body(0.5, diagonal(1, 1, 1));
+  vector_t s = speed_change(f, b, vector(2, 3, 5), 3);
+  munit_assert_double(s.x, ==,  4);
+  munit_assert_double(s.y, ==,  6);
+  munit_assert_double(s.z, ==, 10);
+  return MUNIT_OK;
+}
+
 MunitTest test_state[] = {
-  {"/components" , test_components , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/scale_state", test_scale_state, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/add_states" , test_add_states , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {NULL          , NULL            , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
+  {"/components"           , test_components           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/scale_state"          , test_scale_state          , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/add_states"           , test_add_states           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/force_changes_speed"  , test_force_changes_speed  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/impulse_changes_speed", test_impulse_changes_speed, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {NULL                    , NULL                      , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
