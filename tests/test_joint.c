@@ -42,8 +42,8 @@ static MunitResult test_speed_vector(const MunitParameter params[], void *data) 
 static MunitResult test_ball_jacobian(const MunitParameter params[], void *data) {
   state_t *s1 = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector(0, 0, 4), vector(0, 0, 0), quaternion_rotation(M_PI / 2, vector(1, 0, 0)), vector(0, 0, 0));
-  large_matrix_t j = ball_in_socket_jacobian(s1, s2, ball_in_socket(0, 0, vector(0, 0, 2), vector(0, 0, -2)));
-  munit_assert_int(j.rows, ==, 3);
+  large_matrix_t j = ball_in_socket_jacobian(s1, s2, ball_in_socket(0, 1, vector(0, 0, 2), vector(0, 0, -2)));
+  munit_assert_int(j.rows, ==,  3);
   munit_assert_int(j.cols, ==, 12);
   munit_assert_double(j.data[0], ==,  1); munit_assert_double(j.data[13], ==,  1); munit_assert_double(j.data[26], ==,  1);
   munit_assert_double(j.data[6], ==, -1); munit_assert_double(j.data[19], ==, -1); munit_assert_double(j.data[32], ==, -1);
@@ -57,7 +57,7 @@ static MunitResult test_ball_jacobian(const MunitParameter params[], void *data)
 static MunitResult test_ball_correction(const MunitParameter params[], void *data) {
   state_t *s1 = state(vector(-4, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector( 5, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  large_vector_t b = ball_in_socket_correction(s1, s2, ball_in_socket(0, 0, vector(2, 0, 0), vector(-3, 0, 0)));
+  large_vector_t b = ball_in_socket_correction(s1, s2, ball_in_socket(0, 1, vector(2, 0, 0), vector(-3, 0, 0)));
   munit_assert_int(b.rows, ==, 3);
   munit_assert_double_equal(b.data[0], -4, 6);
   munit_assert_double_equal(b.data[1],  0, 6);
@@ -116,6 +116,25 @@ static MunitResult test_joint_impulse(const MunitParameter params[], void *data)
   return MUNIT_OK;
 }
 
+static MunitResult test_hinge_jacobian(const MunitParameter params[], void *data) {
+  state_t *s1 = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  state_t *s2 = state(vector(0, 0, 4), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  large_matrix_t j = hinge_jacobian(s1, s2, hinge(0, 1, vector(0, 0, 2), vector(0, 0, -2), vector(1, 0, 0), vector(1, 0, 0)));
+  munit_assert_int(j.rows, ==,  5);
+  munit_assert_int(j.cols, ==, 12);
+  munit_assert_double(j.data[0], ==,  1); munit_assert_double(j.data[13], ==,  1); munit_assert_double(j.data[26], ==,  1);
+  munit_assert_double(j.data[6], ==, -1); munit_assert_double(j.data[19], ==, -1); munit_assert_double(j.data[32], ==, -1);
+  munit_assert_double_equal(j.data[ 4],  2, 6);
+  munit_assert_double_equal(j.data[15], -2, 6);
+  munit_assert_double_equal(j.data[10],  2, 6);
+  munit_assert_double_equal(j.data[21], -2, 6);
+  munit_assert_double_equal(j.data[40], 1, 6);
+  munit_assert_double_equal(j.data[53], 1, 6);
+  munit_assert_double_equal(j.data[46], -1, 6);
+  munit_assert_double_equal(j.data[59], -1, 6);
+  return MUNIT_OK;
+}
+
 MunitTest test_joint[] = {
   {"/mass_matrix"       , test_mass_matrix       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/rotate_inertia"    , test_rotate_inertia    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -126,5 +145,6 @@ MunitTest test_joint[] = {
   {"/correcting_impulse", test_correcting_impulse, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/indices"           , test_indices           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/joint_impulse"     , test_joint_impulse     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/hinge_jacobian"    , test_hinge_jacobian    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                 , NULL                   , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
