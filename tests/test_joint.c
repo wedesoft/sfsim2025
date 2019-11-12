@@ -135,6 +135,19 @@ static MunitResult test_hinge_jacobian(const MunitParameter params[], void *data
   return MUNIT_OK;
 }
 
+static MunitResult test_hinge_correction(const MunitParameter params[], void *data) {
+  state_t *s1 = state(vector(-4, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  state_t *s2 = state(vector( 5, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  large_vector_t b = hinge_correction(s1, s2, hinge(0, 1, vector(2, 0, 0), vector(-3, 0, 0), vector(1, 0, 0.1), vector(1, 0, -0.1)));
+  munit_assert_int(b.rows, ==, 5);
+  munit_assert_double_equal(b.data[0], -4  , 6);
+  munit_assert_double_equal(b.data[1],  0  , 6);
+  munit_assert_double_equal(b.data[2],  0  , 6);
+  munit_assert_double_equal(b.data[3],  0.2, 6);
+  munit_assert_double_equal(b.data[4],  0  , 6);
+  return MUNIT_OK;
+}
+
 MunitTest test_joint[] = {
   {"/mass_matrix"       , test_mass_matrix       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/rotate_inertia"    , test_rotate_inertia    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -146,5 +159,6 @@ MunitTest test_joint[] = {
   {"/indices"           , test_indices           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/joint_impulse"     , test_joint_impulse     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/hinge_jacobian"    , test_hinge_jacobian    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/hinge_correction"  , test_hinge_correction  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                 , NULL                   , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

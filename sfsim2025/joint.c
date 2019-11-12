@@ -91,12 +91,18 @@ large_vector_t ball_in_socket_correction(state_t *state1, state_t *state2, joint
                                          vector_add(state2->position, rotate_vector(state2->orientation, joint.ball_in_socket.r2))));
 }
 
+static vector_t hinge_axis(state_t *state1, state_t *state2, joint_t joint) {
+  vector_t s1 = rotate_vector(state1->orientation, joint.hinge.s1);
+  vector_t s2 = rotate_vector(state2->orientation, joint.hinge.s2);
+  return vector_scale(vector_add(s1, s2), 0.5);
+}
+
+// Construct Jacobian for hinge joint.
+// http://image.diku.dk/kenny/download/erleben.05.thesis.pdf
 large_matrix_t hinge_jacobian(state_t *state1, state_t *state2, joint_t joint) {
   large_matrix_t result = allocate_large_matrix(5, 12);
   memset(result.data, 0, result.rows * result.cols * sizeof(double));
-  vector_t s1 = rotate_vector(state1->orientation, joint.hinge.s1);
-  vector_t s2 = rotate_vector(state2->orientation, joint.hinge.s2);
-  vector_t s = vector_scale(vector_add(s1, s2), 0.5);
+  vector_t s = hinge_axis(state1, state2, joint);
   vector_t t1 = orthogonal1(s);
   vector_t t2 = orthogonal2(s);
   double *p0 = result.data;
@@ -117,5 +123,25 @@ large_matrix_t hinge_jacobian(state_t *state1, state_t *state2, joint_t joint) {
   *p3++ = rot2.m31; *p3++ = rot2.m32; *p3++ = rot2.m33; p3 += 9;
   *p3++ = -t1.x; *p3++ = -t1.y; *p3++ = -t1.z; p3 += 9;
   *p3++ = -t2.x; *p3++ = -t2.y; *p3++ = -t2.z; p3 += 9;
+  return result;
+}
+
+// Compute error correction term for hinge joint.
+// http://image.diku.dk/kenny/download/erleben.05.thesis.pdf
+large_vector_t hinge_correction(state_t *state1, state_t *state2, joint_t joint) {
+  large_vector_t result = allocate_large_vector(5);
+  vector_t positional = vector_subtract(vector_add(state1->position, rotate_vector(state1->orientation, joint.ball_in_socket.r1)),
+                                        vector_add(state2->position, rotate_vector(state2->orientation, joint.ball_in_socket.r2)));
+  vector_t s1 = rotate_vector(state1->orientation, joint.hinge.s1);
+  vector_t s2 = rotate_vector(state2->orientation, joint.hinge.s2);
+  vector_t u = cross_product(s1, s2);
+  vector_t s = hinge_axis(state1, state2, joint);
+  vector_t t1 = orthogonal1(s);
+  vector_t t2 = orthogonal2(s);
+  result.data[0] = positional.x;
+  result.data[1] = positional.y;
+  result.data[2] = positional.z;
+  result.data[3] = inner_product(t1, u);
+  result.data[4] = inner_product(t2, u);
   return result;
 }
