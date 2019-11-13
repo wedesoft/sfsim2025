@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <stdbool.h>
 #include "joint.h"
 
 
@@ -57,26 +58,38 @@ void correcting_impulse(body_t body1, body_t body2, state_t *state1, state_t *st
 // Determine correcting impulse for a given joint.
 void joint_impulse(body_t body1, body_t body2, joint_t joint, state_t *state1, state_t *state2,
                    vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2) {
-  large_matrix_t j = ball_in_socket_jacobian(state1, state2, joint);
-  large_vector_t b = ball_in_socket_correction(state1, state2, joint);
+  large_matrix_t j;
+  large_vector_t b;
+  switch (joint.joint_type) {
+    case BALL_IN_SOCKET:
+      j = ball_in_socket_jacobian(state1, state2, joint.ball_in_socket);
+      b = ball_in_socket_correction(state1, state2, joint.ball_in_socket);
+      break;
+    case HINGE:
+      j = hinge_jacobian(state1, state2, joint.hinge);
+      b = hinge_correction(state1, state2, joint.hinge);
+      break;
+    default:
+      assert(false);
+  };
   correcting_impulse(body1, body2, state1, state2, j, b, impulse1, impulse2, tau1, tau2);
 }
 
 // Construct Jacobian for ball-in-socket joint.
 // http://image.diku.dk/kenny/download/erleben.05.thesis.pdf
-large_matrix_t ball_in_socket_jacobian(state_t *state1, state_t *state2, joint_t joint) {
+large_matrix_t ball_in_socket_jacobian(state_t *state1, state_t *state2, ball_in_socket_t joint) {
   large_matrix_t result = allocate_large_matrix(3, 12);
   memset(result.data, 0, result.rows * result.cols * sizeof(double));
   double *p0 = result.data;
   *p0 = 1; p0 += 13; *p0 = 1; p0 += 13; *p0 = 1; p0 += 13;
-  matrix_t rot1 = matrix_negative(cross_product_matrix(rotate_vector(state1->orientation, joint.ball_in_socket.r1)));
+  matrix_t rot1 = matrix_negative(cross_product_matrix(rotate_vector(state1->orientation, joint.r1)));
   double *p1 = result.data + 3;
   *p1++ = rot1.m11; *p1++ = rot1.m12; *p1++ = rot1.m13; p1 += 9;
   *p1++ = rot1.m21; *p1++ = rot1.m22; *p1++ = rot1.m23; p1 += 9;
   *p1++ = rot1.m31; *p1++ = rot1.m32; *p1++ = rot1.m33; p1 += 9;
   double *p2 = result.data + 6;
   *p2 = -1; p2 += 13; *p2 = -1; p2 += 13; *p2 = -1; p2 += 13;
-  matrix_t rot2 = cross_product_matrix(rotate_vector(state2->orientation, joint.ball_in_socket.r2));
+  matrix_t rot2 = cross_product_matrix(rotate_vector(state2->orientation, joint.r2));
   double *p3 = result.data + 9;
   *p3++ = rot2.m11; *p3++ = rot2.m12; *p3++ = rot2.m13; p3 += 9;
   *p3++ = rot2.m21; *p3++ = rot2.m22; *p3++ = rot2.m23; p3 += 9;
@@ -86,20 +99,20 @@ large_matrix_t ball_in_socket_jacobian(state_t *state1, state_t *state2, joint_t
 
 // Compute error correction term for ball-in-socket joint.
 // http://image.diku.dk/kenny/download/erleben.05.thesis.pdf
-large_vector_t ball_in_socket_correction(state_t *state1, state_t *state2, joint_t joint) {
-  return to_large_vector(vector_subtract(vector_add(state1->position, rotate_vector(state1->orientation, joint.ball_in_socket.r1)),
-                                         vector_add(state2->position, rotate_vector(state2->orientation, joint.ball_in_socket.r2))));
+large_vector_t ball_in_socket_correction(state_t *state1, state_t *state2, ball_in_socket_t joint) {
+  return to_large_vector(vector_subtract(vector_add(state1->position, rotate_vector(state1->orientation, joint.r1)),
+                                         vector_add(state2->position, rotate_vector(state2->orientation, joint.r2))));
 }
 
-static vector_t hinge_axis(state_t *state1, state_t *state2, joint_t joint) {
-  vector_t s1 = rotate_vector(state1->orientation, joint.hinge.s1);
-  vector_t s2 = rotate_vector(state2->orientation, joint.hinge.s2);
+static vector_t hinge_axis(state_t *state1, state_t *state2, hinge_t joint) {
+  vector_t s1 = rotate_vector(state1->orientation, joint.s1);
+  vector_t s2 = rotate_vector(state2->orientation, joint.s2);
   return vector_scale(vector_add(s1, s2), 0.5);
 }
 
 // Construct Jacobian for hinge joint.
 // http://image.diku.dk/kenny/download/erleben.05.thesis.pdf
-large_matrix_t hinge_jacobian(state_t *state1, state_t *state2, joint_t joint) {
+large_matrix_t hinge_jacobian(state_t *state1, state_t *state2, hinge_t joint) {
   large_matrix_t result = allocate_large_matrix(5, 12);
   memset(result.data, 0, result.rows * result.cols * sizeof(double));
   vector_t s = hinge_axis(state1, state2, joint);
@@ -107,7 +120,7 @@ large_matrix_t hinge_jacobian(state_t *state1, state_t *state2, joint_t joint) {
   vector_t t2 = orthogonal2(s);
   double *p0 = result.data;
   *p0 = 1; p0 += 13; *p0 = 1; p0 += 13; *p0 = 1; p0 += 13;
-  matrix_t rot1 = matrix_negative(cross_product_matrix(rotate_vector(state1->orientation, joint.hinge.r1)));
+  matrix_t rot1 = matrix_negative(cross_product_matrix(rotate_vector(state1->orientation, joint.r1)));
   double *p1 = result.data + 3;
   *p1++ = rot1.m11; *p1++ = rot1.m12; *p1++ = rot1.m13; p1 += 9;
   *p1++ = rot1.m21; *p1++ = rot1.m22; *p1++ = rot1.m23; p1 += 9;
@@ -116,7 +129,7 @@ large_matrix_t hinge_jacobian(state_t *state1, state_t *state2, joint_t joint) {
   *p1++ = t2.x; *p1++ = t2.y; *p1++ = t2.z; p1 += 9;
   double *p2 = result.data + 6;
   *p2 = -1; p2 += 13; *p2 = -1; p2 += 13; *p2 = -1; p2 += 13;
-  matrix_t rot2 = cross_product_matrix(rotate_vector(state2->orientation, joint.hinge.r2));
+  matrix_t rot2 = cross_product_matrix(rotate_vector(state2->orientation, joint.r2));
   double *p3 = result.data + 9;
   *p3++ = rot2.m11; *p3++ = rot2.m12; *p3++ = rot2.m13; p3 += 9;
   *p3++ = rot2.m21; *p3++ = rot2.m22; *p3++ = rot2.m23; p3 += 9;
@@ -128,13 +141,13 @@ large_matrix_t hinge_jacobian(state_t *state1, state_t *state2, joint_t joint) {
 
 // Compute error correction term for hinge joint.
 // http://image.diku.dk/kenny/download/erleben.05.thesis.pdf
-large_vector_t hinge_correction(state_t *state1, state_t *state2, joint_t joint) {
+large_vector_t hinge_correction(state_t *state1, state_t *state2, hinge_t joint) {
   large_vector_t result = allocate_large_vector(5);
-  vector_t positional = vector_subtract(vector_add(state1->position, rotate_vector(state1->orientation, joint.ball_in_socket.r1)),
-                                        vector_add(state2->position, rotate_vector(state2->orientation, joint.ball_in_socket.r2)));
-  vector_t s1 = rotate_vector(state1->orientation, joint.hinge.s1);
-  vector_t s2 = rotate_vector(state2->orientation, joint.hinge.s2);
-  vector_t u = cross_product(s1, s2);
+  vector_t positional = vector_subtract(vector_add(state1->position, rotate_vector(state1->orientation, joint.r1)),
+                                        vector_add(state2->position, rotate_vector(state2->orientation, joint.r2)));
+  vector_t s1 = rotate_vector(state1->orientation, joint.s1);
+  vector_t s2 = rotate_vector(state2->orientation, joint.s2);
+  vector_t u = cross_product(s2, s1);
   vector_t s = hinge_axis(state1, state2, joint);
   vector_t t1 = orthogonal1(s);
   vector_t t2 = orthogonal2(s);

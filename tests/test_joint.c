@@ -42,7 +42,7 @@ static MunitResult test_speed_vector(const MunitParameter params[], void *data) 
 static MunitResult test_ball_jacobian(const MunitParameter params[], void *data) {
   state_t *s1 = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector(0, 0, 4), vector(0, 0, 0), quaternion_rotation(M_PI / 2, vector(1, 0, 0)), vector(0, 0, 0));
-  large_matrix_t j = ball_in_socket_jacobian(s1, s2, ball_in_socket(0, 1, vector(0, 0, 2), vector(0, 0, -2)));
+  large_matrix_t j = ball_in_socket_jacobian(s1, s2, ball_in_socket(0, 1, vector(0, 0, 2), vector(0, 0, -2)).ball_in_socket);
   munit_assert_int(j.rows, ==,  3);
   munit_assert_int(j.cols, ==, 12);
   munit_assert_double(j.data[0], ==,  1); munit_assert_double(j.data[13], ==,  1); munit_assert_double(j.data[26], ==,  1);
@@ -57,7 +57,7 @@ static MunitResult test_ball_jacobian(const MunitParameter params[], void *data)
 static MunitResult test_ball_correction(const MunitParameter params[], void *data) {
   state_t *s1 = state(vector(-4, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector( 5, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  large_vector_t b = ball_in_socket_correction(s1, s2, ball_in_socket(0, 1, vector(2, 0, 0), vector(-3, 0, 0)));
+  large_vector_t b = ball_in_socket_correction(s1, s2, ball_in_socket(0, 1, vector(2, 0, 0), vector(-3, 0, 0)).ball_in_socket);
   munit_assert_int(b.rows, ==, 3);
   munit_assert_double_equal(b.data[0], -4, 6);
   munit_assert_double_equal(b.data[1],  0, 6);
@@ -68,7 +68,7 @@ static MunitResult test_ball_correction(const MunitParameter params[], void *dat
 static MunitResult test_rotate_correction(const MunitParameter params[], void *data) {
   state_t *s1 = state(vector(-4, 0, 0), vector(0, 0, 0), quaternion_rotation(M_PI, vector(0, 0, 1)), vector(0, 0, 0));
   state_t *s2 = state(vector( 5, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  large_vector_t b = ball_in_socket_correction(s1, s2, ball_in_socket(0, 0, vector(2, 0, 0), vector(-3, 0, 0)));
+  large_vector_t b = ball_in_socket_correction(s1, s2, ball_in_socket(0, 0, vector(2, 0, 0), vector(-3, 0, 0)).ball_in_socket);
   munit_assert_int(b.rows, ==, 3);
   munit_assert_double_equal(b.data[0], -8, 6);
   munit_assert_double_equal(b.data[1],  0, 6);
@@ -82,8 +82,8 @@ static MunitResult test_correcting_impulse(const MunitParameter params[], void *
   state_t *s1 = state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector(0, 1, 0), vector(0, -0.01, 0), quaternion_rotation(0, vector(0, 0, 1)), vector(0, 0, 0));
   joint_t jnt = ball_in_socket(0, 1, vector(0, 6370002, 0), vector(0, 1, 0));
-  large_matrix_t j = ball_in_socket_jacobian(s1, s2, jnt);
-  large_vector_t b = ball_in_socket_correction(s1, s2, jnt);
+  large_matrix_t j = ball_in_socket_jacobian(s1, s2, jnt.ball_in_socket);
+  large_vector_t b = ball_in_socket_correction(s1, s2, jnt.ball_in_socket);
   vector_t p1; vector_t t1; vector_t p2; vector_t t2;
   correcting_impulse(body1, body2, s1, s2, j, b, &p1, &p2, &t1, &t2);
   munit_assert_double_equal(p1.x,  0.0 , 6);
@@ -119,7 +119,7 @@ static MunitResult test_joint_impulse(const MunitParameter params[], void *data)
 static MunitResult test_hinge_jacobian(const MunitParameter params[], void *data) {
   state_t *s1 = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector(0, 0, 4), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  large_matrix_t j = hinge_jacobian(s1, s2, hinge(0, 1, vector(0, 0, 2), vector(0, 0, -2), vector(1, 0, 0), vector(1, 0, 0)));
+  large_matrix_t j = hinge_jacobian(s1, s2, hinge(0, 1, vector(0, 0, 2), vector(0, 0, -2), vector(1, 0, 0), vector(1, 0, 0)).hinge);
   munit_assert_int(j.rows, ==,  5);
   munit_assert_int(j.cols, ==, 12);
   munit_assert_double(j.data[0], ==,  1); munit_assert_double(j.data[13], ==,  1); munit_assert_double(j.data[26], ==,  1);
@@ -138,12 +138,12 @@ static MunitResult test_hinge_jacobian(const MunitParameter params[], void *data
 static MunitResult test_hinge_correction(const MunitParameter params[], void *data) {
   state_t *s1 = state(vector(-4, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector( 5, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  large_vector_t b = hinge_correction(s1, s2, hinge(0, 1, vector(2, 0, 0), vector(-3, 0, 0), vector(1, 0, 0.1), vector(1, 0, -0.1)));
+  large_vector_t b = hinge_correction(s1, s2, hinge(0, 1, vector(2, 0, 0), vector(-3, 0, 0), vector(1, 0, 0.1), vector(1, 0, -0.1)).hinge);
   munit_assert_int(b.rows, ==, 5);
   munit_assert_double_equal(b.data[0], -4  , 6);
   munit_assert_double_equal(b.data[1],  0  , 6);
   munit_assert_double_equal(b.data[2],  0  , 6);
-  munit_assert_double_equal(b.data[3],  0.2, 6);
+  munit_assert_double_equal(b.data[3], -0.2, 6);
   munit_assert_double_equal(b.data[4],  0  , 6);
   return MUNIT_OK;
 }
