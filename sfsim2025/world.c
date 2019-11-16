@@ -27,6 +27,14 @@ void *add_worlds(void *a_, void *b_) {
   return result;
 }
 
+static state_t *state_change(state_t *s, body_t b, forces_t f, vector_t p, vector_t t, double dt) {
+  vector_t position_change = vector_scale(s->speed, dt);
+  vector_t speed_change_ = speed_change(f, b, p, dt);
+  quaternion_t orientation_change = quaternion_product(vector_to_quaternion(vector_scale(s->rotation, 0.5 * dt)), s->orientation);
+  vector_t rotation_change_ = rotation_change(s, f, b, t, dt);
+  return state(position_change, speed_change_, orientation_change, rotation_change_);
+}
+
 void *world_change(double time, double dt, void *world_, void *data_) {
   world_t *world = world_;
   world_t *result = make_world();
@@ -55,11 +63,8 @@ void *world_change(double time, double dt, void *world_, void *data_) {
     state_t *s = get_pointer(world->states)[i];
     body_t b = get_body(data->bodies)[i];
     forces_t f = get_forces(data->forces)[i];
-    vector_t position_change = vector_scale(s->speed, dt);
-    vector_t speed_change_ = speed_change(f, b, p[i], dt);
-    quaternion_t orientation_change = quaternion_product(vector_to_quaternion(vector_scale(s->rotation, 0.5 * dt)), s->orientation);
-    vector_t rotation_change_ = rotation_change(s, f, b, t[i], dt);
-    append_pointer(&result->states, state(position_change, speed_change_, orientation_change, rotation_change_));
+    state_t *change = state_change(s, b, f, p[i], t[i], dt);
+    append_pointer(&result->states, change);
   };
   return result;
 }

@@ -39,62 +39,6 @@ static MunitResult test_runge_kutta(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
-static MunitResult test_position_change(const MunitParameter params[], void *data) {
-  state_t *s = state(vector(0, 0, 0), vector(1, 2, 3), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  body_info_t info = body_info(body(2.0, diagonal(1, 1, 1)), forces(vector(0, 0, 0), vector(0, 0, 0)));
-  state_t *ds = state_change(0, 2, s, &info);
-  munit_assert_double(ds->position.x, ==, 2);
-  munit_assert_double(ds->position.y, ==, 4);
-  munit_assert_double(ds->position.z, ==, 6);
-  return MUNIT_OK;
-}
-
-static MunitResult test_speed_change(const MunitParameter params[], void *data) {
-  state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  body_info_t info = body_info(body(2.0, diagonal(1, 1, 1)), forces(vector(1, 2, 3), vector(0, 0, 0)));
-  state_t *ds = state_change(0, 4, s, &info);
-  munit_assert_double(ds->speed.x, ==, 2);
-  munit_assert_double(ds->speed.y, ==, 4);
-  munit_assert_double(ds->speed.z, ==, 6);
-  return MUNIT_OK;
-}
-
-static MunitResult test_rotation(const MunitParameter params[], void *data) {
-  state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  body_info_t info = body_info(body(1.0, diagonal(1, 2, 2)), forces(vector(1, 2, 3), vector(1, 2, 3)));
-  state_t *ds = state_change(0, 2, s, &info);
-  munit_assert_double(ds->rotation.x, ==, 2);
-  munit_assert_double(ds->rotation.y, ==, 2);
-  munit_assert_double(ds->rotation.z, ==, 3);
-  return MUNIT_OK;
-}
-
-static MunitResult test_orientation_change(const MunitParameter params[], void *data) {
-  state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.1, 0.2, 0.3));
-  body_info_t info = body_info(body(1.0, diagonal(1, 1, 1)), forces(vector(1, 2, 3), vector(1, 2, 3)));
-  state_t *ds = state_change(0, 2, s, &info);
-  munit_assert_double_equal(ds->orientation.b, 0.1, 6);
-  return MUNIT_OK;
-}
-
-static MunitResult test_euler(const MunitParameter params[], void *data) {
-  state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(1, 1, 1));
-  body_info_t info = body_info(body(1.0, diagonal(1, 2, 4)), forces(vector(0, 0, 0), vector(0, 0, 0)));
-  state_t *ds = state_change(0, 2, s, &info);
-  munit_assert_double(ds->rotation.x, ==, -4.0);
-  munit_assert_double(ds->rotation.y, ==,  3.0);
-  munit_assert_double(ds->rotation.z, ==, -0.5);
-  return MUNIT_OK;
-}
-
-static MunitResult test_consider_orientation(const MunitParameter params[], void *data) {
-  state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(-1, 0, 0, 0), vector(0.1, 0.2, 0.3));
-  body_info_t info = body_info(body(1.0, diagonal(1, 1, 1)), forces(vector(1, 2, 3), vector(1, 2, 3)));
-  state_t *ds = state_change(0, 2, s, &info);
-  munit_assert_double_equal(ds->orientation.b, -0.1, 6);
-  return MUNIT_OK;
-}
-
 static MunitResult test_inertia_unit_cube(const MunitParameter params[], void *data) {
   matrix_t result = inertia_cuboid(6, 1, 1, 1);
   munit_assert_double(result.m11, ==, 1); munit_assert_double(result.m12, ==, 0); munit_assert_double(result.m13, ==, 0);
@@ -180,12 +124,6 @@ static MunitResult test_consider_angular_impulse(const MunitParameter params[], 
 
 MunitTest test_mechanics[] = {
   {"/runge_kutta"             , test_runge_kutta             , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
-  {"/position_change"         , test_position_change         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/speed_change"            , test_speed_change            , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/rotation"                , test_rotation                , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/orientation_change"      , test_orientation_change      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/euler"                   , test_euler                   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/consider_orientation"    , test_consider_orientation    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/inertia_unit_cube"       , test_inertia_unit_cube       , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/heavy_cube"              , test_heavy_cube              , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/inertia_cuboid"          , test_inertia_cuboid          , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
