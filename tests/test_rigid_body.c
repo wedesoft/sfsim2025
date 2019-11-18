@@ -346,24 +346,24 @@ static MunitResult test_separating_plane3(const MunitParameter params[], void *d
 
 static MunitResult test_contact_points(const MunitParameter params[], void *data) {
   rigid_body_t *cube1 = make_cube(0, 0, 0);
-  rigid_body_t *cube2 = make_cube(1, 1, 2);
+  rigid_body_t *cube2 = make_cube(1, 1, 1.9);
   double distance;
   vector_t normal;
   list_t points = contact_points(cube1, cube2, &distance, &normal);
-  munit_assert_double(distance, ==, 0);
+  munit_assert_double_equal(distance, -0.1, 6);
   munit_assert_int(points.size, ==, 4);
   munit_assert_double(get_vector(points)[0].x, ==, 2);
   munit_assert_double(get_vector(points)[0].y, ==, 2);
-  munit_assert_double(get_vector(points)[0].z, ==, 2);
+  munit_assert_double(get_vector(points)[0].z, ==, 1.95);
   munit_assert_double(get_vector(points)[1].x, ==, 1);
   munit_assert_double(get_vector(points)[1].y, ==, 2);
-  munit_assert_double(get_vector(points)[1].z, ==, 2);
+  munit_assert_double(get_vector(points)[1].z, ==, 1.95);
   munit_assert_double(get_vector(points)[2].x, ==, 1);
   munit_assert_double(get_vector(points)[2].y, ==, 1);
-  munit_assert_double(get_vector(points)[2].z, ==, 2);
+  munit_assert_double(get_vector(points)[2].z, ==, 1.95);
   munit_assert_double(get_vector(points)[3].x, ==, 2);
   munit_assert_double(get_vector(points)[3].y, ==, 1);
-  munit_assert_double(get_vector(points)[3].z, ==, 2);
+  munit_assert_double(get_vector(points)[3].z, ==, 1.95);
   munit_assert_double(normal.x, ==, 0);
   munit_assert_double(normal.y, ==, 0);
   munit_assert_double(normal.z, ==, 1);
@@ -413,6 +413,23 @@ static MunitResult test_transform(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_contacts(const MunitParameter params[], void *data) {
+  rigid_body_t *cube1 = make_cube(0, 0, 0);
+  rigid_body_t *cube2 = make_cube(1, 1, 2);
+  list_t contacts_ = contacts(2, 3, cube1, cube2);
+  munit_assert_int(contacts_.size, ==, 4);
+  contact_t c0 = get_contact(contacts_)[0];
+  munit_assert_int(c0.i, ==, 2);
+  munit_assert_int(c0.j, ==, 3);
+  munit_assert_double(c0.normal.x, ==, 0);
+  munit_assert_double(c0.normal.y, ==, 0);
+  munit_assert_double(c0.normal.z, ==, 1);
+  munit_assert_double(c0.point.x, ==, 2);
+  munit_assert_double(c0.point.y, ==, 2);
+  munit_assert_double(c0.point.z, ==, 2);
+  return MUNIT_OK;
+}
+
 MunitTest test_rigid_body[] = {
   {"/create"           , test_create           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/add_point"        , test_add_point        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -441,5 +458,6 @@ MunitTest test_rigid_body[] = {
   {"/contact_points2"  , test_contact_points2  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/no_contact"       , test_no_contact       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/transform"        , test_transform        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/contacts"         , test_contacts         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                , NULL                  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

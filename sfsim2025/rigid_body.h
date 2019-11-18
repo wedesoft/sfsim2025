@@ -54,4 +54,6 @@ plane_t separating_plane(rigid_body_t *body, rigid_body_t *other, double *distan
 
 list_t contact_points(rigid_body_t *body, rigid_body_t *other, double *distance, vector_t *normal);
 
+list_t contacts(int i, int j, rigid_body_t *body, rigid_body_t *other);
+
 rigid_body_t *transform_body(rigid_body_t *body, quaternion_t q, vector_t t);
