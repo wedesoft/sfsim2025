@@ -415,7 +415,7 @@ static MunitResult test_transform(const MunitParameter params[], void *data) {
 
 static MunitResult test_contacts(const MunitParameter params[], void *data) {
   rigid_body_t *cube1 = make_cube(0, 0, 0);
-  rigid_body_t *cube2 = make_cube(1, 1, 2);
+  rigid_body_t *cube2 = make_cube(1, 1, 1.9);
   list_t contacts_ = contacts(2, 3, cube1, cube2);
   munit_assert_int(contacts_.size, ==, 4);
   contact_t c0 = get_contact(contacts_)[0];
@@ -426,7 +426,8 @@ static MunitResult test_contacts(const MunitParameter params[], void *data) {
   munit_assert_double(c0.normal.z, ==, 1);
   munit_assert_double(c0.point.x, ==, 2);
   munit_assert_double(c0.point.y, ==, 2);
-  munit_assert_double(c0.point.z, ==, 2);
+  munit_assert_double(c0.point.z, ==, 1.95);
+  munit_assert_double_equal(c0.distance, -0.1, 6);
   return MUNIT_OK;
 }
 

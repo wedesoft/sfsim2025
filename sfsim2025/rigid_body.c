@@ -199,7 +199,7 @@ list_t contacts(int i, int j, rigid_body_t *body, rigid_body_t *other) {
   list_t points = contact_points(body, other, &distance, &normal);
   list_t result = make_list();
   for (int k=0; k<points.size; k++) {
-    contact_t c = contact(i, j, normal, get_vector(points)[k]);
+    contact_t c = contact(i, j, normal, get_vector(points)[k], distance);
     append_contact(&result, c);
   };
   return result;

@@ -166,7 +166,7 @@ static MunitResult test_get_coordinate(const MunitParameter params[], void *data
 }
 
 static MunitResult test_append_contact(const MunitParameter params[], void *data) {
-  contact_t c = contact(2, 3, vector(1, 2, 3), vector(3, 4, 5));
+  contact_t c = contact(2, 3, vector(1, 2, 3), vector(3, 4, 5), 0.1);
   list_t list = make_list();
   append_contact(&list, c);
   munit_assert_int(list.size, ==, 1);
@@ -174,7 +174,7 @@ static MunitResult test_append_contact(const MunitParameter params[], void *data
 }
 
 static MunitResult test_get_contact(const MunitParameter params[], void *data) {
-  contact_t c = contact(2, 3, vector(1, 2, 3), vector(3, 4, 5));
+  contact_t c = contact(2, 3, vector(1, 2, 3), vector(3, 4, 5), 0.1);
   list_t list = make_list();
   append_contact(&list, c);
   munit_assert_int(get_contact(list)[0].i, ==, 2);
