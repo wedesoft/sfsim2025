@@ -31,10 +31,62 @@ static MunitResult test_distance(const MunitParameter paramsp[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_jacobian_linear(const MunitParameter params[], void *data) {
+  state_t *s1 = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  state_t *s2 = state(vector(3, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), 0.1);
+  large_matrix_t j = contact_jacobian(c, s1, s2);
+  munit_assert_int(j.rows, ==, 1);
+  munit_assert_int(j.cols, ==, 12);
+  munit_assert_double(j.data[0], ==,  0);
+  munit_assert_double(j.data[1], ==,  0);
+  munit_assert_double(j.data[2], ==, -1);
+  munit_assert_double(j.data[6], ==,  0);
+  munit_assert_double(j.data[7], ==,  0);
+  munit_assert_double(j.data[8], ==,  1);
+  return MUNIT_OK;
+}
+
+static MunitResult test_jacobian_angular(const MunitParameter params[], void *data) {
+  state_t *s1 = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  state_t *s2 = state(vector(3, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), 0.1);
+  large_matrix_t j = contact_jacobian(c, s1, s2);
+  munit_assert_int(j.rows, ==, 1);
+  munit_assert_int(j.cols, ==, 12);
+  munit_assert_double(j.data[ 3], ==, -2);
+  munit_assert_double(j.data[ 4], ==,  1);
+  munit_assert_double(j.data[ 5], ==,  0);
+  munit_assert_double(j.data[ 9], ==,  2);
+  munit_assert_double(j.data[10], ==,  2);
+  munit_assert_double(j.data[11], ==,  0);
+  return MUNIT_OK;
+}
+
+static MunitResult test_no_correction(const MunitParameter params[], void *data) {
+  contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), 0.1);
+  large_vector_t b = contact_correction(c);
+  munit_assert_int(b.rows, ==, 1);
+  munit_assert_double(b.data[0], ==, 0.0);
+  return MUNIT_OK;
+}
+
+static MunitResult test_correction(const MunitParameter params[], void *data) {
+  contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), -0.1);
+  large_vector_t b = contact_correction(c);
+  munit_assert_int(b.rows, ==, 1);
+  munit_assert_double(b.data[0], ==, 0.1);
+  return MUNIT_OK;
+}
+
 MunitTest test_contact[] = {
-  {"/body_indices" , test_body_indices , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/normal"       , test_normal       , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/point"        , test_point        , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/distance"     , test_distance     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {NULL            , NULL              , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
+  {"/body_indices"    , test_body_indices    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/normal"          , test_normal          , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/point"           , test_point           , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/distance"        , test_distance        , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/jacobian_linear" , test_jacobian_linear , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/jacobian_angular", test_jacobian_angular, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/no_correction"   , test_no_correction   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/correction"      , test_correction      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {NULL               , NULL                 , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
 };
