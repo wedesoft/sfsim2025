@@ -39,20 +39,30 @@ large_vector_t speed_vector(state_t *state1, state_t *state2) {
   return result;
 }
 
-// Determine correcting impulse given the Jacobian and the error vector.
-void correcting_impulse(body_t body1, body_t body2, state_t *state1, state_t *state2, large_matrix_t j, large_vector_t b,
-                        vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2) {
+// Get multiplier vector for rows of joint or contact Jacobian.
+large_vector_t lambda(body_t body1, body_t body2, state_t *state1, state_t *state2, large_matrix_t j, large_vector_t b) {
   large_matrix_t m = joint_mass(body1, body2, state1, state2);
   large_vector_t u = speed_vector(state1, state2);
   large_matrix_t denominator = large_matrix_dot(large_matrix_dot(j, large_inverse(m)), large_transpose(j));
   large_vector_t nominator = large_vector_add(large_matrix_vector_dot(j, u), b);
-  large_vector_t lambda = large_vector_negative(large_matrix_vector_dot(large_inverse(denominator), nominator));
+  return large_vector_negative(large_matrix_vector_dot(large_inverse(denominator), nominator));
+}
+
+// Use Jacobian and multiplier vector to compute linear and angular impulses for the two rigid bodies.
+void apply_lambda(large_matrix_t j, large_vector_t lambda, vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2) {
   large_vector_t p = large_matrix_vector_dot(large_transpose(j), lambda);
   assert(p.rows == 12);
   impulse1->x = p.data[0]; impulse1->y = p.data[1]; impulse1->z = p.data[2];
   tau1->x = p.data[3]; tau1->y = p.data[ 4]; tau1->z = p.data[ 5];
   impulse2->x = p.data[6]; impulse2->y = p.data[7]; impulse2->z = p.data[8];
   tau2->x = p.data[9]; tau2->y = p.data[10]; tau2->z = p.data[11];
+}
+
+// Determine correcting impulse given the Jacobian and the error vector.
+void correcting_impulse(body_t body1, body_t body2, state_t *state1, state_t *state2, large_matrix_t j, large_vector_t b,
+                        vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2) {
+  large_vector_t lambda_ = lambda(body1, body2, state1, state2, j, b);
+  apply_lambda(j, lambda_, impulse1, impulse2, tau1, tau2);
 }
 
 // Determine correcting impulse for a given joint.
