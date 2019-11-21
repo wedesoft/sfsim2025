@@ -1,4 +1,6 @@
+#include <assert.h>
 #include "contact.h"
+#include "joint.h"
 
 
 // Construct Jacobian for a contact point of two objects.
@@ -28,4 +30,15 @@ large_vector_t contact_correction(contact_t contact) {
   large_vector_t result = allocate_large_vector(1);
   result.data[0] = contact.distance < 0 ? -contact.distance : 0.0;
   return result;
+}
+
+void contact_impulse(body_t body1, body_t body2, state_t *state1, state_t *state2, contact_t contact,
+                     vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2) {
+  large_matrix_t j = contact_jacobian(contact, state1, state2);
+  large_vector_t b = contact_correction(contact);
+  large_vector_t lambda_ = lambda(body1, body2, state1, state2, j, b);
+  assert(lambda_.rows == 1);
+  if (lambda_.data[0] < 0)
+    lambda_.data[0] = 0;
+  apply_lambda(j, lambda_, impulse1, impulse2, tau1, tau2);
 }

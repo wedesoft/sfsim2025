@@ -20,3 +20,6 @@ static inline contact_t contact(int i, int j, vector_t normal, vector_t point, d
 large_matrix_t contact_jacobian(contact_t contact, state_t *state1, state_t *state2);
 
 large_vector_t contact_correction(contact_t contact);
+
+void contact_impulse(body_t body1, body_t body2, state_t *state1, state_t *state2, contact_t contact,
+                     vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2);
