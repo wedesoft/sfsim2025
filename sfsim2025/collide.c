@@ -76,17 +76,24 @@ void *world_change_prototype(double time, double dt, void *world_, void *data_) 
   forces_t forces1 = get_forces(data->forces)[0];
   forces_t forces2 = get_forces(data->forces)[1];
   list_t contacts_ = contacts(0, 1, b1, b2);
-  for (int j=0; j<4; j++) {
+  vector_t p1[contacts_.size]; memset(p1, 0, sizeof(p1));
+  vector_t p2[contacts_.size]; memset(p2, 0, sizeof(p2));
+  vector_t t1[contacts_.size]; memset(t1, 0, sizeof(t1));
+  vector_t t2[contacts_.size]; memset(t2, 0, sizeof(t2));
+  for (int j=0; j<10; j++) {
     for (int i=0; i<contacts_.size; i++) {
       contact_t c = get_contact(contacts_)[0];
-      vector_t impulse1; vector_t impulse2; vector_t tau1; vector_t tau2;
+      p[0] = vector_subtract(p[0], p1[i]);
+      p[1] = vector_subtract(p[1], p2[i]);
+      t[0] = vector_subtract(t[0], t1[i]);
+      t[1] = vector_subtract(t[1], t2[i]);
       state_t *prediction1 = predict(s1, body1, forces1, p[0], t[0], dt);
       state_t *prediction2 = predict(s2, body2, forces2, p[1], t[1], dt);
-      contact_impulse(body1, body2, s1, s2, c, &impulse1, &impulse2, &tau1, &tau2);
-      p[0] = vector_add(p[0], impulse1);
-      p[1] = vector_add(p[1], impulse2);
-      t[0] = vector_add(t[0], tau1);
-      t[1] = vector_add(t[1], tau2);
+      contact_impulse(body1, body2, s1, s2, c, &p1[i], &p2[i], &t1[i], &t2[i]);
+      p[0] = vector_add(p[0], p1[i]);
+      p[1] = vector_add(p[1], p2[i]);
+      t[0] = vector_add(t[0], t1[i]);
+      t[1] = vector_add(t[1], t2[i]);
     };
   };
   for (int i=0; i<world->states.size; i++) {
