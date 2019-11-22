@@ -27,7 +27,7 @@ void *add_worlds(void *a_, void *b_) {
   return result;
 }
 
-static state_t *state_change(state_t *s, body_t b, forces_t f, vector_t p, vector_t t, double dt) {
+state_t *state_change(state_t *s, body_t b, forces_t f, vector_t p, vector_t t, double dt) {
   vector_t position_change = vector_scale(s->speed, dt);
   vector_t speed_change_ = speed_change(f, b, p, dt);
   quaternion_t orientation_change = quaternion_product(vector_to_quaternion(vector_scale(s->rotation, 0.5 * dt)), s->orientation);

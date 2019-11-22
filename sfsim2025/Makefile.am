@@ -1,4 +1,4 @@
-noinst_PROGRAMS = tumble pendulum chain
+noinst_PROGRAMS = tumble pendulum chain collide
 
 lib_LTLIBRARIES = libsfsim2025.la
 
@@ -25,3 +25,8 @@ chain_SOURCES = chain.c
 chain_CFLAGS = $(GLEW_CFLAGS) $(GL_CFLAGS) $(ATLAS_CFLAGS) $(BOEHM_CFLAGS) $(SDL_CFLAGS)
 chain_LDFLAGS =
 chain_LDADD = libsfsim2025.la $(GLEW_LIBS) $(GL_LIBS) $(BOEHM_LIBS) $(SDL_LIBS) -lm
+
+collide_SOURCES = collide.c
+collide_CFLAGS = $(GLEW_CFLAGS) $(GL_CFLAGS) $(ATLAS_CFLAGS) $(BOEHM_CFLAGS) $(SDL_CFLAGS)
+collide_LDFLAGS =
+collide_LDADD = libsfsim2025.la $(GLEW_LIBS) $(GL_LIBS) $(BOEHM_LIBS) $(SDL_LIBS) -lm
