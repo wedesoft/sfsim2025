@@ -80,9 +80,15 @@ void *world_change_prototype(double time, double dt, void *world_, void *data_) 
   vector_t p2[contacts_.size]; memset(p2, 0, sizeof(p2));
   vector_t t1[contacts_.size]; memset(t1, 0, sizeof(t1));
   vector_t t2[contacts_.size]; memset(t2, 0, sizeof(t2));
+  if (contacts_.size > 0) {
+    contact_t c = get_contact(contacts_)[0];
+    printf("%d contacts: depth = %f, ", contacts_.size, c.distance);
+    printf("normal = [%f %f %f]\n", c.normal.x, c.normal.y, c.normal.z);
+  } else
+    printf("0 contacts\n");
   for (int j=0; j<10; j++) {
     for (int i=0; i<contacts_.size; i++) {
-      contact_t c = get_contact(contacts_)[0];
+      contact_t c = get_contact(contacts_)[i];
       p[0] = vector_subtract(p[0], p1[i]);
       p[1] = vector_subtract(p[1], p2[i]);
       t[0] = vector_subtract(t[0], t1[i]);
