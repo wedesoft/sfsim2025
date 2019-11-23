@@ -157,6 +157,8 @@ list_t penetration_candidates(plane_t p, rigid_body_t *body) {
 
 // Get best separating plane between two polyhedra.
 plane_t separating_plane(rigid_body_t *body, rigid_body_t *other, double *distance) {
+  assert(body->faces.size > 0);
+  assert(other->faces.size > 0);
   int face1_index, point1_index;
   double separation1 = best_face(body, other, &face1_index, &point1_index);
   int face2_index, point2_index;
@@ -185,11 +187,16 @@ plane_t separating_plane(rigid_body_t *body, rigid_body_t *other, double *distan
 
 // Get contact points, contact normal, and distance between two bodies.
 list_t contact_points(rigid_body_t *body, rigid_body_t *other, double *distance, vector_t *normal) {
-  plane_t p = separating_plane(body, other, distance);
-  if (normal) *normal = p.normal;
-  list_t candidates1 = convex_hull(plane_coordinates(p, penetration_candidates(negative_plane(p), body)));
-  list_t candidates2 = convex_hull(plane_coordinates(p, penetration_candidates(p, other)));
-  return plane_points(p, convex_hull(intersection(candidates1, candidates2)));
+  list_t result;
+  if (body->faces.size > 0 && other->faces.size > 0) {
+    plane_t p = separating_plane(body, other, distance);
+    if (normal) *normal = p.normal;
+    list_t candidates1 = convex_hull(plane_coordinates(p, penetration_candidates(negative_plane(p), body)));
+    list_t candidates2 = convex_hull(plane_coordinates(p, penetration_candidates(p, other)));
+    result = plane_points(p, convex_hull(intersection(candidates1, candidates2)));
+  } else
+    result = make_list();
+  return result;
 }
 
 // Get list of contacts for two objects.

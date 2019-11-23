@@ -387,6 +387,14 @@ static MunitResult test_contact_points2(const MunitParameter params[], void *dat
   return MUNIT_OK;
 }
 
+static MunitResult test_empty_objects(const MunitParameter params[], void *data) {
+  rigid_body_t *body1 = make_rigid_body();
+  rigid_body_t *body2 = make_rigid_body();
+  list_t points = contact_points(body1, body2, NULL, NULL);
+  munit_assert_int(points.size, ==, 0);
+  return MUNIT_OK;
+}
+
 static MunitResult test_no_contact(const MunitParameter params[], void *data) {
   rigid_body_t *cube1 = make_cube(0, 0, 0);
   rigid_body_t *cube2 = make_cube(0, 0, 3);
@@ -457,6 +465,7 @@ MunitTest test_rigid_body[] = {
   {"/separating_plane3", test_separating_plane3, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/contact_points"   , test_contact_points   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/contact_points2"  , test_contact_points2  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/empty_objects"    , test_empty_objects    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/no_contact"       , test_no_contact       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/transform"        , test_transform        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/contacts"         , test_contacts         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
