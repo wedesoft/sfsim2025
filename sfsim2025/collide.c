@@ -113,8 +113,10 @@ void *world_change_prototype(double time, double dt, void *world_, void *data_) 
 }
 
 void step() {
-  double dt = 0.004;
-  world = runge_kutta(world, dt, world_change_prototype, add_worlds, scale_world, &info);
+  double dt = 0.01;
+  int iterations = 3;
+  for (int i=0; i<iterations; i++)
+    world = runge_kutta(world, dt / iterations, world_change_prototype, add_worlds, scale_world, &info);
 }
 
 int main(int argc, char *argv[]) {
