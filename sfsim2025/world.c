@@ -39,6 +39,8 @@ void *world_change(double time, double dt, void *world_, void *data_) {
   world_t *world = world_;
   world_t *result = make_world();
   world_info_t *data = data_;
+  assert(data->bodies.size == world->states.size);
+  assert(data->forces.size == world->states.size);
   vector_t p[world->states.size]; memset(p, 0, sizeof(p));
   vector_t t[world->states.size]; memset(t, 0, sizeof(t));
   for (int c=0; c<data->iterations; c++)

@@ -80,26 +80,22 @@ void *world_change_prototype(double time, double dt, void *world_, void *data_) 
   vector_t p2[contacts_.size]; memset(p2, 0, sizeof(p2));
   vector_t t1[contacts_.size]; memset(t1, 0, sizeof(t1));
   vector_t t2[contacts_.size]; memset(t2, 0, sizeof(t2));
-  if (contacts_.size > 0) {
-    contact_t c = get_contact(contacts_)[0];
-    printf("%d contacts: depth = %f, ", contacts_.size, c.distance);
-    printf("normal = [%f %f %f]\n", c.normal.x, c.normal.y, c.normal.z);
-  } else
-    printf("0 contacts\n");
-  for (int j=0; j<10; j++) {
-    for (int i=0; i<contacts_.size; i++) {
-      contact_t c = get_contact(contacts_)[i];
-      p[0] = vector_subtract(p[0], p1[i]);
-      p[1] = vector_subtract(p[1], p2[i]);
-      t[0] = vector_subtract(t[0], t1[i]);
-      t[1] = vector_subtract(t[1], t2[i]);
-      state_t *prediction1 = predict(s1, body1, forces1, p[0], t[0], dt);
-      state_t *prediction2 = predict(s2, body2, forces2, p[1], t[1], dt);
-      contact_impulse(body1, body2, s1, s2, c, &p1[i], &p2[i], &t1[i], &t2[i]);
-      p[0] = vector_add(p[0], p1[i]);
-      p[1] = vector_add(p[1], p2[i]);
-      t[0] = vector_add(t[0], t1[i]);
-      t[1] = vector_add(t[1], t2[i]);
+  for (int k=0; k<10; k++) {
+    for (int l=0; l<contacts_.size; l++) {
+      contact_t c = get_contact(contacts_)[l];
+      int i = c.i;
+      int j = c.j;
+      p[i] = vector_subtract(p[i], p1[l]);
+      p[j] = vector_subtract(p[j], p2[l]);
+      t[i] = vector_subtract(t[i], t1[l]);
+      t[j] = vector_subtract(t[j], t2[l]);
+      state_t *prediction1 = predict(s1, body1, forces1, p[i], t[i], dt);
+      state_t *prediction2 = predict(s2, body2, forces2, p[j], t[j], dt);
+      contact_impulse(body1, body2, s1, s2, c, &p1[l], &p2[l], &t1[l], &t2[l]);
+      p[i] = vector_add(p[i], p1[l]);
+      p[j] = vector_add(p[j], p2[l]);
+      t[i] = vector_add(t[i], t1[l]);
+      t[j] = vector_add(t[j], t2[l]);
     };
   };
   for (int i=0; i<world->states.size; i++) {
