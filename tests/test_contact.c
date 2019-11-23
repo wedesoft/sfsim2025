@@ -76,7 +76,7 @@ static MunitResult test_correction(const MunitParameter params[], void *data) {
   contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), -0.1);
   large_vector_t b = contact_correction(c);
   munit_assert_int(b.rows, ==, 1);
-  munit_assert_double(b.data[0], ==, 0.1);
+  munit_assert_double(b.data[0], ==, -0.1);
   return MUNIT_OK;
 }
 

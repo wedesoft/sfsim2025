@@ -31,7 +31,7 @@ large_matrix_t contact_jacobian(contact_t contact, state_t *state1, state_t *sta
 large_vector_t contact_correction(contact_t contact) {
   large_vector_t result = allocate_large_vector(1);
   // Only separating corrections are allowed.
-  result.data[0] = contact.distance < 0 ? -contact.distance : 0.0;
+  result.data[0] = contact.distance < 0 ? contact.distance : 0.0;
   return result;
 }
 
