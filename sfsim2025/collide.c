@@ -91,7 +91,7 @@ void *world_change_prototype(double time, double dt, void *world_, void *data_) 
       t[j] = vector_subtract(t[j], t2[l]);
       state_t *prediction1 = predict(s1, body1, forces1, p[i], t[i], dt);
       state_t *prediction2 = predict(s2, body2, forces2, p[j], t[j], dt);
-      contact_impulse(body1, body2, s1, s2, c, &p1[l], &p2[l], &t1[l], &t2[l]);
+      contact_impulse(body1, body2, prediction1, prediction2, c, &p1[l], &p2[l], &t1[l], &t2[l]);
       p[i] = vector_add(p[i], p1[l]);
       p[j] = vector_add(p[j], p2[l]);
       t[i] = vector_add(t[i], t1[l]);
