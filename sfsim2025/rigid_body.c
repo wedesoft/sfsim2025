@@ -200,13 +200,13 @@ list_t contact_points(rigid_body_t *body, rigid_body_t *other, double *distance,
 }
 
 // Get list of contacts for two objects.
-list_t contacts(int i, int j, rigid_body_t *body, rigid_body_t *other) {
+list_t contacts(int i, int j, rigid_body_t *body, rigid_body_t *other, double restitution) {
   double distance;
   vector_t normal;
   list_t points = contact_points(body, other, &distance, &normal);
   list_t result = make_list();
   for (int k=0; k<points.size; k++) {
-    contact_t c = contact(i, j, normal, get_vector(points)[k], distance);
+    contact_t c = contact(i, j, normal, get_vector(points)[k], distance, restitution);
     append_contact(&result, c);
   };
   return result;

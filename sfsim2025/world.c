@@ -55,7 +55,7 @@ void *world_change(double time, double dt, void *world_, void *data_) {
     for (int j=i+1; j<rigid_bodies.size; j++) {
       rigid_body_t *body = get_pointer(rigid_bodies)[i];
       rigid_body_t *other = get_pointer(rigid_bodies)[j];
-      list_t contacts_of_bodies = contacts(i, j, body, other);
+      list_t contacts_of_bodies = contacts(i, j, body, other, data->restitution);
       for (int c=0; c<contacts_of_bodies.size; c++)
         append_contact(&contacts_, get_contact(contacts_of_bodies)[c]);
     };

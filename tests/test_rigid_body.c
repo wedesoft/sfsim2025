@@ -424,7 +424,7 @@ static MunitResult test_transform(const MunitParameter params[], void *data) {
 static MunitResult test_contacts(const MunitParameter params[], void *data) {
   rigid_body_t *cube1 = make_cube(0, 0, 0);
   rigid_body_t *cube2 = make_cube(1, 1, 1.9);
-  list_t contacts_ = contacts(2, 3, cube1, cube2);
+  list_t contacts_ = contacts(2, 3, cube1, cube2, 0);
   munit_assert_int(contacts_.size, ==, 4);
   contact_t c0 = get_contact(contacts_)[0];
   munit_assert_int(c0.i, ==, 2);

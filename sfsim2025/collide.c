@@ -86,6 +86,7 @@ int main(int argc, char *argv[]) {
   append_pointer(&world->states, state(vector(0, 2, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 2)));
   info = make_world_info();
   info.iterations = 4;
+  info.restitution = 0.5;
   append_body(&info.bodies, body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000)));
   append_body(&info.bodies, body(1.0, inertia_cuboid(1.0, w, h, d)));
   append_pointer(&info.rigid_bodies, make_cube(6370000, 6370000, 6370000));
