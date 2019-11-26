@@ -60,6 +60,7 @@ int main(int argc, char *argv[]) {
   info = make_world_info();
   append_body(&info.bodies, body(1, inertia_cuboid(1, w, h, d)));
   append_forces(&info.forces, forces(vector(0, 0, 0), vector(0, 0, 0)));
+  append_pointer(&info.rigid_bodies, make_rigid_body());
   clock_gettime(CLOCK_REALTIME, &t0);
   bool quit = false;
   while (!quit) {
