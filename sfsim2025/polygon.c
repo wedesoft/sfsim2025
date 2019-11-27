@@ -69,6 +69,8 @@ static inline bool side(coordinate_t a, coordinate_t b, coordinate_t p) {
 
 // Check whether point is inside polygon (must be specified in counter clockwise order!).
 bool inside(list_t points, coordinate_t point) {
+  if (points.size <= 1)
+    return false;
   for (int i=0; i<points.size; i++) {
     int j = i < points.size - 1 ? i + 1 : 0;
     if (side(get_coordinate(points)[i], get_coordinate(points)[j], point))

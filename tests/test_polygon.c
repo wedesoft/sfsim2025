@@ -144,6 +144,13 @@ static MunitResult test_outside2(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_one_point(const MunitParameter params[], void *data) {
+  list_t result = make_list();
+  append_coordinate(&result, coordinate(0, 0));
+  munit_assert_false(inside(result, coordinate(2, 3)));
+  return MUNIT_OK;
+}
+
 static MunitResult test_subset(const MunitParameter params[], void *data) {
   list_t result = intersection(triangle(), large_triangle());
   munit_assert_int(result.size, ==, 3);
@@ -194,6 +201,7 @@ MunitTest test_polygon[] = {
   {"/inside"          , test_inside          , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/outside"         , test_outside         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/outside2"        , test_outside2        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/one_point"       , test_one_point       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/subset"          , test_subset          , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/subset2"         , test_subset2         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/intersections"   , test_intersections   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},

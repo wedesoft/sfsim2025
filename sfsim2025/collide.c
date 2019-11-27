@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
   gluPerspective(65.0, (GLfloat)640/(GLfloat)480, 1.0, 20.0);
   world = make_world();
   append_pointer(&world->states, state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
-  append_pointer(&world->states, state(vector(0, 2, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 2)));
+  append_pointer(&world->states, state(vector(0, 2, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.25, 0, 0.5)));
   info = make_world_info();
   info.iterations = 4;
   info.restitution = 0.5;

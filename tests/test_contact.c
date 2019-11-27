@@ -91,16 +91,13 @@ static MunitResult test_correction(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_restitution(const MunitParameter params[], void *data) {
-  return MUNIT_SKIP;
-  /*
-  state_t *s1 = state(vector(3, 0, 0), vector(0, 0, -0.25), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  state_t *s2 = state(vector(0, 0, 0), vector(0, 0, 0.25), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  state_t *s1 = state(vector(0, 0, 0), vector(0, 0, 0.25), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  state_t *s2 = state(vector(3, 0, 0), vector(0, 0, -0.25), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), 0.1, 0.5);
   large_vector_t b = contact_correction(c, s1, s2);
   munit_assert_int(b.rows, ==, 1);
   munit_assert_double(b.data[0], ==, -0.25);
   return MUNIT_OK;
-  */
 }
 
 static MunitResult test_contact_impulse(const MunitParameter params[], void *data) {
