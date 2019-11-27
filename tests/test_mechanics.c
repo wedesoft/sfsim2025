@@ -39,6 +39,15 @@ static MunitResult test_runge_kutta(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_euler(const MunitParameter params[], void *data) {
+  double initial[2] = {0.0, 0.0};
+  double acceleration = 3.0;
+  double *final = euler(initial, 4, f, add, scale, &acceleration);
+  munit_assert_double_equal(final[1], 12, 6);
+  munit_assert_double_equal(final[0],  0, 6);
+  return MUNIT_OK;
+}
+
 static MunitResult test_inertia_unit_cube(const MunitParameter params[], void *data) {
   matrix_t result = inertia_cuboid(6, 1, 1, 1);
   munit_assert_double(result.m11, ==, 1); munit_assert_double(result.m12, ==, 0); munit_assert_double(result.m13, ==, 0);
@@ -124,6 +133,7 @@ static MunitResult test_consider_angular_impulse(const MunitParameter params[], 
 
 MunitTest test_mechanics[] = {
   {"/runge_kutta"             , test_runge_kutta             , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/euler"                   , test_euler                   , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/inertia_unit_cube"       , test_inertia_unit_cube       , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/heavy_cube"              , test_heavy_cube              , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/inertia_cuboid"          , test_inertia_cuboid          , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},

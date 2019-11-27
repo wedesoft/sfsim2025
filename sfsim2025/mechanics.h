@@ -8,6 +8,9 @@
 void *runge_kutta(void *y0, double dt, void *f(double, double, void *, void *), void *add(void *, void *),
                   void *scale(void *, double), void *data);
 
+void *euler(void *y0, double dt, void *f(double, double, void *, void *), void *add(void *, void *),
+            void *scale(void *, double), void *data);
+
 typedef struct {
   body_t body;
   forces_t forces;
