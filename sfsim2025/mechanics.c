@@ -17,11 +17,6 @@ void *runge_kutta(void *y0, double dt, void *f(double, double, void *, void *), 
   return add(y0, scale(add(add(add(k1, scale(k2, 2)), scale(k3, 2)), k4), 1.0 / 6.0));
 }
 
-void *euler(void *y0, double dt, void *f(double, double, void *, void *), void *add(void *, void *),
-            void *scale(void *, double), void *data) {
-  return add(y0, f(0, dt, y0, data));
-}
-
 // Predict speed and rotation for next time step.
 state_t *predict(state_t *s, body_t b, forces_t f, vector_t p, vector_t t, double dt) {
   vector_t speed = vector_add(s->speed, speed_change(f, b, p, dt));
