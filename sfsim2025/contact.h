@@ -13,6 +13,8 @@ typedef struct {
   double restitution;
 } contact_t;
 
+vector_t relative_speed(state_t *state1, state_t *state2, vector_t point);
+
 // Initialize contact.
 static inline contact_t contact(int i, int j, vector_t normal, vector_t point, double distance, double restitution) {
   return (contact_t){.i = i, .j = j, .normal = normal, .point = point, .distance = distance, .restitution=restitution};

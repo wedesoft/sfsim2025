@@ -38,6 +38,26 @@ static MunitResult test_restitution_value(const MunitParameter params[], void *d
   return MUNIT_OK;
 }
 
+static MunitResult test_relative_speed(const MunitParameter params[], void *data) {
+  state_t *s1 = state(vector(0, 0, 0), vector(0, 0, 0.25), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  state_t *s2 = state(vector(3, 0, 0), vector(0, 0, -0.25), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  vector_t v_relative = relative_speed(s1, s2, vector(1.5, 0, 0));
+  munit_assert_double(v_relative.x, ==,  0  );
+  munit_assert_double(v_relative.y, ==,  0  );
+  munit_assert_double(v_relative.z, ==, -0.5);
+  return MUNIT_OK;
+}
+
+static MunitResult test_relative_rotation(const MunitParameter params[], void *data) {
+  state_t *s1 = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 1, 0));
+  state_t *s2 = state(vector(3, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 1));
+  vector_t v_relative = relative_speed(s1, s2, vector(1.5, 0, 0));
+  munit_assert_double(v_relative.x, ==,  0  );
+  munit_assert_double(v_relative.y, ==, -1.5);
+  munit_assert_double(v_relative.z, ==,  1.5);
+  return MUNIT_OK;
+}
+
 static MunitResult test_jacobian_linear(const MunitParameter params[], void *data) {
   state_t *s1 = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector(3, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
@@ -140,6 +160,8 @@ MunitTest test_contact[] = {
   {"/point"             , test_point             , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/distance"          , test_distance          , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/restitution_value" , test_restitution_value , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/relative_speed"    , test_relative_speed    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/relative_rotation" , test_relative_rotation , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/jacobian_linear"   , test_jacobian_linear   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/jacobian_angular"  , test_jacobian_angular  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/no_correction"     , test_no_correction     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},

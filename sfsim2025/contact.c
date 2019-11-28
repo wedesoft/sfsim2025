@@ -3,6 +3,15 @@
 #include "joint.h"
 
 
+// Compute relative speed of two objects at a given point.
+vector_t relative_speed(state_t *state1, state_t *state2, vector_t point) {
+  vector_t r1 = vector_subtract(point, state1->position);
+  vector_t r2 = vector_subtract(point, state2->position);
+  vector_t angular_speed1 = cross_product(state1->rotation, r1);
+  vector_t angular_speed2 = cross_product(state2->rotation, r2);
+  return vector_subtract(vector_add(state2->speed, angular_speed2), vector_add(state1->speed, angular_speed1));
+}
+
 // Construct Jacobian for a contact point of two objects.
 // http://image.diku.dk/kenny/download/erleben.05.thesis.pdf
 large_matrix_t contact_jacobian(contact_t contact, state_t *state1, state_t *state2) {
@@ -34,8 +43,8 @@ large_vector_t contact_correction(contact_t contact, state_t *state1, state_t *s
   vector_t r2 = vector_subtract(contact.point, state2->position);
   vector_t angular_speed1 = cross_product(state1->rotation, r1);
   vector_t angular_speed2 = cross_product(state2->rotation, r2);
-  vector_t v_rel = vector_subtract(vector_add(state1->speed, angular_speed1), vector_add(state2->speed, angular_speed2));
-  double v_normal = -inner_product(v_rel, contact.normal);
+  vector_t v_rel = relative_speed(state1, state2, contact.point);
+  double v_normal = inner_product(v_rel, contact.normal);
   // Only separating corrections are allowed.
   double correction = contact.distance < 0 ? contact.distance : 0.0;
   double restitution = v_normal < 0 ? v_normal * contact.restitution : 0.0;
