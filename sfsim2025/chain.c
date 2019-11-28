@@ -38,8 +38,10 @@ void display() {
 void step() {
   double dt = 0.04;
   int iterations = 10;
-  for (int i=0; i<iterations; i++)
+  for (int i=0; i<iterations; i++) {
+    world = euler(world, 0, world_change, add_worlds, scale_world, &info);
     world = runge_kutta(world, dt / iterations, world_change, add_worlds, scale_world, &info);
+  };
 }
 
 int main(int argc, char *argv[]) {

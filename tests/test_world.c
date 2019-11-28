@@ -202,6 +202,7 @@ static rigid_body_t *make_cube(double w2, double h2, double d2) {
 static world_info_t world_info6(void) {
   world_info_t result = make_world_info();
   result.iterations = 10;
+  result.restitution = 0.5;
   append_body(&result.bodies, body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000)));
   append_forces(&result.forces, forces(vector(0, 0, 0), vector(0, 0, 0)));
   append_pointer(&result.rigid_bodies, make_cube(6370000, 6370000, 6370000));
@@ -218,8 +219,20 @@ static MunitResult test_contact(const MunitParameter params[], void *data) {
   world_info_t info = world_info6();
   world_t *changed = world_change(0, 1, world, &info);
   state_t *result2 = get_pointer(changed->states)[1];
-  // munit_assert_double_equal(result2->speed.y, 0, 6);
+  munit_assert_double_equal(result2->speed.y, 0, 6);
+  return MUNIT_OK;
+}
+
+static MunitResult test_collision(const MunitParameter params[], void *data) {
+  world_t *world = make_world();
+  append_pointer(&world->states, state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
+  append_pointer(&world->states, state(vector(0, 0.5, 0), vector(0, -0.5, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
+  world_info_t info = world_info6();
+  world_t *changed = world_change(0, 0, world, &info);
+  state_t *result2 = get_pointer(changed->states)[1];
   return MUNIT_SKIP;
+  munit_assert_double_equal(result2->speed.y, 0.75, 6);
+  return MUNIT_OK;
 }
 
 MunitTest test_world[] = {
@@ -235,5 +248,6 @@ MunitTest test_world[] = {
   {"/consider_orientation", test_consider_orientation, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/joint"               , test_joint               , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/contact"             , test_contact             , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/collision"           , test_collision           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                   , NULL                     , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
