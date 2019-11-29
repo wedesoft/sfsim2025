@@ -30,3 +30,8 @@ large_vector_t contact_correction(contact_t contact, bool do_restitution);
 
 void contact_impulse(body_t body1, body_t body2, state_t *state1, state_t *state2, contact_t contact,
                      vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2, bool do_restitution);
+
+// Check whether this is a resting or a colliding contact.
+static inline bool is_resting(contact_t contact, double threshold) {
+  return contact.normal_speed * contact.restitution > -threshold;
+}

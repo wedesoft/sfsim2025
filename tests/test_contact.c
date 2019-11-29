@@ -168,6 +168,18 @@ static MunitResult test_collision(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_is_resting(const MunitParameter params[], void *data) {
+  contact_t c = contact(0, 1, vector(0, 1, 0), vector(0, 0, 0), 0, 0.2, -0.2);
+  munit_assert_true(is_resting(c, 0.1));
+  return MUNIT_OK;
+}
+
+static MunitResult test_is_not_resting(const MunitParameter params[], void *data) {
+  contact_t c = contact(0, 1, vector(0, 1, 0), vector(0, 0, 0), 0, 0.2, -0.6);
+  munit_assert_false(is_resting(c, 0.1));
+  return MUNIT_OK;
+}
+
 MunitTest test_contact[] = {
   {"/body_indices"      , test_body_indices      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/normal"            , test_normal            , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
@@ -185,5 +197,7 @@ MunitTest test_contact[] = {
   {"/contact_impulse"   , test_contact_impulse   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/separating_objects", test_separating_objects, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/collision"         , test_collision         , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/is_resting"        , test_is_resting        , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/is_not_resting"    , test_is_not_resting    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                 , NULL                   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
 };

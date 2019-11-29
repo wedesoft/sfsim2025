@@ -64,9 +64,7 @@ void step() {
   double dt = 0.01;
   int iterations = 10;
   for (int i=0; i<iterations; i++) {
-    printf("speed before = %f\n", ((state_t *)get_pointer(world->states)[1])->speed.y);
     world = euler(world, 0, world_change, add_worlds, scale_world, &info);
-    printf("speed after = %f\n", ((state_t *)get_pointer(world->states)[1])->speed.y);
     world = runge_kutta(world, dt / iterations, world_change, add_worlds, scale_world, &info);
   };
 }
@@ -86,10 +84,8 @@ int main(int argc, char *argv[]) {
   gluPerspective(65.0, (GLfloat)640/(GLfloat)480, 1.0, 20.0);
   world = make_world();
   append_pointer(&world->states, state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
-  append_pointer(&world->states, state(vector(0, 2, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
+  append_pointer(&world->states, state(vector(0, 2, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.25, 0, 0.5)));
   info = make_world_info();
-  info.iterations = 10;
-  info.restitution = 1.0;
   append_body(&info.bodies, body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000)));
   append_body(&info.bodies, body(1.0, inertia_cuboid(1.0, w, h, d)));
   append_pointer(&info.rigid_bodies, make_cube(6370000, 6370000, 6370000));
