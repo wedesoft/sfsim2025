@@ -230,7 +230,6 @@ static MunitResult test_collision(const MunitParameter params[], void *data) {
   world_info_t info = world_info6();
   world_t *changed = world_change(0, 0, world, &info);
   state_t *result2 = get_pointer(changed->states)[1];
-  return MUNIT_SKIP;
   munit_assert_double_equal(result2->speed.y, 0.75, 6);
   return MUNIT_OK;
 }

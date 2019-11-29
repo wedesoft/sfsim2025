@@ -37,13 +37,12 @@ large_matrix_t contact_jacobian(contact_t contact, state_t *state1, state_t *sta
 
 // Compute correction for a contact point of two objects.
 // http://image.diku.dk/kenny/download/erleben.05.thesis.pdf
-large_vector_t contact_correction(contact_t contact, state_t *state1, state_t *state2, bool do_restitution) {
+large_vector_t contact_correction(contact_t contact, bool do_restitution) {
   large_vector_t result = allocate_large_vector(1);
   double correction;
   if (do_restitution) {
-    vector_t v_rel = relative_speed(state1, state2, contact.point);
-    double v_normal = inner_product(v_rel, contact.normal);
-    correction = v_normal < 0 ? v_normal * contact.restitution : 0.0;
+    // Only spearating impulses are allowed.
+    correction = contact.normal_speed < 0 ? contact.normal_speed * contact.restitution : 0.0;
   } else {
     // Only separating corrections are allowed.
     correction = contact.distance < 0 ? contact.distance : 0.0;
@@ -56,7 +55,7 @@ large_vector_t contact_correction(contact_t contact, state_t *state1, state_t *s
 void contact_impulse(body_t body1, body_t body2, state_t *state1, state_t *state2, contact_t contact,
                      vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2, bool do_restitution) {
   large_matrix_t j = contact_jacobian(contact, state1, state2);
-  large_vector_t b = contact_correction(contact, state1, state2, do_restitution);
+  large_vector_t b = contact_correction(contact, do_restitution);
   large_vector_t lambda_ = lambda(body1, body2, state1, state2, j, b);
   assert(lambda_.rows == 1);
   // Only separating impulses are allowed.

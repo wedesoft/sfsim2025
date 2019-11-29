@@ -37,6 +37,7 @@ void step() {
   struct timespec t1;
   clock_gettime(CLOCK_REALTIME, &t1);
   double elapsed = fmin(t1.tv_sec - t0.tv_sec + (t1.tv_nsec - t0.tv_nsec) * 1e-9, 0.1);
+  world = euler(world, 0, world_change, add_worlds, scale_world, &info);
   world = runge_kutta(world, elapsed, world_change, add_worlds, scale_world, &info);
   t0 = t1;
 }
