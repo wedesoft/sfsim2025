@@ -123,5 +123,11 @@ void *world_change(double time, double dt, void *world_, void *data_) {
     state_t *change = state_change(s, b, f, p[i], t[i], dt);
     append_pointer(&result->states, change);
   };
+  if (dt == 0 && contacts_.size > 0) {
+    state_t *s = get_pointer(world->states)[1];
+    state_t *c = get_pointer(result->states)[1];
+    printf("speed = %f\n", s->speed.y);
+    printf("speed + change = %f\n", s->speed.y + c->speed.y);
+  };
   return result;
 }

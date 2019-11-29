@@ -64,7 +64,9 @@ void step() {
   double dt = 0.01;
   int iterations = 10;
   for (int i=0; i<iterations; i++) {
+    printf("speed before = %f\n", ((state_t *)get_pointer(world->states)[1])->speed.y);
     world = euler(world, 0, world_change, add_worlds, scale_world, &info);
+    printf("speed after = %f\n", ((state_t *)get_pointer(world->states)[1])->speed.y);
     world = runge_kutta(world, dt / iterations, world_change, add_worlds, scale_world, &info);
   };
 }

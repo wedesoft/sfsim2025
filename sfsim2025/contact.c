@@ -43,9 +43,11 @@ large_vector_t contact_correction(contact_t contact, bool do_restitution) {
   if (do_restitution) {
     // Only spearating impulses are allowed.
     correction = contact.normal_speed < 0 ? contact.normal_speed * contact.restitution : 0.0;
+    printf("restitution = %f\n", correction);
   } else {
     // Only separating corrections are allowed.
     correction = contact.distance < 0 ? contact.distance : 0.0;
+    printf("stabilisation = %f\n", correction);
   };
   result.data[0] = correction;
   return result;
