@@ -48,19 +48,17 @@ static rigid_body_t *make_cube(double w2, double h2, double d2) {
 void display() {
   glClear(GL_COLOR_BUFFER_BIT);
   glMatrixMode(GL_MODELVIEW);
-  for (int i=1; i<4; i++) {
-    state_t *s = get_pointer(world->states)[i];
-    matrix_t r = rotation_matrix(s->orientation);
-    double m[16] = {
-      r.m11, r.m21, r.m31, 0,
-      r.m12, r.m22, r.m32, 0,
-      r.m13, r.m23, r.m33, 0,
-      s->position.x, s->position.y - 1, s->position.z - 5, 1
-    };
-    glLoadMatrixd(m);
-    glScalef(w, h, d);
-    glutWireCube(1.0);
-  }
+  state_t *s = get_pointer(world->states)[1];
+  matrix_t r = rotation_matrix(s->orientation);
+  double m[16] = {
+    r.m11, r.m21, r.m31, 0,
+    r.m12, r.m22, r.m32, 0,
+    r.m13, r.m23, r.m33, 0,
+    s->position.x, s->position.y - 1, s->position.z - 5, 1
+  };
+  glLoadMatrixd(m);
+  glScalef(w, h, d);
+  glutWireCube(1.0);
   glFlush();
 }
 
@@ -91,21 +89,13 @@ int main(int argc, char *argv[]) {
   gluPerspective(65.0, (GLfloat)640/(GLfloat)480, 1.0, 20.0);
   world = make_world();
   append_pointer(&world->states, state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
-  append_pointer(&world->states, state(vector(0, 2, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(1.0, 0.0, 2.0)));
-  append_pointer(&world->states, state(vector(0, 3, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.0, 0.0, 1.0)));
-  append_pointer(&world->states, state(vector(0, 5, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.0, 0.0, 1.0)));
+  append_pointer(&world->states, state(vector(0, 2, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.8, 0.0, 1.5)));
   info = make_world_info();
   append_body(&info.bodies, body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000)));
   append_body(&info.bodies, body(1.0, inertia_cuboid(1.0, w, h, d)));
-  append_body(&info.bodies, body(1.0, inertia_cuboid(1.0, w, h, d)));
-  append_body(&info.bodies, body(1.0, inertia_cuboid(1.0, w, h, d)));
   append_pointer(&info.rigid_bodies, make_cube(6370000, 6370000, 6370000));
   append_pointer(&info.rigid_bodies, make_cube(w / 2, h / 2, d / 2));
-  append_pointer(&info.rigid_bodies, make_cube(w / 2, h / 2, d / 2));
-  append_pointer(&info.rigid_bodies, make_cube(w / 2, h / 2, d / 2));
   append_forces(&info.forces, forces(vector(0, 0, 0), vector(0, 0, 0)));
-  append_forces(&info.forces, forces(vector(0, -9.81, 0), vector(0, 0, 0)));
-  append_forces(&info.forces, forces(vector(0, -9.81, 0), vector(0, 0, 0)));
   append_forces(&info.forces, forces(vector(0, -9.81, 0), vector(0, 0, 0)));
   clock_gettime(CLOCK_REALTIME, &t0);
   bool quit = false;
