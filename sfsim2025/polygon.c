@@ -1,3 +1,4 @@
+#include <tgmath.h>
 #include <stdbool.h>
 #include <float.h>
 #include "coordinate.h"
@@ -25,9 +26,28 @@ static inline bool further(coordinate_t a, coordinate_t b, coordinate_t c) {
   return v2 * v2 + u2 * u2 > v1 * v1 + u1 * u1;
 }
 
+static list_t remove_duplicates(list_t polygon, double epsilon) {
+  list_t result = make_list();
+  for (int i=0; i<polygon.size; i++) {
+    coordinate_t current = get_coordinate(polygon)[i];
+    bool duplicate = false;
+    for (int j=i+1; j<polygon.size; j++) {
+      coordinate_t other = get_coordinate(polygon)[j];
+      if (fabs(current.u - other.u) < epsilon && fabs(current.v - other.v) < epsilon) {
+        duplicate = true;
+        break;
+      };
+    };
+    if (!duplicate)
+      append_coordinate(&result, current);
+  };
+  return result;
+}
+
 // Compute convex hull of 2D point cloud and return resulting polygon in counter clockwise order.
 // https://www.tutorialspoint.com/Jarvis-March-Algorithm
 list_t convex_hull(list_t polygon) {
+  polygon = remove_duplicates(polygon, 1e-6);
   list_t result = make_list();
   if (polygon.size == 0) return result;
   coordinate_t start = coordinate(DBL_MAX, DBL_MAX);

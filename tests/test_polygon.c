@@ -129,6 +129,15 @@ static MunitResult test_empty_hull(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_hull_edge_case(const MunitParameter params[], void *data) {
+  list_t result = make_list();
+  append_coordinate(&result, coordinate(-1, 0));
+  append_coordinate(&result, coordinate(-1, 1e-32));
+  append_coordinate(&result, coordinate( 0, 1));
+  convex_hull(result);
+  return MUNIT_OK;
+}
+
 static MunitResult test_inside(const MunitParameter params[], void *data) {
   munit_assert_true(inside(triangle(), coordinate(0, 1)));
   return MUNIT_OK;
@@ -198,6 +207,7 @@ MunitTest test_polygon[] = {
   {"/skip_collinear"  , test_skip_collinear  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/skip_collinear2" , test_skip_collinear2 , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/empty_hull"      , test_empty_hull      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/hull_edge_case"  , test_hull_edge_case  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/inside"          , test_inside          , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/outside"         , test_outside         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/outside2"        , test_outside2        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
