@@ -38,30 +38,30 @@ large_matrix_t contact_jacobian(contact_t contact, state_t *state1, state_t *sta
   result.data[ 9] = rn2.x;
   result.data[10] = rn2.y;
   result.data[11] = rn2.z;
-  result.data[12 +  0] = -o1.x;
-  result.data[12 +  1] = -o1.y;
-  result.data[12 +  2] = -o1.z;
-  result.data[12 +  3] = -rs1.x;
-  result.data[12 +  4] = -rs1.y;
-  result.data[12 +  5] = -rs1.z;
-  result.data[12 +  6] = o1.x;
-  result.data[12 +  7] = o1.y;
-  result.data[12 +  8] = o1.z;
-  result.data[12 +  9] = rs2.x;
-  result.data[12 + 10] = rs2.y;
-  result.data[12 + 11] = rs2.z;
-  result.data[2 * 12 +  0] = -o2.x;
-  result.data[2 * 12 +  1] = -o2.y;
-  result.data[2 * 12 +  2] = -o2.z;
-  result.data[2 * 12 +  3] = -rt1.x;
-  result.data[2 * 12 +  4] = -rt1.y;
-  result.data[2 * 12 +  5] = -rt1.z;
-  result.data[2 * 12 +  6] = o2.x;
-  result.data[2 * 12 +  7] = o2.y;
-  result.data[2 * 12 +  8] = o2.z;
-  result.data[2 * 12 +  9] = rt2.x;
-  result.data[2 * 12 + 10] = rt2.y;
-  result.data[2 * 12 + 11] = rt2.z;
+  result.data[12 +  0] = o1.x;
+  result.data[12 +  1] = o1.y;
+  result.data[12 +  2] = o1.z;
+  result.data[12 +  3] = rs1.x;
+  result.data[12 +  4] = rs1.y;
+  result.data[12 +  5] = rs1.z;
+  result.data[12 +  6] = -o1.x;
+  result.data[12 +  7] = -o1.y;
+  result.data[12 +  8] = -o1.z;
+  result.data[12 +  9] = -rs2.x;
+  result.data[12 + 10] = -rs2.y;
+  result.data[12 + 11] = -rs2.z;
+  result.data[2 * 12 +  0] = o2.x;
+  result.data[2 * 12 +  1] = o2.y;
+  result.data[2 * 12 +  2] = o2.z;
+  result.data[2 * 12 +  3] = rt1.x;
+  result.data[2 * 12 +  4] = rt1.y;
+  result.data[2 * 12 +  5] = rt1.z;
+  result.data[2 * 12 +  6] = -o2.x;
+  result.data[2 * 12 +  7] = -o2.y;
+  result.data[2 * 12 +  8] = -o2.z;
+  result.data[2 * 12 +  9] = -rt2.x;
+  result.data[2 * 12 + 10] = -rt2.y;
+  result.data[2 * 12 + 11] = -rt2.z;
   return result;
 }
 
@@ -95,8 +95,8 @@ void contact_impulse(body_t body1, body_t body2, state_t *state1, state_t *state
     lambda_.data[0] = 0;
   // Limit friction.
   double f = sqrt(lambda_.data[1] * lambda_.data[1] + lambda_.data[2] * lambda_.data[2]);
-  if (f > lambda_.data[0] * 0.1) {
-    double c = lambda_.data[0] * 0.1 / f;
+  if (f > lambda_.data[0] * 0.5) {
+    double c = lambda_.data[0] * 0.5 / f;
     lambda_.data[1] *= c;
     lambda_.data[2] *= c;
   }

@@ -31,8 +31,8 @@ typedef struct {
 
 static inline world_info_t make_world_info(void) {
   world_info_t result;
-  result.iterations = 5;
-  result.restitution = 0.5;
+  result.iterations = 10;
+  result.restitution = 0.4;
   result.resting_threshold = 0.2;
   result.bodies = make_list();
   result.forces = make_list();
