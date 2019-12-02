@@ -48,7 +48,7 @@ static rigid_body_t *make_cube(double w2, double h2, double d2) {
 void display() {
   glClear(GL_COLOR_BUFFER_BIT);
   glMatrixMode(GL_MODELVIEW);
-  for (int i=0; i<3; i++) {
+  for (int i=0; i<4; i++) {
     state_t *s = get_pointer(world->states)[i+1];
     matrix_t r = rotation_matrix(s->orientation);
     double m[16] = {
@@ -68,7 +68,7 @@ void step() {
   struct timespec t1;
   clock_gettime(CLOCK_REALTIME, &t1);
   double dt = fmin(t1.tv_sec - t0.tv_sec + (t1.tv_nsec - t0.tv_nsec) * 1e-9, 0.1);
-  int iterations = 10;
+  int iterations = 5;
   for (int i=0; i<iterations; i++) {
     world = euler(world, 0, world_change, add_worlds, scale_world, &info);
     world = runge_kutta(world, dt / iterations, world_change, add_worlds, scale_world, &info);
@@ -94,8 +94,10 @@ int main(int argc, char *argv[]) {
   append_pointer(&world->states, state(vector(0, 4, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.3, 0.0, 0.6)));
   append_pointer(&world->states, state(vector(0, 6, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.2, 0.0, 0.4)));
   append_pointer(&world->states, state(vector(0, 8, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.1, 0.0, 0.2)));
+  append_pointer(&world->states, state(vector(0, 10, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.0, 0.0, 0.2)));
   info = make_world_info();
   append_body(&info.bodies, body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000)));
+  append_body(&info.bodies, body(1.0, inertia_cuboid(1.0, w, h, d)));
   append_body(&info.bodies, body(1.0, inertia_cuboid(1.0, w, h, d)));
   append_body(&info.bodies, body(1.0, inertia_cuboid(1.0, w, h, d)));
   append_body(&info.bodies, body(1.0, inertia_cuboid(1.0, w, h, d)));
@@ -103,7 +105,9 @@ int main(int argc, char *argv[]) {
   append_pointer(&info.rigid_bodies, make_cube(w / 2, h / 2, d / 2));
   append_pointer(&info.rigid_bodies, make_cube(w / 2, h / 2, d / 2));
   append_pointer(&info.rigid_bodies, make_cube(w / 2, h / 2, d / 2));
+  append_pointer(&info.rigid_bodies, make_cube(w / 2, h / 2, d / 2));
   append_forces(&info.forces, forces(vector(0, 0, 0), vector(0, 0, 0)));
+  append_forces(&info.forces, forces(vector(0, -9.81, 0), vector(0, 0, 0)));
   append_forces(&info.forces, forces(vector(0, -9.81, 0), vector(0, 0, 0)));
   append_forces(&info.forces, forces(vector(0, -9.81, 0), vector(0, 0, 0)));
   append_forces(&info.forces, forces(vector(0, -9.81, 0), vector(0, 0, 0)));
