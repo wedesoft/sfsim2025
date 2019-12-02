@@ -426,7 +426,7 @@ static MunitResult test_contacts(const MunitParameter params[], void *data) {
   rigid_body_t *cube2 = make_cube(1, 1, 1.9);
   state_t *s1 = state(vector(0, 0, 0), vector(0, 0, 0.1), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector(1, 1, 1.9), vector(0, 0, -0.1), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  list_t contacts_ = contacts(2, 3, cube1, cube2, 0, s1, s2);
+  list_t contacts_ = contacts(2, 3, cube1, cube2, 0, 1, s1, s2);
   munit_assert_int(contacts_.size, ==, 4);
   contact_t c0 = get_contact(contacts_)[0];
   munit_assert_int(c0.i, ==, 2);

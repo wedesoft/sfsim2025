@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <tgmath.h>
 #include <stdbool.h>
 #include <float.h>
@@ -47,7 +48,7 @@ static list_t remove_duplicates(list_t polygon, double epsilon) {
 // Compute convex hull of 2D point cloud and return resulting polygon in counter clockwise order.
 // https://www.tutorialspoint.com/Jarvis-March-Algorithm
 list_t convex_hull(list_t polygon) {
-  polygon = remove_duplicates(polygon, 1e-6);
+  polygon = remove_duplicates(polygon, 1e-4);
   list_t result = make_list();
   if (polygon.size == 0) return result;
   coordinate_t start = coordinate(DBL_MAX, DBL_MAX);
@@ -59,6 +60,7 @@ list_t convex_hull(list_t polygon) {
   coordinate_t current = start;
   append_coordinate(&result, current);
   while (true) {
+    assert(result.size <= polygon.size);
     coordinate_t next = current;
     for (int i=0; i<polygon.size; i++) {
       coordinate_t point = get_coordinate(polygon)[i];

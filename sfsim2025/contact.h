@@ -13,15 +13,16 @@ typedef struct {
   double distance;
   double restitution;
   double normal_speed;
+  double friction;
 } contact_t;
 
 vector_t relative_speed(state_t *state1, state_t *state2, vector_t point);
 
 // Initialize contact.
 static inline contact_t contact(int i, int j, vector_t normal, vector_t point, double distance, double restitution,
-                                double normal_speed) {
+                                double normal_speed, double friction) {
   return (contact_t){.i = i, .j = j, .normal = normal, .point = point, .distance = distance, .restitution=restitution,
-                     .normal_speed = normal_speed};
+                     .normal_speed = normal_speed, .friction=friction};
 }
 
 large_matrix_t contact_jacobian(contact_t contact, state_t *state1, state_t *state2);

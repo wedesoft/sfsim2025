@@ -57,7 +57,7 @@ void *world_change(double time, double dt, void *world_, void *data_) {
       rigid_body_t *other = get_pointer(rigid_bodies)[j];
       state_t *state1 = get_pointer(world->states)[i];
       state_t *state2 = get_pointer(world->states)[j];
-      list_t contacts_of_bodies = contacts(i, j, body, other, data->restitution, state1, state2);
+      list_t contacts_of_bodies = contacts(i, j, body, other, data->restitution, data->friction, state1, state2);
       for (int c=0; c<contacts_of_bodies.size; c++)
         append_contact(&contacts_, get_contact(contacts_of_bodies)[c]);
     };

@@ -22,6 +22,7 @@ void *add_worlds(void *a_, void *b_);
 typedef struct {
   int iterations;
   double restitution;
+  double friction;
   double resting_threshold;
   list_t bodies;
   list_t forces;
@@ -33,6 +34,7 @@ static inline world_info_t make_world_info(void) {
   world_info_t result;
   result.iterations = 5;
   result.restitution = 0.5;
+  result.friction = 0.5;
   result.resting_threshold = 0.01;
   result.bodies = make_list();
   result.forces = make_list();

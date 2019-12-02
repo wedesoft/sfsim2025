@@ -201,7 +201,7 @@ list_t contact_points(rigid_body_t *body, rigid_body_t *other, double *distance,
 
 // Get list of contacts for two objects.
 list_t contacts(int i, int j, rigid_body_t *transformed_body, rigid_body_t *transformed_other, double restitution,
-                state_t *state1, state_t *state2) {
+                double friction, state_t *state1, state_t *state2) {
   double distance;
   vector_t normal;
   list_t points = contact_points(transformed_body, transformed_other, &distance, &normal);
@@ -210,7 +210,7 @@ list_t contacts(int i, int j, rigid_body_t *transformed_body, rigid_body_t *tran
     vector_t point = get_vector(points)[k];
     vector_t relative_speed_ = relative_speed(state1, state2, point);
     double normal_speed = inner_product(relative_speed_, normal);
-    contact_t c = contact(i, j, normal, point, distance, restitution, normal_speed);
+    contact_t c = contact(i, j, normal, point, distance, restitution, normal_speed, friction);
     append_contact(&result, c);
   };
   return result;
