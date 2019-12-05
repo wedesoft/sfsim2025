@@ -180,6 +180,12 @@ static MunitResult test_is_not_resting(const MunitParameter params[], void *data
   return MUNIT_OK;
 }
 
+static MunitResult test_is_not_resting2(const MunitParameter params[], void *data) {
+  contact_t c = contact(0, 1, vector(0, 1, 0), vector(0, 0, 0), 0, 0.2, 0.6, 1.0);
+  munit_assert_false(is_resting(c, 0.1));
+  return MUNIT_OK;
+}
+
 static MunitResult test_friction(const MunitParameter params[], void *data) {
   body_t body1 = body(5.9722e+24, inertia_sphere(5.9722e+24, 6370000));
   body_t body2 = body(1.0, inertia_cuboid(1.0, 0.1, 2, 0.1));
@@ -227,6 +233,7 @@ MunitTest test_contact[] = {
   {"/collision"         , test_collision         , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/is_resting"        , test_is_resting        , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/is_not_resting"    , test_is_not_resting    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/is_not_resting2"   , test_is_not_resting2   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/friction"          , test_friction          , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/friction_limit"    , test_friction_limit    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                 , NULL                   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}

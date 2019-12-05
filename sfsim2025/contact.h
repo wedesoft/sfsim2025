@@ -1,4 +1,5 @@
 #pragma once
+#include <tgmath.h>
 #include <stdbool.h>
 #include "large_matrix.h"
 #include "state.h"
@@ -34,5 +35,5 @@ void contact_impulse(body_t body1, body_t body2, state_t *state1, state_t *state
 
 // Check whether this is a resting or a colliding contact.
 static inline bool is_resting(contact_t contact, double threshold) {
-  return contact.normal_speed * contact.restitution > -threshold;
+  return fabs(contact.normal_speed * contact.restitution) < threshold;
 }
