@@ -68,7 +68,7 @@ void display() {
 void step() {
   struct timespec t1;
   clock_gettime(CLOCK_REALTIME, &t1);
-  double dt = fmin(t1.tv_sec - t0.tv_sec + (t1.tv_nsec - t0.tv_nsec) * 1e-9, 0.1);
+  double dt = fmin(t1.tv_sec - t0.tv_sec + (t1.tv_nsec - t0.tv_nsec) * 1e-9, 0.025);
   int iterations = 5;
   for (int i=0; i<iterations; i++) {
     world = euler(world, 0, world_change, add_worlds, scale_world, &info);
