@@ -15,7 +15,7 @@ struct timespec t0;
 double w = 2.0;
 double h = 0.4;
 double d = 1.0;
-int n = 3;
+int n = 1;
 
 static void add_cube_faces(rigid_body_t *body) {
   add_face(body, face(0, 1, 3));
