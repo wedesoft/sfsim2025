@@ -203,6 +203,7 @@ static world_info_t world_info6(void) {
   world_info_t result = make_world_info();
   result.iterations = 10;
   result.restitution = 0.5;
+  result.friction = 0;
   append_body(&result.bodies, body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000)));
   append_forces(&result.forces, forces(vector(0, 0, 0), vector(0, 0, 0)));
   append_pointer(&result.rigid_bodies, make_cube(6370000, 6370000, 6370000));

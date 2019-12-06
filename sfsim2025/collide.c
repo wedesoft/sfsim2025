@@ -15,7 +15,7 @@ struct timespec t0;
 double w = 2.0;
 double h = 0.4;
 double d = 1.0;
-int n = 1;
+int n = 3;
 
 static void add_cube_faces(rigid_body_t *body) {
   add_face(body, face(0, 1, 3));
@@ -68,8 +68,8 @@ void display() {
 void step() {
   struct timespec t1;
   clock_gettime(CLOCK_REALTIME, &t1);
-  double dt = fmin(t1.tv_sec - t0.tv_sec + (t1.tv_nsec - t0.tv_nsec) * 1e-9, 0.025);
-  int iterations = 5;
+  double dt = fmin(t1.tv_sec - t0.tv_sec + (t1.tv_nsec - t0.tv_nsec) * 1e-9, 0.1);
+  int iterations = 1;
   for (int i=0; i<iterations; i++) {
     world = euler(world, 0, world_change, add_worlds, scale_world, &info);
     world = runge_kutta(world, dt / iterations, world_change, add_worlds, scale_world, &info);
@@ -97,7 +97,7 @@ int main(int argc, char *argv[]) {
   append_pointer(&info.rigid_bodies, make_cube(6370000, 6370000, 6370000));
   append_forces(&info.forces, forces(vector(0, 0, 0), vector(0, 0, 0)));
   for (int i=0; i<n; i++) {
-    append_pointer(&world->states, state(vector(0, 2 + 2 * i, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.0, 0.0, 0.2)));
+    append_pointer(&world->states, state(vector(0, 0.5 * h + h * i, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.4, 0.0, 0.8)));
     append_body(&info.bodies, body(1.0, inertia_cuboid(1.0, w, h, d)));
     append_pointer(&info.rigid_bodies, make_cube(w / 2, h / 2, d / 2));
     append_forces(&info.forces, forces(vector(0, -9.81, 0), vector(0, 0, 0)));

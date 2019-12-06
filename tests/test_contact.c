@@ -69,7 +69,7 @@ static MunitResult test_jacobian_linear(const MunitParameter params[], void *dat
   state_t *s2 = state(vector(3, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), 0.1, 0.4, 2.0, 1.0);
   large_matrix_t j = contact_jacobian(c, s1, s2);
-  munit_assert_int(j.rows, ==, 3);
+  munit_assert_int(j.rows, ==, 1);
   munit_assert_int(j.cols, ==, 12);
   munit_assert_double(j.data[0], ==,  0);
   munit_assert_double(j.data[1], ==,  0);
@@ -85,7 +85,7 @@ static MunitResult test_jacobian_angular(const MunitParameter params[], void *da
   state_t *s2 = state(vector(3, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), 0.1, 0.4, 2.0, 1.0);
   large_matrix_t j = contact_jacobian(c, s1, s2);
-  munit_assert_int(j.rows, ==, 3);
+  munit_assert_int(j.rows, ==, 1);
   munit_assert_int(j.cols, ==, 12);
   munit_assert_double(j.data[ 3], ==, -2);
   munit_assert_double(j.data[ 4], ==,  1);
@@ -99,7 +99,7 @@ static MunitResult test_jacobian_angular(const MunitParameter params[], void *da
 static MunitResult test_no_correction(const MunitParameter params[], void *data) {
   contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), 0.1, 0.0, 2.0, 1.0);
   large_vector_t b = contact_correction(c, false);
-  munit_assert_int(b.rows, ==, 3);
+  munit_assert_int(b.rows, ==, 1);
   munit_assert_double(b.data[0], ==, 0.0);
   return MUNIT_OK;
 }
@@ -107,7 +107,7 @@ static MunitResult test_no_correction(const MunitParameter params[], void *data)
 static MunitResult test_correction(const MunitParameter params[], void *data) {
   contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), -0.1, 0.0, -2.0, 1.0);
   large_vector_t b = contact_correction(c, false);
-  munit_assert_int(b.rows, ==, 3);
+  munit_assert_int(b.rows, ==, 1);
   munit_assert_double(b.data[0], ==, -0.1);
   return MUNIT_OK;
 }
@@ -115,8 +115,42 @@ static MunitResult test_correction(const MunitParameter params[], void *data) {
 static MunitResult test_restitution(const MunitParameter params[], void *data) {
   contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), 0.1, 0.5, -2.0, 1.0);
   large_vector_t b = contact_correction(c, true);
-  munit_assert_int(b.rows, ==, 3);
+  munit_assert_int(b.rows, ==, 1);
   munit_assert_double(b.data[0], ==, -1);
+  return MUNIT_OK;
+}
+
+static MunitResult test_friction_jacobian(const MunitParameter params[], void *data) {
+  state_t *s1 = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  state_t *s2 = state(vector(3, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), 0.1, 0.4, 2.0, 1.0);
+  large_matrix_t j = friction_jacobian(c, s1, s2);
+  munit_assert_int(j.rows, ==, 2);
+  munit_assert_int(j.cols, ==, 12);
+  munit_assert_double(j.data[ 0], ==,  0);
+  munit_assert_double(j.data[ 1], ==, -1);
+  munit_assert_double(j.data[ 2], ==,  0);
+  munit_assert_double(j.data[12], ==,  1);
+  munit_assert_double(j.data[13], ==,  0);
+  munit_assert_double(j.data[14], ==,  0);
+  munit_assert_double(j.data[ 3], ==,  3);
+  munit_assert_double(j.data[ 4], ==,  0);
+  munit_assert_double(j.data[ 5], ==, -1);
+  munit_assert_double(j.data[15], ==,  0);
+  munit_assert_double(j.data[16], ==,  3);
+  munit_assert_double(j.data[17], ==, -2);
+  munit_assert_double(j.data[ 6], ==,  0);
+  munit_assert_double(j.data[ 7], ==,  1);
+  munit_assert_double(j.data[ 8], ==,  0);
+  munit_assert_double(j.data[18], ==, -1);
+  munit_assert_double(j.data[19], ==,  0);
+  munit_assert_double(j.data[20], ==,  0);
+  munit_assert_double(j.data[ 9], ==, -3);
+  munit_assert_double(j.data[10], ==,  0);
+  munit_assert_double(j.data[11], ==, -2);
+  munit_assert_double(j.data[21], ==,  0);
+  munit_assert_double(j.data[22], ==, -3);
+  munit_assert_double(j.data[23], ==,  2);
   return MUNIT_OK;
 }
 
@@ -228,6 +262,7 @@ MunitTest test_contact[] = {
   {"/no_correction"     , test_no_correction     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/correction"        , test_correction        , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/restitution"       , test_restitution       , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/friction_jacobian" , test_friction_jacobian , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/contact_impulse"   , test_contact_impulse   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/separating_objects", test_separating_objects, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/collision"         , test_collision         , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
