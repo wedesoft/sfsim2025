@@ -97,7 +97,7 @@ int main(int argc, char *argv[]) {
   append_pointer(&info.rigid_bodies, make_cube(6370000, 6370000, 6370000));
   append_forces(&info.forces, forces(vector(0, 0, 0), vector(0, 0, 0)));
   for (int i=0; i<n; i++) {
-    append_pointer(&world->states, state(vector(0, 2 + 2 * i, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.0, 0.0, 0.0)));
+    append_pointer(&world->states, state(vector(0, 2 + 2 * i, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.0, 0.0, 0.2)));
     append_body(&info.bodies, body(1.0, inertia_cuboid(1.0, w, h, d)));
     append_pointer(&info.rigid_bodies, make_cube(w / 2, h / 2, d / 2));
     append_forces(&info.forces, forces(vector(0, -9.81, 0), vector(0, 0, 0)));
