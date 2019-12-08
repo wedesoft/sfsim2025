@@ -84,23 +84,23 @@ void contact_impulse(body_t body1, body_t body2, state_t *state1, state_t *state
                      vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2, bool do_restitution) {
   large_matrix_t contact_j = contact_jacobian(contact, state1, state2);
   large_vector_t contact_b = contact_correction(contact, do_restitution);
-  large_vector_t lambda_ = lambda(body1, body2, state1, state2, contact_j, contact_b);
+  large_vector_t lambda_contact = lambda(body1, body2, state1, state2, contact_j, contact_b);
   large_matrix_t friction_j = friction_jacobian(contact, state1, state2);
   large_vector_t b2 = friction_correction(contact);
-  large_vector_t lambda2_ = lambda(body1, body2, state1, state2, friction_j, b2);
+  large_vector_t lambda_friction = lambda(body1, body2, state1, state2, friction_j, b2);
   // Only separating impulses are allowed.
-  if (lambda_.data[0] < 0)
-    lambda_.data[0] = 0;
-  double friction = sqrt(lambda2_.data[0] * lambda2_.data[0] + lambda2_.data[1] * lambda2_.data[1]);
-  if (friction > lambda_.data[0] * contact.friction) {
-    double factor = lambda_.data[0] * contact.friction / friction;
-    lambda2_.data[0] *= factor;
-    lambda2_.data[1] *= factor;
+  if (lambda_contact.data[0] < 0)
+    lambda_contact.data[0] = 0;
+  double friction = sqrt(lambda_friction.data[0] * lambda_friction.data[0] + lambda_friction.data[1] * lambda_friction.data[1]);
+  if (friction > lambda_contact.data[0] * contact.friction) {
+    double factor = lambda_contact.data[0] * contact.friction / friction;
+    lambda_friction.data[0] *= factor;
+    lambda_friction.data[1] *= factor;
   };
   vector_t contact_impulse1, contact_impulse2, contact_tau1, contact_tau2;
-  apply_lambda(contact_j, lambda_, &contact_impulse1, &contact_impulse2, &contact_tau1, &contact_tau2);
+  apply_lambda(contact_j, lambda_contact, &contact_impulse1, &contact_impulse2, &contact_tau1, &contact_tau2);
   vector_t friction_impulse1, friction_impulse2, friction_tau1, friction_tau2;
-  apply_lambda(friction_j, lambda2_, &friction_impulse1, &friction_impulse2, &friction_tau1, &friction_tau2);
+  apply_lambda(friction_j, lambda_friction, &friction_impulse1, &friction_impulse2, &friction_tau1, &friction_tau2);
   *impulse1 = vector_add(contact_impulse1, friction_impulse1);
   *impulse2 = vector_add(contact_impulse2, friction_impulse2);
   *tau1 = vector_add(contact_tau1, friction_tau1);

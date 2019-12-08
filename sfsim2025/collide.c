@@ -56,7 +56,7 @@ void display() {
       r.m11, r.m21, r.m31, 0,
       r.m12, r.m22, r.m32, 0,
       r.m13, r.m23, r.m33, 0,
-      s->position.x, s->position.y - 1, s->position.z - 5, 1
+      s->position.x, s->position.y, s->position.z - 5, 1
     };
     glLoadMatrixd(m);
     glScalef(w, h, d);
