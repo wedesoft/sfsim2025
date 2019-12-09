@@ -36,13 +36,10 @@ large_matrix_t contact_jacobian(contact_t contact, state_t *state1, state_t *sta
 large_vector_t contact_correction(contact_t contact, bool do_restitution) {
   large_vector_t result = allocate_large_vector(1);
   double correction;
-  if (do_restitution) {
-    // Only spearating collision impulses are allowed.
-    correction = contact.normal_speed < 0 ? contact.normal_speed * contact.restitution : 0.0;
-  } else {
-    // Only separating stabilization is allowed.
-    correction = contact.distance < 0 ? contact.distance : 0.0;
-  };
+  if (do_restitution)
+    correction = contact.normal_speed * contact.restitution;
+  else
+    correction = contact.distance;
   result.data[0] = correction;
   return result;
 }
@@ -92,6 +89,7 @@ void contact_impulse(body_t body1, body_t body2, state_t *state1, state_t *state
   if (lambda_contact.data[0] < 0)
     lambda_contact.data[0] = 0;
   double friction = sqrt(lambda_friction.data[0] * lambda_friction.data[0] + lambda_friction.data[1] * lambda_friction.data[1]);
+  // Limit friction.
   if (friction > lambda_contact.data[0] * contact.friction) {
     double factor = lambda_contact.data[0] * contact.friction / friction;
     lambda_friction.data[0] *= factor;
