@@ -96,15 +96,15 @@ static MunitResult test_jacobian_angular(const MunitParameter params[], void *da
   return MUNIT_OK;
 }
 
-static MunitResult test_no_correction(const MunitParameter params[], void *data) {
+static MunitResult test_positive_correction(const MunitParameter params[], void *data) {
   contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), 0.1, 0.0, 2.0, 1.0);
   large_vector_t b = contact_correction(c, false);
   munit_assert_int(b.rows, ==, 1);
-  munit_assert_double(b.data[0], ==, 0.0);
+  munit_assert_double(b.data[0], ==, 0.1);
   return MUNIT_OK;
 }
 
-static MunitResult test_correction(const MunitParameter params[], void *data) {
+static MunitResult test_negative_correction(const MunitParameter params[], void *data) {
   contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), -0.1, 0.0, -2.0, 1.0);
   large_vector_t b = contact_correction(c, false);
   munit_assert_int(b.rows, ==, 1);
@@ -249,27 +249,27 @@ static MunitResult test_friction_limit(const MunitParameter params[], void *data
 }
 
 MunitTest test_contact[] = {
-  {"/body_indices"      , test_body_indices      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/normal"            , test_normal            , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/point"             , test_point             , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/distance"          , test_distance          , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/restitution_value" , test_restitution_value , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/speed_value"       , test_speed_value       , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/relative_speed"    , test_relative_speed    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/relative_rotation" , test_relative_rotation , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/jacobian_linear"   , test_jacobian_linear   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/jacobian_angular"  , test_jacobian_angular  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/no_correction"     , test_no_correction     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/correction"        , test_correction        , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/restitution"       , test_restitution       , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/friction_jacobian" , test_friction_jacobian , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/contact_impulse"   , test_contact_impulse   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/separating_objects", test_separating_objects, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/collision"         , test_collision         , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/is_resting"        , test_is_resting        , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/is_not_resting"    , test_is_not_resting    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/is_not_resting2"   , test_is_not_resting2   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/friction"          , test_friction          , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/friction_limit"    , test_friction_limit    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {NULL                 , NULL                   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
+  {"/body_indices"       , test_body_indices       , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/normal"             , test_normal             , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/point"              , test_point              , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/distance"           , test_distance           , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/restitution_value"  , test_restitution_value  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/speed_value"        , test_speed_value        , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/relative_speed"     , test_relative_speed     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/relative_rotation"  , test_relative_rotation  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/jacobian_linear"    , test_jacobian_linear    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/jacobian_angular"   , test_jacobian_angular   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/positive_correction", test_positive_correction, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/negative_correction", test_negative_correction, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/restitution"        , test_restitution        , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/friction_jacobian"  , test_friction_jacobian  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/contact_impulse"    , test_contact_impulse    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/separating_objects" , test_separating_objects , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/collision"          , test_collision          , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/is_resting"         , test_is_resting         , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/is_not_resting"     , test_is_not_resting     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/is_not_resting2"    , test_is_not_resting2    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/friction"           , test_friction           , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/friction_limit"     , test_friction_limit     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {NULL                  , NULL                    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
 };
