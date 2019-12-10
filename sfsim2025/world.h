@@ -35,7 +35,7 @@ static inline world_info_t make_world_info(void) {
   result.iterations = 10;
   result.restitution = 0.4;
   result.friction = 0.5;
-  result.resting_threshold = 0.1;
+  result.resting_threshold = 0.2;
   result.bodies = make_list();
   result.forces = make_list();
   result.rigid_bodies = make_list();
