@@ -34,8 +34,11 @@ large_matrix_t friction_jacobian(contact_t contact, state_t *state1, state_t *st
 
 large_vector_t friction_correction(contact_t contact);
 
-void contact_impulse(body_t body1, body_t body2, state_t *state1, state_t *state2, contact_t contact,
-                     vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2, bool do_restitution);
+void contact_impulse(body_t body1, body_t body2, state_t *state1, state_t *state2, contact_t contact, bool do_restitution,
+                     vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2, double *lambda_);
+
+void friction_impulse(body_t body1, body_t body2, state_t *state1, state_t *state2, contact_t contact,
+                      vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2, double contact_lambda);
 
 // Check whether this is a resting or a colliding contact.
 static inline bool is_resting(contact_t contact, double threshold) {

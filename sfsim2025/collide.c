@@ -68,7 +68,7 @@ void display() {
 void step() {
   struct timespec t1;
   clock_gettime(CLOCK_REALTIME, &t1);
-  double dt = fmin(t1.tv_sec - t0.tv_sec + (t1.tv_nsec - t0.tv_nsec) * 1e-9, 0.1);
+  double dt = fmin(t1.tv_sec - t0.tv_sec + (t1.tv_nsec - t0.tv_nsec) * 1e-9, 0.2);
   int iterations = 1;
   for (int i=0; i<iterations; i++) {
     world = euler(world, 0, world_change, add_worlds, scale_world, &info);
@@ -97,7 +97,7 @@ int main(int argc, char *argv[]) {
   append_pointer(&info.rigid_bodies, make_cube(6370000, 6370000, 6370000));
   append_forces(&info.forces, forces(vector(0, 0, 0), vector(0, 0, 0)));
   for (int i=0; i<n; i++) {
-    append_pointer(&world->states, state(vector(0, 0.5 * h + h * i, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.4, 0.0, 0.8)));
+    append_pointer(&world->states, state(vector(0, 0.5 * h + h * i, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
     append_body(&info.bodies, body(1.0, inertia_cuboid(1.0, w, h, d)));
     append_pointer(&info.rigid_bodies, make_cube(w / 2, h / 2, d / 2));
     append_forces(&info.forces, forces(vector(0, -9.81, 0), vector(0, 0, 0)));

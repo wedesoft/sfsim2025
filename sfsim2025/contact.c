@@ -77,30 +77,31 @@ large_vector_t friction_correction(contact_t contact) {
   return result;
 }
 // Compute impulse caused by contact point of two objects.
-void contact_impulse(body_t body1, body_t body2, state_t *state1, state_t *state2, contact_t contact,
-                     vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2, bool do_restitution) {
+void contact_impulse(body_t body1, body_t body2, state_t *state1, state_t *state2, contact_t contact, bool do_restitution,
+                     vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2, double *lambda_) {
   large_matrix_t contact_j = contact_jacobian(contact, state1, state2);
   large_vector_t contact_b = contact_correction(contact, do_restitution);
   large_vector_t lambda_contact = lambda(body1, body2, state1, state2, contact_j, contact_b);
-  large_matrix_t friction_j = friction_jacobian(contact, state1, state2);
-  large_vector_t b2 = friction_correction(contact);
-  large_vector_t lambda_friction = lambda(body1, body2, state1, state2, friction_j, b2);
   // Only separating impulses are allowed.
   if (lambda_contact.data[0] < 0)
     lambda_contact.data[0] = 0;
+  if (lambda_)
+    *lambda_ = lambda_contact.data[0];
+  vector_t contact_impulse1, contact_impulse2, contact_tau1, contact_tau2;
+  apply_lambda(contact_j, lambda_contact, impulse1, impulse2, tau1, tau2);
+}
+
+void friction_impulse(body_t body1, body_t body2, state_t *state1, state_t *state2, contact_t contact,
+                      vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2, double contact_lambda) {
+  large_matrix_t friction_j = friction_jacobian(contact, state1, state2);
+  large_vector_t friction_b = friction_correction(contact);
+  large_vector_t lambda_friction = lambda(body1, body2, state1, state2, friction_j, friction_b);
   double friction = sqrt(lambda_friction.data[0] * lambda_friction.data[0] + lambda_friction.data[1] * lambda_friction.data[1]);
   // Limit friction.
-  if (friction > lambda_contact.data[0] * contact.friction) {
-    double factor = lambda_contact.data[0] * contact.friction / friction;
+  if (friction > contact_lambda * contact.friction) {
+    double factor = contact_lambda * contact.friction / friction;
     lambda_friction.data[0] *= factor;
     lambda_friction.data[1] *= factor;
   };
-  vector_t contact_impulse1, contact_impulse2, contact_tau1, contact_tau2;
-  apply_lambda(contact_j, lambda_contact, &contact_impulse1, &contact_impulse2, &contact_tau1, &contact_tau2);
-  vector_t friction_impulse1, friction_impulse2, friction_tau1, friction_tau2;
-  apply_lambda(friction_j, lambda_friction, &friction_impulse1, &friction_impulse2, &friction_tau1, &friction_tau2);
-  *impulse1 = vector_add(contact_impulse1, friction_impulse1);
-  *impulse2 = vector_add(contact_impulse2, friction_impulse2);
-  *tau1 = vector_add(contact_tau1, friction_tau1);
-  *tau2 = vector_add(contact_tau2, friction_tau2);
+  apply_lambda(friction_j, lambda_friction, impulse1, impulse2, tau1, tau2);
 }

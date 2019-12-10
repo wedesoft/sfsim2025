@@ -160,14 +160,15 @@ static MunitResult test_contact_impulse(const MunitParameter params[], void *dat
   state_t *s1 = state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector(0, 1, 0), vector(0, -0.01, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   contact_t c = contact(0, 1, vector(0, 1, 0), vector(0, 0, 0), 0, 0.5, -2.0, 1.0);
-  vector_t p1; vector_t t1; vector_t p2; vector_t t2;
-  contact_impulse(body1, body2, s1, s2, c, &p1, &p2, &t1, &t2, false);
+  vector_t p1; vector_t t1; vector_t p2; vector_t t2; double lambda_;
+  contact_impulse(body1, body2, s1, s2, c, false, &p1, &p2, &t1, &t2, &lambda_);
   munit_assert_double_equal(p1.x,  0.0 , 6);
   munit_assert_double_equal(p1.y, -0.01, 6);
   munit_assert_double_equal(p1.z,  0.0 , 6);
   munit_assert_double_equal(p2.x,  0.0 , 6);
   munit_assert_double_equal(p2.y,  0.01, 6);
   munit_assert_double_equal(p2.z,  0.0 , 6);
+  munit_assert_double_equal(lambda_, 0.01, 6);
   return MUNIT_OK;
 }
 
@@ -177,14 +178,15 @@ static MunitResult test_separating_objects(const MunitParameter params[], void *
   state_t *s1 = state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector(0, 1, 0), vector(0, 0.01, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   contact_t c = contact(0, 1, vector(0, 1, 0), vector(0, 0, 0), 0, 0, 0.01, 1.0);
-  vector_t p1; vector_t t1; vector_t p2; vector_t t2;
-  contact_impulse(body1, body2, s1, s2, c, &p1, &p2, &t1, &t2, false);
+  vector_t p1; vector_t t1; vector_t p2; vector_t t2; double lambda_;
+  contact_impulse(body1, body2, s1, s2, c, false, &p1, &p2, &t1, &t2, &lambda_);
   munit_assert_double_equal(p1.x, 0.0, 6);
   munit_assert_double_equal(p1.y, 0.0, 6);
   munit_assert_double_equal(p1.z, 0.0, 6);
   munit_assert_double_equal(p2.x, 0.0, 6);
   munit_assert_double_equal(p2.y, 0.0, 6);
   munit_assert_double_equal(p2.z, 0.0, 6);
+  munit_assert_double_equal(lambda_, 0.0, 6);
   return MUNIT_OK;
 }
 
@@ -194,11 +196,12 @@ static MunitResult test_collision(const MunitParameter params[], void *data) {
   state_t *s1 = state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector(0, 1, 0), vector(0, -0.1, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   contact_t c = contact(0, 1, vector(0, 1, 0), vector(0, 0, 0), 0, 0.5, -0.1, 1.0);
-  vector_t p1; vector_t t1; vector_t p2; vector_t t2;
-  contact_impulse(body1, body2, s1, s2, c, &p1, &p2, &t1, &t2, true);
+  vector_t p1; vector_t t1; vector_t p2; vector_t t2; double lambda_;
+  contact_impulse(body1, body2, s1, s2, c, true, &p1, &p2, &t1, &t2, &lambda_);
   munit_assert_double_equal(p2.x,  0.0 , 6);
   munit_assert_double_equal(p2.y,  0.15, 6);
   munit_assert_double_equal(p2.z,  0.0 , 6);
+  munit_assert_double_equal(lambda_, 0.15, 6);
   return MUNIT_OK;
 }
 
@@ -224,13 +227,13 @@ static MunitResult test_friction(const MunitParameter params[], void *data) {
   body_t body1 = body(5.9722e+24, inertia_sphere(5.9722e+24, 6370000));
   body_t body2 = body(1.0, inertia_cuboid(1.0, 0.1, 2, 0.1));
   state_t *s1 = state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  state_t *s2 = state(vector(0, 1, 0), vector(0.1, -0.1, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  state_t *s2 = state(vector(0, 1, 0), vector(0.1, 0.0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   contact_t c = contact(0, 1, vector(0, 1, 0), vector(0, 1, 0), 0, 0.5, -0.1, 1.0);
   vector_t p1; vector_t t1; vector_t p2; vector_t t2;
-  contact_impulse(body1, body2, s1, s2, c, &p1, &p2, &t1, &t2, true);
-  munit_assert_double_equal(p2.x, -0.1 , 6);
-  munit_assert_double_equal(p2.y,  0.15, 6);
-  munit_assert_double_equal(p2.z,  0.  , 6);
+  friction_impulse(body1, body2, s1, s2, c, &p1, &p2, &t1, &t2, 1.0);
+  munit_assert_double_equal(p2.x, -0.1, 6);
+  munit_assert_double_equal(p2.y,  0.0, 6);
+  munit_assert_double_equal(p2.z,  0. , 6);
   return MUNIT_OK;
 }
 
@@ -238,13 +241,13 @@ static MunitResult test_friction_limit(const MunitParameter params[], void *data
   body_t body1 = body(5.9722e+24, inertia_sphere(5.9722e+24, 6370000));
   body_t body2 = body(1.0, inertia_cuboid(1.0, 0.1, 2, 0.1));
   state_t *s1 = state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  state_t *s2 = state(vector(0, 1, 0), vector(0.1, -0.1, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  state_t *s2 = state(vector(0, 1, 0), vector(1.0, 0.0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   contact_t c = contact(0, 1, vector(0, 1, 0), vector(0, 1, 0), 0, 0.5, -0.1, 0.5);
   vector_t p1; vector_t t1; vector_t p2; vector_t t2;
-  contact_impulse(body1, body2, s1, s2, c, &p1, &p2, &t1, &t2, true);
-  munit_assert_double_equal(p2.x, -0.075, 6);
-  munit_assert_double_equal(p2.y,  0.15 , 6);
-  munit_assert_double_equal(p2.z,  0.   ,  6);
+  friction_impulse(body1, body2, s1, s2, c, &p1, &p2, &t1, &t2, 1.0);
+  munit_assert_double_equal(p2.x, -0.5, 6);
+  munit_assert_double_equal(p2.y,  0.0, 6);
+  munit_assert_double_equal(p2.z,  0.0, 6);
   return MUNIT_OK;
 }
 
