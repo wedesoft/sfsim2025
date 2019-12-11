@@ -201,9 +201,9 @@ static rigid_body_t *make_cube(double w2, double h2, double d2) {
 
 static world_info_t world_info6(void) {
   world_info_t result = make_world_info();
-  result.iterations = 10;
+  result.iterations = 20;
   result.restitution = 0.5;
-  result.friction = 0;
+  result.friction = 0.4;
   append_body(&result.bodies, body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000)));
   append_forces(&result.forces, forces(vector(0, 0, 0), vector(0, 0, 0)));
   append_pointer(&result.rigid_bodies, make_cube(6370000, 6370000, 6370000));
@@ -220,7 +220,7 @@ static MunitResult test_contact(const MunitParameter params[], void *data) {
   world_info_t info = world_info6();
   world_t *changed = world_change(0, 1, world, &info);
   state_t *result2 = get_pointer(changed->states)[1];
-  munit_assert_double_equal(result2->speed.y, 0, 5);
+  munit_assert_double_equal(result2->speed.y, 0, 6);
   return MUNIT_OK;
 }
 
@@ -231,7 +231,7 @@ static MunitResult test_collision(const MunitParameter params[], void *data) {
   world_info_t info = world_info6();
   world_t *changed = world_change(0, 0, world, &info);
   state_t *result2 = get_pointer(changed->states)[1];
-  munit_assert_double_equal(result2->speed.y, 0.75, 5);
+  munit_assert_double_equal(result2->speed.y, 0.75, 6);
   return MUNIT_OK;
 }
 
