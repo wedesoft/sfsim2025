@@ -2,12 +2,12 @@
 #include <float.h>
 #include <gc.h>
 #include "polygon.h"
-#include "rigid_body.h"
+#include "hull.h"
 
 
 // Create an empty rigid body.
-rigid_body_t *make_rigid_body(void) {
-  rigid_body_t *result = GC_MALLOC(sizeof(rigid_body_t));
+hull_t *make_hull(void) {
+  hull_t *result = GC_MALLOC(sizeof(hull_t));
   result->points = make_list();
   result->edges = make_list();
   result->faces = make_list();
@@ -15,12 +15,12 @@ rigid_body_t *make_rigid_body(void) {
 }
 
 // Add 3D point to a rigid body.
-void add_point(rigid_body_t *body, vector_t point) {
+void add_point(hull_t *body, vector_t point) {
   append_vector(&body->points, point);
 }
 
 // Add edge to a rigid body.
-void add_edge(rigid_body_t *body, edge_t edge) {
+void add_edge(hull_t *body, edge_t edge) {
   for (int i=0; i<body->edges.size; i++) {
     edge_t current = get_edge(body->edges)[i];
     if (edge_eq(current, edge)) return;
@@ -30,7 +30,7 @@ void add_edge(rigid_body_t *body, edge_t edge) {
 }
 
 // Add face and corresponding edges to a rigid body.
-void add_face(rigid_body_t *body, face_t face) {
+void add_face(hull_t *body, face_t face) {
   append_face(&body->faces, face);
   add_edge(body, edge(face.a, face.b));
   add_edge(body, edge(face.b, face.c));
@@ -38,7 +38,7 @@ void add_face(rigid_body_t *body, face_t face) {
 }
 
 // Get normal vector of a body's face.
-vector_t face_normal(rigid_body_t *body, face_t face) {
+vector_t face_normal(hull_t *body, face_t face) {
   vector_t a = get_vector(body->points)[face.a];
   vector_t b = get_vector(body->points)[face.b];
   vector_t c = get_vector(body->points)[face.c];
@@ -48,7 +48,7 @@ vector_t face_normal(rigid_body_t *body, face_t face) {
 }
 
 // Get face plane of a body's face.
-plane_t face_plane(rigid_body_t *body, face_t face) {
+plane_t face_plane(hull_t *body, face_t face) {
   plane_t result;
   result.point = get_vector(body->points)[face.a];
   result.normal = face_normal(body, face);
@@ -56,7 +56,7 @@ plane_t face_plane(rigid_body_t *body, face_t face) {
 }
 
 // Get point of body with smallest distance to specified plane.
-double smallest_distance(plane_t plane, rigid_body_t *body, int *index) {
+double smallest_distance(plane_t plane, hull_t *body, int *index) {
   double result = DBL_MAX;
   for (int i=0; i<body->points.size; i++) {
     double distance = plane_distance(plane, get_vector(body->points)[i]);
@@ -69,7 +69,7 @@ double smallest_distance(plane_t plane, rigid_body_t *body, int *index) {
 }
 
 // Get point of body with largest distance to specified plane.
-double largest_distance(plane_t plane, rigid_body_t *body, int *index) {
+double largest_distance(plane_t plane, hull_t *body, int *index) {
   double result = -DBL_MAX;
   for (int i=0; i<body->points.size; i++) {
     double distance = plane_distance(plane, get_vector(body->points)[i]);
@@ -82,7 +82,7 @@ double largest_distance(plane_t plane, rigid_body_t *body, int *index) {
 }
 
 // Get face-point combination from two bodies with greatest separation.
-double best_face(rigid_body_t * body, rigid_body_t *other, int *face_index, int *point_index) {
+double best_face(hull_t * body, hull_t *other, int *face_index, int *point_index) {
   double result = -DBL_MAX;
   for (int i=0; i<body->faces.size; i++) {
     int index;
@@ -100,7 +100,7 @@ double best_face(rigid_body_t * body, rigid_body_t *other, int *face_index, int 
 #define DISTANCE_EPS 1e-3
 
 // Construct separating planes from a pair of edges.
-bool edge_planes(rigid_body_t *body, edge_t edge1, rigid_body_t *other, edge_t edge2, plane_t *p1, plane_t *p2) {
+bool edge_planes(hull_t *body, edge_t edge1, hull_t *other, edge_t edge2, plane_t *p1, plane_t *p2) {
   assert(p1);
   assert(p2);
   vector_t orthogonal = cross_product(edge_vector(body, edge1), edge_vector(other, edge2));
@@ -121,7 +121,7 @@ bool edge_planes(rigid_body_t *body, edge_t edge1, rigid_body_t *other, edge_t e
 }
 
 // Get best separating plane constructed from two edges.
-double best_edge_pair(rigid_body_t *body, rigid_body_t *other, int *edge1_index, int *edge2_index) {
+double best_edge_pair(hull_t *body, hull_t *other, int *edge1_index, int *edge2_index) {
   double result = -DBL_MAX;
   for (int j=0; j<body->edges.size; j++) {
     for (int i=0; i<other->edges.size; i++) {
@@ -145,7 +145,7 @@ double best_edge_pair(rigid_body_t *body, rigid_body_t *other, int *edge1_index,
 #define PENETRATION_EPS 1e-3
 
 // Get points which are on the separating plane
-list_t penetration_candidates(plane_t p, rigid_body_t *body) {
+list_t penetration_candidates(plane_t p, hull_t *body) {
   list_t result = make_list();
   for (int i=0; i<body->points.size; i++) {
     vector_t v = get_vector(body->points)[i];
@@ -156,7 +156,7 @@ list_t penetration_candidates(plane_t p, rigid_body_t *body) {
 }
 
 // Get best separating plane between two polyhedra.
-plane_t separating_plane(rigid_body_t *body, rigid_body_t *other, double *distance) {
+plane_t separating_plane(hull_t *body, hull_t *other, double *distance) {
   assert(body->faces.size > 0);
   assert(other->faces.size > 0);
   int face1_index, point1_index;
@@ -186,7 +186,7 @@ plane_t separating_plane(rigid_body_t *body, rigid_body_t *other, double *distan
 }
 
 // Get contact points, contact normal, and distance between two bodies.
-list_t contact_points(rigid_body_t *body, rigid_body_t *other, double *distance, vector_t *normal) {
+list_t contact_points(hull_t *body, hull_t *other, double *distance, vector_t *normal) {
   list_t result;
   if (body->faces.size > 0 && other->faces.size > 0) {
     plane_t p = separating_plane(body, other, distance);
@@ -200,7 +200,7 @@ list_t contact_points(rigid_body_t *body, rigid_body_t *other, double *distance,
 }
 
 // Get list of contacts for two objects.
-list_t contacts(int i, int j, rigid_body_t *transformed_body, rigid_body_t *transformed_other, double restitution,
+list_t contacts(int i, int j, hull_t *transformed_body, hull_t *transformed_other, double restitution,
                 double friction, state_t *state1, state_t *state2) {
   double distance;
   vector_t normal;
@@ -217,8 +217,8 @@ list_t contacts(int i, int j, rigid_body_t *transformed_body, rigid_body_t *tran
 }
 
 // Rotate and translate the points of a rigid body.
-rigid_body_t *transform_body(rigid_body_t *body, quaternion_t q, vector_t t) {
-  rigid_body_t *result = GC_MALLOC(sizeof(rigid_body_t));
+hull_t *transform_body(hull_t *body, quaternion_t q, vector_t t) {
+  hull_t *result = GC_MALLOC(sizeof(hull_t));
   result->points = make_list();
   result->edges = body->edges;
   result->faces = body->faces;

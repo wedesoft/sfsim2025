@@ -5,7 +5,7 @@
 #include <SDL_opengl.h>
 #include <GL/glut.h>
 #include "sfsim2025/mechanics.h"
-#include "sfsim2025/rigid_body.h"
+#include "sfsim2025/hull.h"
 #include "sfsim2025/world.h"
 
 world_t *world;
@@ -17,7 +17,7 @@ double h = 0.4;
 double d = 1.0;
 int n = 2;
 
-static void add_cube_faces(rigid_body_t *body) {
+static void add_cube_faces(hull_t *body) {
   add_face(body, face(0, 1, 3));
   add_face(body, face(0, 3, 2));
   add_face(body, face(5, 4, 7));
@@ -32,8 +32,8 @@ static void add_cube_faces(rigid_body_t *body) {
   add_face(body, face(2, 7, 6));
 }
 
-static rigid_body_t *make_cube(double w2, double h2, double d2) {
-  rigid_body_t *result = make_rigid_body();
+static hull_t *make_cube(double w2, double h2, double d2) {
+  hull_t *result = make_hull();
   add_point(result, vector(-w2, -h2, -d2));
   add_point(result, vector(+w2, -h2, -d2));
   add_point(result, vector(-w2, -h2, +d2));

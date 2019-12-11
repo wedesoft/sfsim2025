@@ -45,16 +45,16 @@ void *world_change(double time, double dt, void *world_, void *data_) {
   // Rotate and translate the rigid bodies.
   list_t rigid_bodies = make_list();
   for (int i=0; i<data->rigid_bodies.size; i++) {
-    rigid_body_t * rigid_body = get_pointer(data->rigid_bodies)[i];
+    hull_t * hull = get_pointer(data->rigid_bodies)[i];
     state_t *state = get_pointer(world->states)[i];
-    append_pointer(&rigid_bodies, transform_body(rigid_body, state->orientation, state->position));
+    append_pointer(&rigid_bodies, transform_body(hull, state->orientation, state->position));
   };
   // Determine all contacts between rigid bodies.
   list_t contacts_ = make_list();
   for (int i=0; i<rigid_bodies.size; i++) {
     for (int j=i+1; j<rigid_bodies.size; j++) {
-      rigid_body_t *body = get_pointer(rigid_bodies)[i];
-      rigid_body_t *other = get_pointer(rigid_bodies)[j];
+      hull_t *body = get_pointer(rigid_bodies)[i];
+      hull_t *other = get_pointer(rigid_bodies)[j];
       state_t *state1 = get_pointer(world->states)[i];
       state_t *state2 = get_pointer(world->states)[j];
       list_t contacts_of_bodies = contacts(i, j, body, other, data->restitution, data->friction, state1, state2);

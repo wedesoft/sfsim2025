@@ -1,7 +1,7 @@
 #pragma once
 #include <gc.h>
 #include "list.h"
-#include "rigid_body.h"
+#include "hull.h"
 
 
 typedef struct {

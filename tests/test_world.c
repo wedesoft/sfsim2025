@@ -49,7 +49,7 @@ static world_info_t world_info(void) {
   world_info_t result = make_world_info();
   append_body(&result.bodies, body(2.0, diagonal(1, 1, 1)));
   append_forces(&result.forces, forces(vector(1, 2, 3), vector(0, 0, 0)));
-  append_pointer(&result.rigid_bodies, make_rigid_body());
+  append_pointer(&result.rigid_bodies, make_hull());
   return result;
 }
 
@@ -81,7 +81,7 @@ static world_info_t world_info2(void) {
   world_info_t result = make_world_info();
   append_body(&result.bodies, body(1.0, diagonal(1, 2, 2)));
   append_forces(&result.forces, forces(vector(1, 2, 3), vector(1, 2, 3)));
-  append_pointer(&result.rigid_bodies, make_rigid_body());
+  append_pointer(&result.rigid_bodies, make_hull());
   return result;
 }
 
@@ -101,7 +101,7 @@ static world_info_t world_info3(void) {
   world_info_t result = make_world_info();
   append_body(&result.bodies, body(1.0, diagonal(1, 1, 1)));
   append_forces(&result.forces, forces(vector(1, 2, 3), vector(1, 2, 3)));
-  append_pointer(&result.rigid_bodies, make_rigid_body());
+  append_pointer(&result.rigid_bodies, make_hull());
   return result;
 }
 
@@ -119,7 +119,7 @@ static world_info_t world_info4(void) {
   world_info_t result = make_world_info();
   append_body(&result.bodies, body(1.0, diagonal(1, 2, 4)));
   append_forces(&result.forces, forces(vector(0, 0, 0), vector(0, 0, 0)));
-  append_pointer(&result.rigid_bodies, make_rigid_body());
+  append_pointer(&result.rigid_bodies, make_hull());
   return result;
 }
 
@@ -149,10 +149,10 @@ static world_info_t world_info5(void) {
   world_info_t result = make_world_info();
   append_body(&result.bodies, body(1.0, diagonal(1, 1, 1)));
   append_forces(&result.forces, forces(vector(0, 0, 0), vector(0, 0, 0)));
-  append_pointer(&result.rigid_bodies, make_rigid_body());
+  append_pointer(&result.rigid_bodies, make_hull());
   append_body(&result.bodies, body(1.0, diagonal(1, 1, 1)));
   append_forces(&result.forces, forces(vector(0, 0, 0), vector(0, 0, 0)));
-  append_pointer(&result.rigid_bodies, make_rigid_body());
+  append_pointer(&result.rigid_bodies, make_hull());
   append_joint(&result.joints, ball_in_socket(0, 1, vector(2, 0, 0), vector(-2, 0, 0)));
   return result;
 }
@@ -170,7 +170,7 @@ static MunitResult test_joint(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
-static void add_cube_faces(rigid_body_t *body) {
+static void add_cube_faces(hull_t *body) {
   add_face(body, face(0, 1, 3));
   add_face(body, face(0, 3, 2));
   add_face(body, face(5, 4, 7));
@@ -185,8 +185,8 @@ static void add_cube_faces(rigid_body_t *body) {
   add_face(body, face(2, 7, 6));
 }
 
-static rigid_body_t *make_cube(double w2, double h2, double d2) {
-  rigid_body_t *result = make_rigid_body();
+static hull_t *make_cube(double w2, double h2, double d2) {
+  hull_t *result = make_hull();
   add_point(result, vector(-w2, -h2, -d2));
   add_point(result, vector(+w2, -h2, -d2));
   add_point(result, vector(-w2, -h2, +d2));

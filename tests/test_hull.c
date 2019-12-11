@@ -1,15 +1,15 @@
-#include "sfsim2025/rigid_body.h"
-#include "test_rigid_body.h"
+#include "sfsim2025/hull.h"
+#include "test_hull.h"
 #include "test_helper.h"
 
 
-static rigid_body_t *make_tetrahedron(double scale, double z) {
+static hull_t *make_tetrahedron(double scale, double z) {
   //      3---2    z^  ^
   //     / \  |     | /y
   //    /   \ |  ---+---->
   //   /     \|    /|   x
   // 0--------1
-  rigid_body_t *result = make_rigid_body();
+  hull_t *result = make_hull();
   add_point(result, vector(0, 0, z));
   add_point(result, vector(scale, 0, z));
   add_point(result, vector(0, scale, z));
@@ -21,7 +21,7 @@ static rigid_body_t *make_tetrahedron(double scale, double z) {
   return result;
 }
 
-static void add_cube_faces(rigid_body_t *body) {
+static void add_cube_faces(hull_t *body) {
   add_face(body, face(0, 1, 3));
   add_face(body, face(0, 3, 2));
   add_face(body, face(5, 4, 7));
@@ -36,7 +36,7 @@ static void add_cube_faces(rigid_body_t *body) {
   add_face(body, face(2, 7, 6));
 }
 
-static rigid_body_t *make_cube(double x, double y, double z) {
+static hull_t *make_cube(double x, double y, double z) {
   //   6-------7
   //  /       /|        ^  ^
   // 2-------3 |       z| /y
@@ -44,7 +44,7 @@ static rigid_body_t *make_cube(double x, double y, double z) {
   // |       | 5    ----+----->
   // |       |/        /|   x
   // 0-------1        / |
-  rigid_body_t *result = make_rigid_body();
+  hull_t *result = make_hull();
   add_point(result, vector(0 + x, 0 + y, 0 + z));
   add_point(result, vector(2 + x, 0 + y, 0 + z));
   add_point(result, vector(0 + x, 0 + y, 2 + z));
@@ -57,7 +57,7 @@ static rigid_body_t *make_cube(double x, double y, double z) {
   return result;
 }
 
-static rigid_body_t *make_rotated_cube1(double z) {
+static hull_t *make_rotated_cube1(double z) {
   //        7
   //       / \         ^  ^
   //      3   \       z| /y
@@ -67,7 +67,7 @@ static rigid_body_t *make_rotated_cube1(double z) {
   //    \   /
   //     \ /
   //      0
-  rigid_body_t *result = make_rigid_body();
+  hull_t *result = make_hull();
   add_point(result, vector(1, 0, 0 + z));
   add_point(result, vector(2, 0, 1 + z));
   add_point(result, vector(0, 0, 1 + z));
@@ -80,14 +80,14 @@ static rigid_body_t *make_rotated_cube1(double z) {
   return result;
 }
 
-static rigid_body_t *make_rotated_cube2(double z) {
+static hull_t *make_rotated_cube2(double z) {
   //    7 ------3        ^  ^
   //   /       / \      z| /y
   //  /       /   1      |/
   // 6-------2   /   ----+----->
   //  \       \ /       /|   x
   //   4-------0
-  rigid_body_t *result = make_rigid_body();
+  hull_t *result = make_hull();
   add_point(result, vector(2, 1, 0 + z));
   add_point(result, vector(2, 2, 1 + z));
   add_point(result, vector(2, 0, 1 + z));
@@ -101,28 +101,28 @@ static rigid_body_t *make_rotated_cube2(double z) {
 }
 
 static MunitResult test_create(const MunitParameter params[], void *data) {
-  munit_assert_int(make_rigid_body()->points.size, ==, 0);
-  munit_assert_int(make_rigid_body()->edges.size, ==, 0);
-  munit_assert_int(make_rigid_body()->faces.size, ==, 0);
+  munit_assert_int(make_hull()->points.size, ==, 0);
+  munit_assert_int(make_hull()->edges.size, ==, 0);
+  munit_assert_int(make_hull()->faces.size, ==, 0);
   return MUNIT_OK;
 }
 
 static MunitResult test_add_point(const MunitParameter params[], void *data) {
-  rigid_body_t *body = make_rigid_body();
+  hull_t *body = make_hull();
   add_point(body, vector(2, 3, 5));
   munit_assert_int(body->points.size, ==, 1);
   return MUNIT_OK;
 }
 
 static MunitResult test_add_face(const MunitParameter params[], void *data) {
-  rigid_body_t *body = make_rigid_body();
+  hull_t *body = make_hull();
   add_face(body, face(0, 1, 2));
   munit_assert_int(body->faces.size, ==, 1);
   return MUNIT_OK;
 }
 
 static MunitResult test_face_edges(const MunitParameter params[], void *data) {
-  rigid_body_t *body = make_rigid_body();
+  hull_t *body = make_hull();
   add_face(body, face(0, 1, 2));
   munit_assert_int(body->edges.size, ==, 3);
   munit_assert_int(get_edge(body->edges)[0].a, ==, 0);
@@ -135,7 +135,7 @@ static MunitResult test_face_edges(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_existing_edge(const MunitParameter params[], void *data) {
-  rigid_body_t *body = make_rigid_body();
+  hull_t *body = make_hull();
   add_face(body, face(0, 1, 2));
   add_face(body, face(2, 1, 4));
   munit_assert_int(body->edges.size, ==, 5);
@@ -143,7 +143,7 @@ static MunitResult test_existing_edge(const MunitParameter params[], void *data)
 }
 
 static MunitResult test_edge_tail(const MunitParameter params[], void *data) {
-  rigid_body_t *body = make_tetrahedron(1.0, 0.0);
+  hull_t *body = make_tetrahedron(1.0, 0.0);
   vector_t result = edge_tail(body, edge(1, 2));
   munit_assert_double(result.x, ==, 1.0);
   munit_assert_double(result.y, ==, 0.0);
@@ -152,7 +152,7 @@ static MunitResult test_edge_tail(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_edge_head(const MunitParameter params[], void *data) {
-  rigid_body_t *body = make_tetrahedron(1.0, 0.0);
+  hull_t *body = make_tetrahedron(1.0, 0.0);
   vector_t result = edge_head(body, edge(1, 2));
   munit_assert_double(result.x, ==, 0.0);
   munit_assert_double(result.y, ==, 1.0);
@@ -161,7 +161,7 @@ static MunitResult test_edge_head(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_edge_vector(const MunitParameter params[], void *data) {
-  rigid_body_t *body = make_tetrahedron(1.0, 0.0);
+  hull_t *body = make_tetrahedron(1.0, 0.0);
   vector_t result = edge_vector(body, edge(1, 2));
   munit_assert_double(result.x, ==, -1.0);
   munit_assert_double(result.y, ==,  1.0);
@@ -170,7 +170,7 @@ static MunitResult test_edge_vector(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_face_normal(const MunitParameter params[], void *data) {
-  rigid_body_t *body = make_tetrahedron(2.0, 0.0);
+  hull_t *body = make_tetrahedron(2.0, 0.0);
   vector_t result = face_normal(body, face(0, 2, 1));
   munit_assert_double(result.x, ==,  0.0);
   munit_assert_double(result.y, ==,  0.0);
@@ -179,7 +179,7 @@ static MunitResult test_face_normal(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_face_plane(const MunitParameter params[], void *data) {
-  rigid_body_t *body = make_tetrahedron(1.0, 0.0);
+  hull_t *body = make_tetrahedron(1.0, 0.0);
   plane_t plane = face_plane(body, face(2, 1, 0));
   munit_assert_double(plane.point.x, ==, 0.0);
   munit_assert_double(plane.point.y, ==, 1.0);
@@ -192,7 +192,7 @@ static MunitResult test_face_plane(const MunitParameter params[], void *data) {
 
 static MunitResult test_smallest_distance(const MunitParameter params[], void *data) {
   plane_t p = plane(vector(0, 0, 3), vector(0, 0, -1));
-  rigid_body_t *body = make_tetrahedron(1.0, 0.0);
+  hull_t *body = make_tetrahedron(1.0, 0.0);
   int index = -1;
   munit_assert_double(smallest_distance(p, body, &index), ==, 2);
   munit_assert_int(index, ==, 3);
@@ -201,7 +201,7 @@ static MunitResult test_smallest_distance(const MunitParameter params[], void *d
 
 static MunitResult test_largest_distance(const MunitParameter params[], void *data) {
   plane_t p = plane(vector(0, 0, 3), vector(0, 0, -1));
-  rigid_body_t *body = make_tetrahedron(1.0, 0.0);
+  hull_t *body = make_tetrahedron(1.0, 0.0);
   int index = -1;
   munit_assert_double(largest_distance(p, body, &index), ==, 3);
   munit_assert_int(index, ==, 0);
@@ -209,8 +209,8 @@ static MunitResult test_largest_distance(const MunitParameter params[], void *da
 }
 
 static MunitResult test_best_face(const MunitParameter params[], void *data) {
-  rigid_body_t *body = make_tetrahedron(1.0, 3.0);
-  rigid_body_t *other = make_tetrahedron(1.0, 0.0);
+  hull_t *body = make_tetrahedron(1.0, 3.0);
+  hull_t *other = make_tetrahedron(1.0, 0.0);
   int face_index = -1;
   int point_index = -1;
   munit_assert_double_equal(best_face(body, other, &face_index, &point_index), 2.0, 6);
@@ -220,8 +220,8 @@ static MunitResult test_best_face(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_edge_planes(const MunitParameter params[], void *data) {
-  rigid_body_t *body = make_tetrahedron(1, 2);
-  rigid_body_t *other = make_tetrahedron(1, 5);
+  hull_t *body = make_tetrahedron(1, 2);
+  hull_t *other = make_tetrahedron(1, 5);
   plane_t p1;
   plane_t p2;
   munit_assert_true(edge_planes(body, edge(1, 3), other, edge(2, 0), &p1, &p2));
@@ -241,8 +241,8 @@ static MunitResult test_edge_planes(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_check_planes(const MunitParameter params[], void *data) {
-  rigid_body_t *body = make_tetrahedron(1, 2);
-  rigid_body_t *other = make_tetrahedron(1, 5);
+  hull_t *body = make_tetrahedron(1, 2);
+  hull_t *other = make_tetrahedron(1, 5);
   plane_t p1;
   plane_t p2;
   munit_assert_true(edge_planes(body, edge(1, 3), other, edge(0, 2), &p1, &p2));
@@ -259,8 +259,8 @@ static MunitResult test_check_planes(const MunitParameter params[], void *data) 
 }
 
 static MunitResult test_reject_planes(const MunitParameter params[], void *data) {
-  rigid_body_t *body = make_tetrahedron(1, 2);
-  rigid_body_t *other = make_tetrahedron(1, 5);
+  hull_t *body = make_tetrahedron(1, 2);
+  hull_t *other = make_tetrahedron(1, 5);
   plane_t p1;
   plane_t p2;
   munit_assert_false(edge_planes(body, edge(0, 1), other, edge(0, 2), &p1, &p2));
@@ -268,8 +268,8 @@ static MunitResult test_reject_planes(const MunitParameter params[], void *data)
 }
 
 static MunitResult test_parallel_edges(const MunitParameter params[], void *data) {
-  rigid_body_t *body = make_tetrahedron(1, 2);
-  rigid_body_t *other = make_tetrahedron(1, 5);
+  hull_t *body = make_tetrahedron(1, 2);
+  hull_t *other = make_tetrahedron(1, 5);
   plane_t p1;
   plane_t p2;
   munit_assert_false(edge_planes(body, edge(0, 1), other, edge(0, 1), &p1, &p2));
@@ -277,8 +277,8 @@ static MunitResult test_parallel_edges(const MunitParameter params[], void *data
 }
 
 static MunitResult test_best_edge_pair(const MunitParameter params[], void *data) {
-  rigid_body_t *body = make_tetrahedron(1, 2);
-  rigid_body_t *other = make_tetrahedron(1, 5);
+  hull_t *body = make_tetrahedron(1, 2);
+  hull_t *other = make_tetrahedron(1, 5);
   int edge1_index = -1;
   int edge2_index = -1;
   munit_assert_double_equal(best_edge_pair(body, other, &edge1_index, &edge2_index), sqrt(2), 6);
@@ -292,22 +292,22 @@ static MunitResult test_best_edge_pair(const MunitParameter params[], void *data
 }
 
 static MunitResult test_no_penetration(const MunitParameter params[], void *data) {
-  rigid_body_t *body = make_tetrahedron(1, 2);
+  hull_t *body = make_tetrahedron(1, 2);
   plane_t p = plane(vector(0, 0, 0), vector(0, 0, 1));
   munit_assert_int(penetration_candidates(p, body).size, ==, 0);
   return MUNIT_OK;
 }
 
 static MunitResult test_penetration(const MunitParameter params[], void *data) {
-  rigid_body_t *body = make_tetrahedron(1, 2);
+  hull_t *body = make_tetrahedron(1, 2);
   plane_t p = plane(vector(0, 0, 2), vector(0, 0, 1));
   munit_assert_int(penetration_candidates(p, body).size, ==, 3);
   return MUNIT_OK;
 }
 
 static MunitResult test_separating_plane(const MunitParameter params[], void *data) {
-  rigid_body_t *cube = make_cube(0, 0, 0);
-  rigid_body_t *tetrahedron = make_tetrahedron(2, 4);
+  hull_t *cube = make_cube(0, 0, 0);
+  hull_t *tetrahedron = make_tetrahedron(2, 4);
   double distance;
   plane_t result = separating_plane(cube, tetrahedron, &distance);
   munit_assert_double(distance, ==, 2.0);
@@ -319,8 +319,8 @@ static MunitResult test_separating_plane(const MunitParameter params[], void *da
 }
 
 static MunitResult test_separating_plane2(const MunitParameter params[], void *data) {
-  rigid_body_t *tetrahedron = make_tetrahedron(2, 0);
-  rigid_body_t *cube = make_cube(0, 0, 4);
+  hull_t *tetrahedron = make_tetrahedron(2, 0);
+  hull_t *cube = make_cube(0, 0, 4);
   double distance;
   plane_t result = separating_plane(tetrahedron, cube, &distance);
   munit_assert_double(distance, ==, 2.0);
@@ -332,8 +332,8 @@ static MunitResult test_separating_plane2(const MunitParameter params[], void *d
 }
 
 static MunitResult test_separating_plane3(const MunitParameter params[], void *data) {
-  rigid_body_t *cube1 = make_rotated_cube1(0);
-  rigid_body_t *cube2 = make_rotated_cube2(4);
+  hull_t *cube1 = make_rotated_cube1(0);
+  hull_t *cube2 = make_rotated_cube2(4);
   double distance;
   plane_t result = separating_plane(cube1, cube2, &distance);
   munit_assert_double(distance, ==, 2.0);
@@ -345,8 +345,8 @@ static MunitResult test_separating_plane3(const MunitParameter params[], void *d
 }
 
 static MunitResult test_contact_points(const MunitParameter params[], void *data) {
-  rigid_body_t *cube1 = make_cube(0, 0, 0);
-  rigid_body_t *cube2 = make_cube(1, 1, 1.9);
+  hull_t *cube1 = make_cube(0, 0, 0);
+  hull_t *cube2 = make_cube(1, 1, 1.9);
   double distance;
   vector_t normal;
   list_t points = contact_points(cube1, cube2, &distance, &normal);
@@ -371,8 +371,8 @@ static MunitResult test_contact_points(const MunitParameter params[], void *data
 }
 
 static MunitResult test_contact_points2(const MunitParameter params[], void *data) {
-  rigid_body_t *cube1 = make_rotated_cube1(0);
-  rigid_body_t *cube2 = make_rotated_cube2(2);
+  hull_t *cube1 = make_rotated_cube1(0);
+  hull_t *cube2 = make_rotated_cube2(2);
   double distance;
   vector_t normal;
   list_t points = contact_points(cube1, cube2, &distance, &normal);
@@ -388,16 +388,16 @@ static MunitResult test_contact_points2(const MunitParameter params[], void *dat
 }
 
 static MunitResult test_empty_objects(const MunitParameter params[], void *data) {
-  rigid_body_t *body1 = make_rigid_body();
-  rigid_body_t *body2 = make_rigid_body();
+  hull_t *body1 = make_hull();
+  hull_t *body2 = make_hull();
   list_t points = contact_points(body1, body2, NULL, NULL);
   munit_assert_int(points.size, ==, 0);
   return MUNIT_OK;
 }
 
 static MunitResult test_no_contact(const MunitParameter params[], void *data) {
-  rigid_body_t *cube1 = make_cube(0, 0, 0);
-  rigid_body_t *cube2 = make_cube(0, 0, 3);
+  hull_t *cube1 = make_cube(0, 0, 0);
+  hull_t *cube2 = make_cube(0, 0, 3);
   double distance;
   vector_t normal;
   list_t points = contact_points(cube1, cube2, &distance, &normal);
@@ -407,8 +407,8 @@ static MunitResult test_no_contact(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_transform(const MunitParameter params[], void *data) {
-  rigid_body_t *body = make_cube(0, 0, 0);
-  rigid_body_t *result = transform_body(body, quaternion_rotation(M_PI / 2, vector(1, 0, 0)), vector(1, 2, 3));
+  hull_t *body = make_cube(0, 0, 0);
+  hull_t *result = transform_body(body, quaternion_rotation(M_PI / 2, vector(1, 0, 0)), vector(1, 2, 3));
   list_t points = result->points;
   munit_assert_memory_equal(sizeof(list_t), &result->edges, &body->edges);
   munit_assert_memory_equal(sizeof(list_t), &result->faces, &body->faces);
@@ -422,8 +422,8 @@ static MunitResult test_transform(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_contacts(const MunitParameter params[], void *data) {
-  rigid_body_t *cube1 = make_cube(0, 0, 0);
-  rigid_body_t *cube2 = make_cube(1, 1, 1.9);
+  hull_t *cube1 = make_cube(0, 0, 0);
+  hull_t *cube2 = make_cube(1, 1, 1.9);
   state_t *s1 = state(vector(0, 0, 0), vector(0, 0, 0.1), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector(1, 1, 1.9), vector(0, 0, -0.1), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   list_t contacts_ = contacts(2, 3, cube1, cube2, 0, 1, s1, s2);
@@ -442,7 +442,7 @@ static MunitResult test_contacts(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
-MunitTest test_rigid_body[] = {
+MunitTest test_hull[] = {
   {"/create"           , test_create           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/add_point"        , test_add_point        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/add_face"         , test_add_face         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},

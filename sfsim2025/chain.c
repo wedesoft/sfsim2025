@@ -69,9 +69,9 @@ int main(int argc, char *argv[]) {
   append_forces(&info.forces, forces(vector(0, 0, 0), vector(0, 0, 0)));
   for (int i=0; i<n; i++)
     append_forces(&info.forces, forces(vector(0, -9.81, 0), vector(0, 0, 0)));
-  append_pointer(&info.rigid_bodies, make_rigid_body());
+  append_pointer(&info.rigid_bodies, make_hull());
   for (int i=0; i<n; i++)
-    append_pointer(&info.rigid_bodies, make_rigid_body());
+    append_pointer(&info.rigid_bodies, make_hull());
   append_joint(&info.joints, hinge(0, 1, vector(0, 6370002, 0), vector(0, 1, 0), vector(0, 0, 1), vector(0, 0, 1)));
   for (int i=0; i<n-1; i++)
     append_joint(&info.joints, hinge(i + 1, i + 2, vector(0, -1, 0), vector(0, 1, 0), vector(0, 0, 1), vector(0, 0, 1)));

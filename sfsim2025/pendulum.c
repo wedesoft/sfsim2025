@@ -62,8 +62,8 @@ int main(int argc, char *argv[]) {
   append_body(&info.bodies, body(1.0, inertia_cuboid(1.0, w, h, d)));
   append_forces(&info.forces, forces(vector(0, 9.81, 0), vector(0, 0, 0)));
   append_forces(&info.forces, forces(vector(0, -9.81, 0), vector(0, 0, 0)));
-  append_pointer(&info.rigid_bodies, make_rigid_body());
-  append_pointer(&info.rigid_bodies, make_rigid_body());
+  append_pointer(&info.rigid_bodies, make_hull());
+  append_pointer(&info.rigid_bodies, make_hull());
   append_joint(&info.joints, ball_in_socket(0, 1, vector(0, 6370002, 0), vector(0, 1, 0)));
   bool quit = false;
   while (!quit) {
