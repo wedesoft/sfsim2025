@@ -35,12 +35,28 @@ state_t *state_change(state_t *s, body_t b, forces_t f, vector_t p, vector_t t, 
   return state(position_change, speed_change_, orientation_change, rotation_change_);
 }
 
-static list_t transform_bodies(list_t bodies, list_t states) {
+static inline list_t transform_bodies(list_t bodies, list_t states) {
   list_t result = make_list();
   for (int i=0; i<bodies.size; i++) {
     hull_t *hull = get_pointer(bodies)[i];
     state_t *state = get_pointer(states)[i];
     append_pointer(&result, transform_body(hull, state->orientation, state->position));
+  };
+  return result;
+}
+
+static inline list_t determine_contacts(list_t bodies, list_t states, double restitution, double friction) {
+  list_t result = make_list();
+  for (int i=0; i<bodies.size; i++) {
+    for (int j=i+1; j<bodies.size; j++) {
+      hull_t *body = get_pointer(bodies)[i];
+      hull_t *other = get_pointer(bodies)[j];
+      state_t *state1 = get_pointer(states)[i];
+      state_t *state2 = get_pointer(states)[j];
+      list_t contacts_of_bodies = contacts(i, j, body, other, restitution, friction, state1, state2);
+      for (int c=0; c<contacts_of_bodies.size; c++)
+        append_contact(&result, get_contact(contacts_of_bodies)[c]);
+    };
   };
   return result;
 }
@@ -55,18 +71,7 @@ void *world_change(double time, double dt, void *world_, void *data_) {
   // Rotate and translate the rigid bodies.
   list_t rigid_bodies = transform_bodies(data->rigid_bodies, world->states);
   // Determine all contacts between rigid bodies.
-  list_t contacts_ = make_list();
-  for (int i=0; i<rigid_bodies.size; i++) {
-    for (int j=i+1; j<rigid_bodies.size; j++) {
-      hull_t *body = get_pointer(rigid_bodies)[i];
-      hull_t *other = get_pointer(rigid_bodies)[j];
-      state_t *state1 = get_pointer(world->states)[i];
-      state_t *state2 = get_pointer(world->states)[j];
-      list_t contacts_of_bodies = contacts(i, j, body, other, data->restitution, data->friction, state1, state2);
-      for (int c=0; c<contacts_of_bodies.size; c++)
-        append_contact(&contacts_, get_contact(contacts_of_bodies)[c]);
-    };
-  };
+  list_t contacts_ = determine_contacts(rigid_bodies, world->states, data->restitution, data->friction);
   // Initialise linear and rotational impulses to zero.
   vector_t p[world->states.size]; memset(p, 0, sizeof(p));
   vector_t t[world->states.size]; memset(t, 0, sizeof(t));
