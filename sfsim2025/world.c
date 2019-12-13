@@ -35,6 +35,16 @@ state_t *state_change(state_t *s, body_t b, forces_t f, vector_t p, vector_t t, 
   return state(position_change, speed_change_, orientation_change, rotation_change_);
 }
 
+static list_t transform_bodies(list_t bodies, list_t states) {
+  list_t result = make_list();
+  for (int i=0; i<bodies.size; i++) {
+    hull_t *hull = get_pointer(bodies)[i];
+    state_t *state = get_pointer(states)[i];
+    append_pointer(&result, transform_body(hull, state->orientation, state->position));
+  };
+  return result;
+}
+
 void *world_change(double time, double dt, void *world_, void *data_) {
   world_t *world = world_;
   world_t *result = make_world();
@@ -43,12 +53,7 @@ void *world_change(double time, double dt, void *world_, void *data_) {
   assert(data->forces.size == world->states.size);
   assert(data->rigid_bodies.size == world->states.size);
   // Rotate and translate the rigid bodies.
-  list_t rigid_bodies = make_list();
-  for (int i=0; i<data->rigid_bodies.size; i++) {
-    hull_t * hull = get_pointer(data->rigid_bodies)[i];
-    state_t *state = get_pointer(world->states)[i];
-    append_pointer(&rigid_bodies, transform_body(hull, state->orientation, state->position));
-  };
+  list_t rigid_bodies = transform_bodies(data->rigid_bodies, world->states);
   // Determine all contacts between rigid bodies.
   list_t contacts_ = make_list();
   for (int i=0; i<rigid_bodies.size; i++) {
