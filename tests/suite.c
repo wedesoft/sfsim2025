@@ -1,6 +1,7 @@
 #include <gc.h>
 #include "munit.h"
 #include "test_contact.h"
+#include "test_force.h"
 #include "test_joint.h"
 #include "test_large_matrix.h"
 #include "test_large_vector.h"
@@ -33,6 +34,7 @@ static MunitSuite test_sfsim[] = {
   {"/contact"             , test_contact             , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/joint"               , test_joint               , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/world"               , test_world               , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/force"               , test_force               , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {NULL                   , NULL                     , NULL, 0, MUNIT_SUITE_OPTION_NONE}
 };
 
