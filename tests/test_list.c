@@ -198,6 +198,22 @@ static MunitResult test_get_body(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_append_force(const MunitParameter params[], void *data) {
+  force_t f = gravitation(0, 1);
+  list_t list = make_list();
+  append_force(&list, f);
+  munit_assert_int(list.size, ==, 1);
+  return MUNIT_OK;
+}
+
+static MunitResult test_get_force(const MunitParameter params[], void *data) {
+  force_t f = gravitation(0, 1);
+  list_t list = make_list();
+  append_force(&list, f);
+  munit_assert_int(get_force(list)[0].j, ==, 1);
+  return MUNIT_OK;
+}
+
 static MunitResult test_append_forces(const MunitParameter params[], void *data) {
   forces_t f = forces(vector(2, 3, 5), vector(3, 5, 7));
   list_t list = make_list();
@@ -257,6 +273,8 @@ MunitTest test_list[] = {
   {"/get_contact"      , test_get_contact      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/append_body"      , test_append_body      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/get_body"         , test_get_body         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/append_force"     , test_append_force     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/get_force"        , test_get_force        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/append_forces"    , test_append_forces    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/get_forces"       , test_get_forces       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/append_joint"     , test_append_joint     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},

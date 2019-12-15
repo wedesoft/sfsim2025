@@ -5,6 +5,7 @@
 #include "coordinate.h"
 #include "edge.h"
 #include "face.h"
+#include "force.h"
 #include "forces.h"
 #include "joint.h"
 #include "vector.h"
@@ -101,6 +102,15 @@ static inline void append_body(list_t *list, body_t value) {
 
 static inline body_t *get_body(list_t list) {
   return (body_t *)list.element;
+}
+
+static inline void append_force(list_t *list, force_t value) {
+  grow_list(list, sizeof(force_t), true);
+  ((force_t *)list->element)[list->size++] = value;
+}
+
+static inline force_t *get_force(list_t list) {
+  return (force_t *)list.element;
 }
 
 static inline void append_forces(list_t *list, forces_t value) {
