@@ -26,8 +26,8 @@ static inline state_t *state(vector_t position, vector_t speed, quaternion_t ori
 void *add_states(void *a_, void *b_);
 
 // Compute change of speed given the forces acting on the body.
-static inline vector_t speed_change(forces_t forces, body_t body, vector_t impulse, double dt) {
-  return vector_add(vector_scale(impulse, 1 / body.mass), vector_scale(forces.force, dt / body.mass));
+static inline vector_t speed_change(body_t body, vector_t force, vector_t impulse, double dt) {
+  return vector_add(vector_scale(impulse, 1 / body.mass), vector_scale(force, dt / body.mass));
 }
 
 static inline vector_t rotation_change(state_t *state, forces_t forces, body_t body, vector_t angular, double dt) {

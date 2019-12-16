@@ -34,9 +34,8 @@ static MunitResult test_add_states(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_force_changes_speed(const MunitParameter params[], void *data) {
-  forces_t f = forces(vector(2, 3, 5), vector(0, 0, 0));
   body_t b = body(0.5, diagonal(1, 1, 1));
-  vector_t s = speed_change(f, b, vector(0, 0, 0), 3);
+  vector_t s = speed_change(b, vector(2, 3, 5), vector(0, 0, 0), 3);
   munit_assert_double(s.x, ==, 12);
   munit_assert_double(s.y, ==, 18);
   munit_assert_double(s.z, ==, 30);
@@ -44,9 +43,8 @@ static MunitResult test_force_changes_speed(const MunitParameter params[], void 
 }
 
 static MunitResult test_impulse_changes_speed(const MunitParameter params[], void *data) {
-  forces_t f = forces(vector(0, 0, 0), vector(0, 0, 0));
   body_t b = body(0.5, diagonal(1, 1, 1));
-  vector_t s = speed_change(f, b, vector(2, 3, 5), 3);
+  vector_t s = speed_change(b, vector(0, 0, 0), vector(2, 3, 5), 3);
   munit_assert_double(s.x, ==,  4);
   munit_assert_double(s.y, ==,  6);
   munit_assert_double(s.z, ==, 10);

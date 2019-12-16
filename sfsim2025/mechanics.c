@@ -19,7 +19,7 @@ void *runge_kutta(void *y0, double dt, void *f(double, double, void *, void *), 
 
 // Predict speed and rotation for next time step.
 state_t *predict(state_t *s, body_t b, forces_t f, vector_t p, vector_t t, double dt) {
-  vector_t speed = vector_add(s->speed, speed_change(f, b, p, dt));
+  vector_t speed = vector_add(s->speed, speed_change(b, f.force, p, dt));
   vector_t rotation = vector_add(s->rotation, rotation_change(s, f, b, t, dt));
   return state(s->position, speed, s->orientation, rotation);
 }
