@@ -37,4 +37,4 @@ static inline matrix_t inertia_sphere(double mass, double radius) {
   return diagonal(i, i, i);
 }
 
-state_t *predict(state_t *s, body_t b, forces_t f, vector_t p, vector_t t, double dt);
+state_t *predict(state_t *s, body_t b, forces_t f, vector_t linear_impulse, vector_t angular_impulse, double dt);

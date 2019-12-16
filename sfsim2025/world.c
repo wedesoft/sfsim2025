@@ -94,10 +94,10 @@ void *world_change(double time, double dt, void *world_, void *data_) {
       state_t *s2 = get_pointer(world->states)[j];
       body_t body1 = get_body(data->bodies)[i];
       body_t body2 = get_body(data->bodies)[j];
-      forces_t forces1 = get_forces(data->forces)[i];
-      forces_t forces2 = get_forces(data->forces)[j];
-      state_t *prediction1 = predict(s1, body1, forces1, linear_impulse[i], angular_impulse[i], dt);
-      state_t *prediction2 = predict(s2, body2, forces2, linear_impulse[j], angular_impulse[j], dt);
+      forces_t f1 = get_forces(data->forces)[i];
+      forces_t f2 = get_forces(data->forces)[j];
+      state_t *prediction1 = predict(s1, body1, f1, linear_impulse[i], angular_impulse[i], dt);
+      state_t *prediction2 = predict(s2, body2, f2, linear_impulse[j], angular_impulse[j], dt);
       vector_t p1; vector_t p2; vector_t t1; vector_t t2;
       joint_impulse(body1, body2, joint, prediction1, prediction2, &p1, &p2, &t1, &t2);
       linear_impulse[i] = vector_add(linear_impulse[i], p1);
@@ -116,15 +116,15 @@ void *world_change(double time, double dt, void *world_, void *data_) {
         state_t *s2 = get_pointer(world->states)[j];
         body_t body1 = get_body(data->bodies)[i];
         body_t body2 = get_body(data->bodies)[j];
-        forces_t forces1 = get_forces(data->forces)[i];
-        forces_t forces2 = get_forces(data->forces)[j];
+        forces_t f1 = get_forces(data->forces)[i];
+        forces_t f2 = get_forces(data->forces)[j];
         // Update contact impulse
         linear_impulse[i] = vector_subtract(linear_impulse[i], l_i_contact1[k]);
         linear_impulse[j] = vector_subtract(linear_impulse[j], l_i_contact2[k]);
         angular_impulse[i] = vector_subtract(angular_impulse[i], a_i_contact1[k]);
         angular_impulse[j] = vector_subtract(angular_impulse[j], a_i_contact2[k]);
-        state_t *contact_prediction1 = predict(s1, body1, forces1, linear_impulse[i], angular_impulse[i], dt);
-        state_t *contact_prediction2 = predict(s2, body2, forces2, linear_impulse[j], angular_impulse[j], dt);
+        state_t *contact_prediction1 = predict(s1, body1, f1, linear_impulse[i], angular_impulse[i], dt);
+        state_t *contact_prediction2 = predict(s2, body2, f2, linear_impulse[j], angular_impulse[j], dt);
         double contact_lambda;
         contact_impulse(body1, body2, contact_prediction1, contact_prediction2, c, dt == 0.0,
                         &l_i_contact1[k], &l_i_contact2[k], &a_i_contact1[k], &a_i_contact2[k], &contact_lambda);
@@ -137,8 +137,8 @@ void *world_change(double time, double dt, void *world_, void *data_) {
         linear_impulse[j] = vector_subtract(linear_impulse[j], l_i_friction2[k]);
         angular_impulse[i] = vector_subtract(angular_impulse[i], a_i_friction1[k]);
         angular_impulse[j] = vector_subtract(angular_impulse[j], a_i_friction2[k]);
-        state_t *friction_prediction1 = predict(s1, body1, forces1, linear_impulse[i], angular_impulse[i], dt);
-        state_t *friction_prediction2 = predict(s2, body2, forces2, linear_impulse[j], angular_impulse[j], dt);
+        state_t *friction_prediction1 = predict(s1, body1, f1, linear_impulse[i], angular_impulse[i], dt);
+        state_t *friction_prediction2 = predict(s2, body2, f2, linear_impulse[j], angular_impulse[j], dt);
         friction_impulse(body1, body2, friction_prediction1, friction_prediction2, c,
                          &l_i_friction1[k], &l_i_friction2[k], &a_i_friction1[k], &a_i_friction2[k], contact_lambda);
         linear_impulse[i] = vector_add(linear_impulse[i], l_i_friction1[k]);
