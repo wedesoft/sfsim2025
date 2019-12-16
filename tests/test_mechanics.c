@@ -83,8 +83,7 @@ static MunitResult test_inertia_sphere(const MunitParameter params[], void *data
 static MunitResult test_predict_speed(const MunitParameter params[], void *data) {
   body_t b = body(0.25, diagonal(1, 1, 1));
   state_t *s = state(vector(1, 2, 3), vector(3, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  forces_t f = forces(vector(1, 0, 0), vector(0, 0, 0));
-  state_t *result = predict(s, b, f, vector(0, 0, 0), vector(0, 0, 0), 0.5);
+  state_t *result = predict(s, b, vector(1, 0, 0), vector(0, 0, 0), vector(0, 0, 0), vector(0, 0, 0), 0.5);
   munit_assert_double(result->position.x, ==, 1);
   munit_assert_double(result->position.y, ==, 2);
   munit_assert_double(result->position.z, ==, 3);
@@ -97,8 +96,7 @@ static MunitResult test_predict_speed(const MunitParameter params[], void *data)
 static MunitResult test_consider_linear_impulse(const MunitParameter params[], void *data) {
   body_t b = body(0.25, diagonal(1, 1, 1));
   state_t *s = state(vector(1, 2, 3), vector(3, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  forces_t f = forces(vector(0, 0, 0), vector(0, 0, 0));
-  state_t *result = predict(s, b, f, vector(1, 0, 0), vector(0, 0, 0), 0.5);
+  state_t *result = predict(s, b, vector(0, 0, 0), vector(0, 0, 0), vector(1, 0, 0), vector(0, 0, 0), 0.5);
   munit_assert_double(result->speed.x, ==, 7);
   munit_assert_double(result->speed.y, ==, 0);
   munit_assert_double(result->speed.z, ==, 0);
@@ -108,8 +106,7 @@ static MunitResult test_consider_linear_impulse(const MunitParameter params[], v
 static MunitResult test_predict_rotation(const MunitParameter params[], void *data) {
   body_t b = body(1, diagonal(1, 1, 1));
   state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(2, 0, 0));
-  forces_t f = forces(vector(0, 0, 0), vector(3, 0, 0));
-  state_t *result = predict(s, b, f, vector(0, 0, 0), vector(0, 0, 0), 0.5);
+  state_t *result = predict(s, b, vector(0, 0, 0), vector(3, 0, 0), vector(0, 0, 0), vector(0, 0, 0), 0.5);
   munit_assert_double(result->orientation.a, ==, 1);
   munit_assert_double(result->orientation.b, ==, 0);
   munit_assert_double(result->orientation.c, ==, 0);
@@ -123,8 +120,7 @@ static MunitResult test_predict_rotation(const MunitParameter params[], void *da
 static MunitResult test_consider_angular_impulse(const MunitParameter params[], void *data) {
   body_t b = body(1, diagonal(1, 1, 1));
   state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(2, 0, 0));
-  forces_t f = forces(vector(0, 0, 0), vector(0, 0, 0));
-  state_t *result = predict(s, b, f, vector(0, 0, 0), vector(3, 0, 0), 0.5);
+  state_t *result = predict(s, b, vector(0, 0, 0), vector(0, 0, 0), vector(0, 0, 0), vector(3, 0, 0), 0.5);
   munit_assert_double(result->rotation.x, ==, 5);
   munit_assert_double(result->rotation.y, ==, 0);
   munit_assert_double(result->rotation.z, ==, 0);

@@ -37,4 +37,10 @@ static inline matrix_t inertia_sphere(double mass, double radius) {
   return diagonal(i, i, i);
 }
 
-state_t *predict(state_t *s, body_t b, forces_t f, vector_t linear_impulse, vector_t angular_impulse, double dt);
+// Predict speed and rotation for next time step using specified forces and impulses.
+static inline state_t *predict(state_t *s, body_t b, vector_t force, vector_t torque,
+                               vector_t linear_impulse, vector_t angular_impulse, double dt) {
+  vector_t speed = vector_add(s->speed, speed_change(b, force, linear_impulse, dt));
+  vector_t rotation = vector_add(s->rotation, rotation_change(s, b, torque, angular_impulse, dt));
+  return state(s->position, speed, s->orientation, rotation);
+}
