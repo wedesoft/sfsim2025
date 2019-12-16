@@ -27,11 +27,11 @@ void *add_worlds(void *a_, void *b_) {
   return result;
 }
 
-state_t *state_change(state_t *s, body_t b, forces_t f, vector_t p, vector_t t, double dt) {
+state_t *state_change(state_t *s, body_t b, forces_t f, vector_t linear_impulse, vector_t angular_impulse, double dt) {
   vector_t position_change = vector_scale(s->speed, dt);
-  vector_t speed_change_ = speed_change(f, b, p, dt);
+  vector_t speed_change_ = speed_change(f, b, linear_impulse, dt);
   quaternion_t orientation_change = quaternion_product(vector_to_quaternion(vector_scale(s->rotation, 0.5 * dt)), s->orientation);
-  vector_t rotation_change_ = rotation_change(s, f, b, t, dt);
+  vector_t rotation_change_ = rotation_change(s, f, b, angular_impulse, dt);
   return state(position_change, speed_change_, orientation_change, rotation_change_);
 }
 
@@ -140,7 +140,7 @@ void *world_change(double time, double dt, void *world_, void *data_) {
         state_t *friction_prediction1 = predict(s1, body1, forces1, linear_impulse[i], angular_impulse[i], dt);
         state_t *friction_prediction2 = predict(s2, body2, forces2, linear_impulse[j], angular_impulse[j], dt);
         friction_impulse(body1, body2, friction_prediction1, friction_prediction2, c,
-                        &l_i_friction1[k], &l_i_friction2[k], &a_i_friction1[k], &a_i_friction2[k], contact_lambda);
+                         &l_i_friction1[k], &l_i_friction2[k], &a_i_friction1[k], &a_i_friction2[k], contact_lambda);
         linear_impulse[i] = vector_add(linear_impulse[i], l_i_friction1[k]);
         linear_impulse[j] = vector_add(linear_impulse[j], l_i_friction2[k]);
         angular_impulse[i] = vector_add(angular_impulse[i], a_i_friction1[k]);

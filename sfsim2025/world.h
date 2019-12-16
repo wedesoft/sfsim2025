@@ -45,6 +45,6 @@ static inline world_info_t make_world_info(void) {
   return result;
 }
 
-state_t *state_change(state_t *s, body_t b, forces_t f, vector_t p, vector_t t, double dt);
+state_t *state_change(state_t *s, body_t b, forces_t f, vector_t linear_impulse, vector_t angular_impulse, double dt);
 
 void *world_change(double time, double dt, void *world_, void *data_);
