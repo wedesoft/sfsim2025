@@ -54,8 +54,7 @@ static MunitResult test_impulse_changes_speed(const MunitParameter params[], voi
 static MunitResult test_torque_changes_rotation(const MunitParameter params[], void *data) {
   state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   body_t b = body(1, diagonal(1, 2, 2));
-  forces_t f = forces(vector(0, 0, 0), vector(1, 2, 3));
-  vector_t r = rotation_change(s, f, b, vector(0, 0, 0), 3);
+  vector_t r = rotation_change(s, b, vector(1, 2, 3), vector(0, 0, 0), 3);
   munit_assert_double(r.x, ==, 3);
   munit_assert_double(r.y, ==, 3);
   munit_assert_double(r.z, ==, 4.5);
@@ -65,8 +64,7 @@ static MunitResult test_torque_changes_rotation(const MunitParameter params[], v
 static MunitResult test_angular_impulse(const MunitParameter params[], void *data) {
   state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   body_t b = body(1, diagonal(1, 2, 2));
-  forces_t f = forces(vector(0, 0, 0), vector(0, 0, 0));
-  vector_t r = rotation_change(s, f, b, vector(1, 2, 3), 3);
+  vector_t r = rotation_change(s, b, vector(0, 0, 0), vector(1, 2, 3), 3);
   munit_assert_double(r.x, ==, 1);
   munit_assert_double(r.y, ==, 1);
   munit_assert_double(r.z, ==, 1.5);
@@ -76,8 +74,7 @@ static MunitResult test_angular_impulse(const MunitParameter params[], void *dat
 static MunitResult test_euler(const MunitParameter params[], void *data) {
   state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(1, 1, 1));
   body_t b = body(1, diagonal(1, 2, 4));
-  forces_t f = forces(vector(0, 0, 0), vector(0, 0, 0));
-  vector_t r = rotation_change(s, f, b, vector(0, 0, 0), 2);
+  vector_t r = rotation_change(s, b, vector(0, 0, 0), vector(0, 0, 0), 2);
   munit_assert_double(r.x, ==, -4);
   munit_assert_double(r.y, ==,  3);
   munit_assert_double(r.z, ==, -0.5);
@@ -87,8 +84,7 @@ static MunitResult test_euler(const MunitParameter params[], void *data) {
 static MunitResult test_consider_orientation(const MunitParameter params[], void *data) {
   state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion_rotation(M_PI / 2, vector(1, 0, 0)), vector(0, 0, 0));
   body_t b = body(1, diagonal(1, 2, 4));
-  forces_t f = forces(vector(0, 0, 0), vector(1, 2, 3));
-  vector_t r = rotation_change(s, f, b, vector(0, 0, 0), 3);
+  vector_t r = rotation_change(s, b, vector(1, 2, 3), vector(0, 0, 0), 3);
   munit_assert_double_equal(r.x, 3  , 6);
   munit_assert_double_equal(r.y, 1.5, 6);
   munit_assert_double_equal(r.z, 4.5, 6);

@@ -31,7 +31,7 @@ state_t *state_change(state_t *s, body_t b, forces_t f, vector_t linear_impulse,
   vector_t position_change = vector_scale(s->speed, dt);
   vector_t speed_change_ = speed_change(b, f.force, linear_impulse, dt);
   quaternion_t orientation_change = quaternion_product(vector_to_quaternion(vector_scale(s->rotation, 0.5 * dt)), s->orientation);
-  vector_t rotation_change_ = rotation_change(s, f, b, angular_impulse, dt);
+  vector_t rotation_change_ = rotation_change(s, b, f.torque, angular_impulse, dt);
   return state(position_change, speed_change_, orientation_change, rotation_change_);
 }
 
