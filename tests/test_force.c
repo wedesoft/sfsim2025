@@ -25,8 +25,23 @@ static MunitResult test_exert_gravitation(const MunitParameter params[], void *d
   return MUNIT_OK;
 }
 
+static MunitResult test_fixed(const MunitParameter params[], void *data) {
+  force_t f = fixed_force(3, vector(1, 2, 3), vector(4, 5, 6));
+  munit_assert_int(f.force_type, ==, FIXED_FORCE);
+  munit_assert_int(f.i, ==, 3);
+  munit_assert_int(f.j, ==, 3);
+  munit_assert_double(f.fixed_force.force.x, ==, 1);
+  munit_assert_double(f.fixed_force.force.y, ==, 2);
+  munit_assert_double(f.fixed_force.force.z, ==, 3);
+  munit_assert_double(f.fixed_force.torque.x, ==, 4);
+  munit_assert_double(f.fixed_force.torque.y, ==, 5);
+  munit_assert_double(f.fixed_force.torque.z, ==, 6);
+  return MUNIT_OK;
+}
+
 MunitTest test_force[] = {
   {"/gravitation"      , test_gravitation      , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/exert_gravitation", test_exert_gravitation, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/fixed"            , test_fixed            , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                , NULL                  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
