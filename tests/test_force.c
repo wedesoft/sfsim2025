@@ -22,10 +22,12 @@ static MunitResult test_exert_gravitation(const MunitParameter params[], void *d
   exert_force(body1, body2, f, state1, state2, &force1, &force2, &tau1, &tau2);
   munit_assert_double_equal(force1.y, +9.82, 3);
   munit_assert_double_equal(force2.y, -9.82, 3);
+  munit_assert_double(tau1.x, ==, 0);
+  munit_assert_double(tau2.x, ==, 0);
   return MUNIT_OK;
 }
 
-static MunitResult test_fixed(const MunitParameter params[], void *data) {
+static MunitResult test_fixed_force(const MunitParameter params[], void *data) {
   force_t f = fixed_force(3, vector(1, 2, 3), vector(4, 5, 6));
   munit_assert_int(f.force_type, ==, FIXED_FORCE);
   munit_assert_int(f.i, ==, 3);
@@ -39,9 +41,23 @@ static MunitResult test_fixed(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_exert_fixed_force(const MunitParameter params[], void *data) {
+  force_t f = fixed_force(3, vector(1, 2, 3), vector(4, 5, 6));
+  body_t b = body(1, inertia_sphere(1, 1));
+  state_t *s = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  vector_t force1; vector_t tau1; vector_t force2; vector_t tau2;
+  exert_force(b, b, f, s, s, &force1, &force2, &tau1, &tau2);
+  munit_assert_double(force1.x, ==, 1);
+  munit_assert_double(tau1.x, ==, 4);
+  munit_assert_double(force2.x, ==, 0);
+  munit_assert_double(tau2.x, ==, 0);
+  return MUNIT_OK;
+}
+
 MunitTest test_force[] = {
   {"/gravitation"      , test_gravitation      , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/exert_gravitation", test_exert_gravitation, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/fixed"            , test_fixed            , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/fixed_force"      , test_fixed_force      , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/exert_fixed_force", test_exert_fixed_force, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                , NULL                  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
