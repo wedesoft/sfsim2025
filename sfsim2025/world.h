@@ -25,7 +25,6 @@ typedef struct {
   double friction;
   double resting_threshold;
   list_t bodies;
-  list_t force;
   list_t forces;
   list_t rigid_bodies;
   list_t joints;
@@ -38,7 +37,6 @@ static inline world_info_t make_world_info(void) {
   result.friction = 0.5;
   result.resting_threshold = 0.2;
   result.bodies = make_list();
-  result.force = make_list();
   result.forces = make_list();
   result.rigid_bodies = make_list();
   result.joints = make_list();

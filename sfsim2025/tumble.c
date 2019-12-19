@@ -60,7 +60,6 @@ int main(int argc, char *argv[]) {
   append_pointer(&world->states, state(vector(0, 0, -4), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0.4, 0.1, 4)));
   info = make_world_info();
   append_body(&info.bodies, body(1, inertia_cuboid(1, w, h, d)));
-  append_forces(&info.forces, forces(vector(0, 0, 0), vector(0, 0, 0)));
   append_pointer(&info.rigid_bodies, make_hull());
   clock_gettime(CLOCK_REALTIME, &t0);
   bool quit = false;

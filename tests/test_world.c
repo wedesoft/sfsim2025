@@ -48,7 +48,7 @@ static MunitResult test_add_states(const MunitParameter params[], void *data) {
 static world_info_t world_info(void) {
   world_info_t result = make_world_info();
   append_body(&result.bodies, body(2.0, diagonal(1, 1, 1)));
-  append_forces(&result.forces, forces(vector(1, 2, 3), vector(0, 0, 0)));
+  append_force(&result.forces, fixed_force(0, vector(1, 2, 3), vector(0, 0, 0)));
   append_pointer(&result.rigid_bodies, make_hull());
   return result;
 }
@@ -80,7 +80,7 @@ static MunitResult test_speed_change(const MunitParameter params[], void *data) 
 static world_info_t world_info2(void) {
   world_info_t result = make_world_info();
   append_body(&result.bodies, body(1.0, diagonal(1, 2, 2)));
-  append_forces(&result.forces, forces(vector(1, 2, 3), vector(1, 2, 3)));
+  append_force(&result.forces, fixed_force(0, vector(1, 2, 3), vector(1, 2, 3)));
   append_pointer(&result.rigid_bodies, make_hull());
   return result;
 }
@@ -100,7 +100,7 @@ static MunitResult test_rotation(const MunitParameter params[], void *data) {
 static world_info_t world_info3(void) {
   world_info_t result = make_world_info();
   append_body(&result.bodies, body(1.0, diagonal(1, 1, 1)));
-  append_forces(&result.forces, forces(vector(1, 2, 3), vector(1, 2, 3)));
+  append_force(&result.forces, fixed_force(0, vector(1, 2, 3), vector(1, 2, 3)));
   append_pointer(&result.rigid_bodies, make_hull());
   return result;
 }
@@ -118,7 +118,6 @@ static MunitResult test_orientation_change(const MunitParameter params[], void *
 static world_info_t world_info4(void) {
   world_info_t result = make_world_info();
   append_body(&result.bodies, body(1.0, diagonal(1, 2, 4)));
-  append_forces(&result.forces, forces(vector(0, 0, 0), vector(0, 0, 0)));
   append_pointer(&result.rigid_bodies, make_hull());
   return result;
 }
@@ -148,10 +147,8 @@ static MunitResult test_consider_orientation(const MunitParameter params[], void
 static world_info_t world_info5(void) {
   world_info_t result = make_world_info();
   append_body(&result.bodies, body(1.0, diagonal(1, 1, 1)));
-  append_forces(&result.forces, forces(vector(0, 0, 0), vector(0, 0, 0)));
   append_pointer(&result.rigid_bodies, make_hull());
   append_body(&result.bodies, body(1.0, diagonal(1, 1, 1)));
-  append_forces(&result.forces, forces(vector(0, 0, 0), vector(0, 0, 0)));
   append_pointer(&result.rigid_bodies, make_hull());
   append_joint(&result.joints, ball_in_socket(0, 1, vector(2, 0, 0), vector(-2, 0, 0)));
   return result;
@@ -205,10 +202,9 @@ static world_info_t world_info6(void) {
   result.restitution = 0.5;
   result.friction = 0.4;
   append_body(&result.bodies, body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000)));
-  append_forces(&result.forces, forces(vector(0, 0, 0), vector(0, 0, 0)));
   append_pointer(&result.rigid_bodies, make_cube(6370000, 6370000, 6370000));
   append_body(&result.bodies, body(1.0, inertia_cuboid(1.0, 1, 1, 1)));
-  append_forces(&result.forces, forces(vector(0, -9.81, 0), vector(0, 0, 0)));
+  append_force(&result.forces, gravitation(0, 1));
   append_pointer(&result.rigid_bodies, make_cube(0.5, 0.5, 0.5));
   return result;
 }

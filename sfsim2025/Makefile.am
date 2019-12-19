@@ -2,7 +2,7 @@ noinst_PROGRAMS = tumble pendulum chain collide
 
 lib_LTLIBRARIES = libsfsim2025.la
 
-pkginclude_HEADERS = body.h contact.h coordinate.h edge.h face.h force.h forces.h joint.h large_matrix.h large_vector.h list.h \
+pkginclude_HEADERS = body.h contact.h coordinate.h edge.h face.h force.h joint.h large_matrix.h large_vector.h list.h \
 										 matrix.h matrix43.h mechanics.h plane.h polygon.h quaternion.h hull.h state.h vector.h world.h
 
 libsfsim2025_la_SOURCES = contact.c force.c joint.c large_matrix.c large_vector.c list.c matrix.c mechanics.c plane.c polygon.c \

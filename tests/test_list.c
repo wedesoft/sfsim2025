@@ -214,22 +214,6 @@ static MunitResult test_get_force(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
-static MunitResult test_append_forces(const MunitParameter params[], void *data) {
-  forces_t f = forces(vector(2, 3, 5), vector(3, 5, 7));
-  list_t list = make_list();
-  append_forces(&list, f);
-  munit_assert_int(list.size, ==, 1);
-  return MUNIT_OK;
-}
-
-static MunitResult test_get_forces(const MunitParameter params[], void *data) {
-  forces_t f = forces(vector(2, 3, 5), vector(3, 5, 7));
-  list_t list = make_list();
-  append_forces(&list, f);
-  munit_assert_double(get_forces(list)[0].force.x, ==, 2);
-  return MUNIT_OK;
-}
-
 static MunitResult test_append_joint(const MunitParameter params[], void *data) {
   joint_t f = ball_in_socket(1, 2, vector(2, 3, 5), vector(3, 5, 7));
   list_t list = make_list();
@@ -275,8 +259,6 @@ MunitTest test_list[] = {
   {"/get_body"         , test_get_body         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/append_force"     , test_append_force     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/get_force"        , test_get_force        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/append_forces"    , test_append_forces    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/get_forces"       , test_get_forces       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/append_joint"     , test_append_joint     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/get_joint"        , test_get_joint        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                , NULL                  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}

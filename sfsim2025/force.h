@@ -28,4 +28,4 @@ static inline force_t fixed_force(int i, vector_t force, vector_t torque) {
 }
 
 void exert_force(body_t body1, body_t body2, force_t force, state_t *state1, state_t *state2,
-                 vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2);
+                 vector_t *force1, vector_t *force2, vector_t *tau1, vector_t *tau2);

@@ -66,9 +66,8 @@ int main(int argc, char *argv[]) {
   append_body(&info.bodies, body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000)));
   for (int i=0; i<n; i++)
     append_body(&info.bodies, body(1.0, inertia_cuboid(1.0, w, h, d)));
-  append_forces(&info.forces, forces(vector(0, 0, 0), vector(0, 0, 0)));
   for (int i=0; i<n; i++)
-    append_forces(&info.forces, forces(vector(0, -9.81, 0), vector(0, 0, 0)));
+    append_force(&info.forces, gravitation(0, i + 1));
   append_pointer(&info.rigid_bodies, make_hull());
   for (int i=0; i<n; i++)
     append_pointer(&info.rigid_bodies, make_hull());

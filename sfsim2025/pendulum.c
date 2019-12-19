@@ -60,8 +60,7 @@ int main(int argc, char *argv[]) {
   info = make_world_info();
   append_body(&info.bodies, body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000)));
   append_body(&info.bodies, body(1.0, inertia_cuboid(1.0, w, h, d)));
-  append_forces(&info.forces, forces(vector(0, 9.81, 0), vector(0, 0, 0)));
-  append_forces(&info.forces, forces(vector(0, -9.81, 0), vector(0, 0, 0)));
+  append_force(&info.forces, gravitation(0, 1));
   append_pointer(&info.rigid_bodies, make_hull());
   append_pointer(&info.rigid_bodies, make_hull());
   append_joint(&info.joints, ball_in_socket(0, 1, vector(0, 6370002, 0), vector(0, 1, 0)));

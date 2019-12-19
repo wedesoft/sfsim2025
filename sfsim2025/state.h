@@ -1,7 +1,6 @@
 #pragma once
 #include <gc.h>
 #include "body.h"
-#include "forces.h"
 #include "vector.h"
 #include "quaternion.h"
 

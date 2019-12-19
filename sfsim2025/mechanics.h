@@ -1,7 +1,6 @@
 #pragma once
 #include <gc.h>
 #include "body.h"
-#include "forces.h"
 #include "state.h"
 
 
@@ -12,15 +11,6 @@ void *runge_kutta(void *y0, double dt, void *f(double, double, void *, void *), 
 static inline void *euler(void *y0, double dt, void *f(double, double, void *, void *), void *add(void *, void *),
                           void *scale(void *, double), void *data) {
   return add(y0, f(0, dt, y0, data));
-}
-
-typedef struct {
-  body_t body;
-  forces_t forces;
-} body_info_t;
-
-static inline body_info_t body_info(body_t body, forces_t forces) {
-  return (body_info_t){.body = body, .forces = forces};
 }
 
 // Compute inertial matrix of cuboid.
