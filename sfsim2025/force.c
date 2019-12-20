@@ -20,9 +20,9 @@ static inline void exert_gravitation(body_t body1, body_t body2, state_t *state1
 
 static inline void exert_fixed_force(body_t body1, body_t body2, fixed_force_t fixed_force, state_t *state1, state_t *state2,
                                      vector_t *force1, vector_t *force2, vector_t *tau1, vector_t *tau2) {
-  *force1 = fixed_force.force;
+  *force1 = rotate_vector(state1->orientation, fixed_force.force);
   *force2 = vector(0, 0, 0);
-  *tau1 = fixed_force.torque;
+  *tau1 = rotate_vector(state1->orientation, fixed_force.torque);
   *tau2 = vector(0, 0, 0);
 }
 
