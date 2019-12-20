@@ -65,11 +65,25 @@ static MunitResult test_rotate_fixed_force(const MunitParameter params[], void *
   return MUNIT_OK;
 }
 
+static MunitResult test_spring_damper(const MunitParameter params[], void *data) {
+  force_t f = spring_damper(1, 2, vector(3, 0, 0), vector(4, 0, 0), 5, 6, 7);
+  munit_assert_int(f.force_type, ==, SPRING_DAMPER);
+  munit_assert_int(f.i, ==, 1);
+  munit_assert_int(f.j, ==, 2);
+  munit_assert_double(f.spring_damper.r1.x, ==, 3);
+  munit_assert_double(f.spring_damper.r2.x, ==, 4);
+  munit_assert_double(f.spring_damper.length, ==, 5);
+  munit_assert_double(f.spring_damper.k, ==, 6);
+  munit_assert_double(f.spring_damper.c, ==, 7);
+  return MUNIT_OK;
+}
+
 MunitTest test_force[] = {
   {"/gravitation"       , test_gravitation       , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/exert_gravitation" , test_exert_gravitation , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/fixed_force"       , test_fixed_force       , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/exert_fixed_force" , test_exert_fixed_force , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/rotate_fixed_force", test_rotate_fixed_force, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/spring_damper"     , test_spring_damper     , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                 , NULL                   , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
