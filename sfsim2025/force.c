@@ -35,8 +35,8 @@ static inline void exert_spring_damper(body_t body1, body_t body2, spring_damper
   vector_t force = vector_scale(v, (d - spring_damper.length) * spring_damper.k / d);
   *force1 = force;
   *force2 = vector_negative(force);
-  *tau1 = vector(0, 0, 0);
-  *tau2 = vector(0, 0, 0);
+  *tau1 = cross_product(rotate_vector(state1->orientation, spring_damper.r1), force);
+  *tau2 = cross_product(rotate_vector(state2->orientation, spring_damper.r2), vector_negative(force));
 }
 
 // Compute forces and torques.
