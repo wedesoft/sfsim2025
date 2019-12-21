@@ -26,6 +26,19 @@ static inline void exert_fixed_force(body_t body1, body_t body2, fixed_force_t f
   *tau2 = vector(0, 0, 0);
 }
 
+static inline void exert_spring_damper(body_t body1, body_t body2, spring_damper_t spring_damper, state_t *state1, state_t *state2,
+                                       vector_t *force1, vector_t *force2, vector_t *tau1, vector_t *tau2) {
+  vector_t p1 = transform_point(state1->orientation, state1->position, spring_damper.r1);
+  vector_t p2 = transform_point(state2->orientation, state2->position, spring_damper.r2);
+  vector_t v = vector_subtract(p2, p1);
+  double d = norm(v);
+  vector_t force = vector_scale(v, (d - spring_damper.length) * spring_damper.k / d);
+  *force1 = force;
+  *force2 = vector_negative(force);
+  *tau1 = vector(0, 0, 0);
+  *tau2 = vector(0, 0, 0);
+}
+
 // Compute forces and torques.
 void exert_force(body_t body1, body_t body2, force_t force, state_t *state1, state_t *state2,
                  vector_t *force1, vector_t *force2, vector_t *tau1, vector_t *tau2) {
@@ -35,6 +48,9 @@ void exert_force(body_t body1, body_t body2, force_t force, state_t *state1, sta
       break;
     case FIXED_FORCE:
       exert_fixed_force(body1, body2, force.fixed_force, state1, state2, force1, force2, tau1, tau2);
+      break;
+    case SPRING_DAMPER:
+      exert_spring_damper(body1, body2, force.spring_damper, state1, state2, force1, force2, tau1, tau2);
       break;
     default:
       assert(false);
