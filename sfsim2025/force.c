@@ -28,11 +28,17 @@ static inline void exert_fixed_force(body_t body1, body_t body2, fixed_force_t f
 
 static inline void exert_spring_damper(body_t body1, body_t body2, spring_damper_t spring_damper, state_t *state1, state_t *state2,
                                        vector_t *force1, vector_t *force2, vector_t *tau1, vector_t *tau2) {
-  vector_t p1 = transform_point(state1->orientation, state1->position, spring_damper.r1);
-  vector_t p2 = transform_point(state2->orientation, state2->position, spring_damper.r2);
-  vector_t v = vector_subtract(p2, p1);
-  double d = norm(v);
-  vector_t force = vector_scale(v, (d - spring_damper.length) * spring_damper.k / d);
+  vector_t r1 = rotate_vector(state1->orientation, spring_damper.r1);
+  vector_t r2 = rotate_vector(state2->orientation, spring_damper.r2);
+  vector_t p1 = vector_add(state1->position, r1);
+  vector_t p2 = vector_add(state2->position, r2);
+  vector_t v1 = vector_add(state1->speed, cross_product(state1->rotation, r1));
+  vector_t v2 = vector_add(state2->speed, cross_product(state2->rotation, r2));
+  vector_t d = vector_subtract(p2, p1);
+  vector_t v = vector_subtract(v2, v1);
+  double l = norm(d);
+  double s = inner_product(v, d) / l;
+  vector_t force = vector_scale(d, ((l - spring_damper.length) * spring_damper.k + s * spring_damper.c) / l);
   *force1 = force;
   *force2 = vector_negative(force);
   *tau1 = cross_product(rotate_vector(state1->orientation, spring_damper.r1), force);

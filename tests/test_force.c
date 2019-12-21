@@ -79,7 +79,7 @@ static MunitResult test_spring_damper(const MunitParameter params[], void *data)
 }
 
 static MunitResult test_spring_neutral(const MunitParameter params[], void *data) {
-  force_t f = spring_damper(0, 1, vector(0, 0, 0), vector(0, 0, 0), 5, 10, 2);
+  force_t f = spring_damper(0, 1, vector(0, 0, 0), vector(0, 0, 0), 5, 10, 3);
   body_t body1 = body(1, inertia_sphere(1, 1));
   body_t body2 = body(1, inertia_sphere(1, 1));
   state_t *state1 = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
@@ -93,7 +93,7 @@ static MunitResult test_spring_neutral(const MunitParameter params[], void *data
   return MUNIT_OK;
 }
 static MunitResult test_spring_tension(const MunitParameter params[], void *data) {
-  force_t f = spring_damper(0, 1, vector(0, 0, 0), vector(0, 0, 0), 5, 10, 2);
+  force_t f = spring_damper(0, 1, vector(0, 0, 0), vector(0, 0, 0), 5, 10, 3);
   body_t body1 = body(1, inertia_sphere(1, 1));
   body_t body2 = body(1, inertia_sphere(1, 1));
   state_t *state1 = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
@@ -106,7 +106,7 @@ static MunitResult test_spring_tension(const MunitParameter params[], void *data
 }
 
 static MunitResult test_spring_torque(const MunitParameter params[], void *data) {
-  force_t f = spring_damper(0, 1, vector(0, 1, 0), vector(0, 2, 0), 5, 10, 2);
+  force_t f = spring_damper(0, 1, vector(0, 1, 0), vector(0, 2, 0), 5, 10, 3);
   body_t body1 = body(1, inertia_sphere(1, 1));
   body_t body2 = body(1, inertia_sphere(1, 1));
   state_t *state1 = state(vector(0,  0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
@@ -120,6 +120,19 @@ static MunitResult test_spring_torque(const MunitParameter params[], void *data)
   return MUNIT_OK;
 }
 
+static MunitResult test_damping(const MunitParameter params[], void *data) {
+  force_t f = spring_damper(0, 1, vector(0, 0, 0), vector(0, 0, 0), 5, 10, 3);
+  body_t body1 = body(1, inertia_sphere(1, 1));
+  body_t body2 = body(1, inertia_sphere(1, 1));
+  state_t *state1 = state(vector(0, 0, 0), vector( 1, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  state_t *state2 = state(vector(5, 0, 0), vector(-1, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  vector_t force1; vector_t tau1; vector_t force2; vector_t tau2;
+  exert_force(body1, body2, f, state1, state2, &force1, &force2, &tau1, &tau2);
+  munit_assert_double_equal(force1.x, -6, 6);
+  munit_assert_double_equal(force2.x,  6, 6);
+  return MUNIT_OK;
+}
+
 MunitTest test_force[] = {
   {"/gravitation"       , test_gravitation       , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/exert_gravitation" , test_exert_gravitation , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -130,5 +143,6 @@ MunitTest test_force[] = {
   {"/spring_neutral"    , test_spring_neutral    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/spring_tension"    , test_spring_tension    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/spring_torque"     , test_spring_torque     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/damping"           , test_damping           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                 , NULL                   , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
