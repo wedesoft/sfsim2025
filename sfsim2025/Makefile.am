@@ -1,4 +1,4 @@
-noinst_PROGRAMS = tumble pendulum chain collide spring
+noinst_PROGRAMS = tumble pendulum chain collide spring gear
 
 lib_LTLIBRARIES = libsfsim2025.la
 
@@ -35,3 +35,8 @@ spring_SOURCES = spring.c
 spring_CFLAGS = $(GLEW_CFLAGS) $(GL_CFLAGS) $(ATLAS_CFLAGS) $(BOEHM_CFLAGS) $(SDL_CFLAGS)
 spring_LDFLAGS =
 spring_LDADD = libsfsim2025.la $(GLEW_LIBS) $(GL_LIBS) $(BOEHM_LIBS) $(SDL_LIBS) -lm
+
+gear_SOURCES = gear.c
+gear_CFLAGS = $(GLEW_CFLAGS) $(GL_CFLAGS) $(ATLAS_CFLAGS) $(BOEHM_CFLAGS) $(SDL_CFLAGS)
+gear_LDFLAGS =
+gear_LDADD = libsfsim2025.la $(GLEW_LIBS) $(GL_LIBS) $(BOEHM_LIBS) $(SDL_LIBS) -lm
