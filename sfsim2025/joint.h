@@ -6,7 +6,7 @@
 #include "vector.h"
 
 
-typedef enum {BALL_IN_SOCKET, HINGE} joint_type_t;
+typedef enum {BALL_IN_SOCKET, HINGE, SLIDER} joint_type_t;
 
 typedef struct {
   vector_t r1;
@@ -21,12 +21,20 @@ typedef struct {
 } hinge_t;
 
 typedef struct {
+  vector_t r1;
+  vector_t r2;
+  quaternion_t q1;
+  quaternion_t q2;
+} slider_t;
+
+typedef struct {
   joint_type_t joint_type;
   int i;
   int j;
   union {
     ball_in_socket_t ball_in_socket;
     hinge_t hinge;
+    slider_t slider;
   };
 } joint_t;
 
@@ -36,6 +44,10 @@ static inline joint_t ball_in_socket(int i, int j, vector_t r1, vector_t r2) {
 
 static inline joint_t hinge(int i, int j, vector_t r1, vector_t r2, vector_t s1, vector_t s2) {
   return (joint_t){.joint_type = HINGE, .i = i, .j = j, .hinge.r1 = r1, .hinge.r2 = r2, .hinge.s1 = s1, .hinge.s2 = s2};
+}
+
+static inline joint_t slider(int i, int j, vector_t r1, vector_t r2, quaternion_t q1, quaternion_t q2) {
+  return (joint_t){.joint_type = SLIDER, .i = i, .j = j, .slider.r1 = r1, .slider.r2 = r2, .slider.q1 = q1, .slider.q2 = q2};
 }
 
 large_matrix_t joint_mass(body_t body1, body_t body2, state_t *state1, state_t *state2);
@@ -56,6 +68,8 @@ large_vector_t ball_in_socket_correction(state_t *state1, state_t *state2, ball_
 large_matrix_t hinge_jacobian(state_t *state1, state_t *state2, hinge_t joint);
 
 large_vector_t hinge_correction(state_t *state1, state_t *state2, hinge_t joint);
+
+large_matrix_t slider_jacobian(state_t *state1, state_t *state2, slider_t slider);
 
 void joint_impulse(body_t body1, body_t body2, joint_t joint, state_t *state1, state_t *state2,
                    vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2);

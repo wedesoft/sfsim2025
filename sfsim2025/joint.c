@@ -65,26 +65,6 @@ void correcting_impulse(body_t body1, body_t body2, state_t *state1, state_t *st
   apply_lambda(j, lambda_, impulse1, impulse2, tau1, tau2);
 }
 
-// Determine correcting impulse for a given joint.
-void joint_impulse(body_t body1, body_t body2, joint_t joint, state_t *state1, state_t *state2,
-                   vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2) {
-  large_matrix_t j;
-  large_vector_t b;
-  switch (joint.joint_type) {
-    case BALL_IN_SOCKET:
-      j = ball_in_socket_jacobian(state1, state2, joint.ball_in_socket);
-      b = ball_in_socket_correction(state1, state2, joint.ball_in_socket);
-      break;
-    case HINGE:
-      j = hinge_jacobian(state1, state2, joint.hinge);
-      b = hinge_correction(state1, state2, joint.hinge);
-      break;
-    default:
-      assert(false);
-  };
-  correcting_impulse(body1, body2, state1, state2, j, b, impulse1, impulse2, tau1, tau2);
-}
-
 // Construct Jacobian for ball-in-socket joint.
 // http://image.diku.dk/kenny/download/erleben.05.thesis.pdf
 large_matrix_t ball_in_socket_jacobian(state_t *state1, state_t *state2, ball_in_socket_t joint) {
@@ -114,9 +94,9 @@ large_vector_t ball_in_socket_correction(state_t *state1, state_t *state2, ball_
                                          vector_add(state2->position, rotate_vector(state2->orientation, joint.r2))));
 }
 
-static vector_t hinge_axis(state_t *state1, state_t *state2, hinge_t joint) {
-  vector_t s1 = rotate_vector(state1->orientation, joint.s1);
-  vector_t s2 = rotate_vector(state2->orientation, joint.s2);
+static vector_t hinge_axis(state_t *state1, state_t *state2, hinge_t hinge) {
+  vector_t s1 = rotate_vector(state1->orientation, hinge.s1);
+  vector_t s2 = rotate_vector(state2->orientation, hinge.s2);
   return vector_scale(vector_add(s1, s2), 0.5);
 }
 
@@ -167,4 +147,58 @@ large_vector_t hinge_correction(state_t *state1, state_t *state2, hinge_t joint)
   result.data[3] = inner_product(t1, u);
   result.data[4] = inner_product(t2, u);
   return result;
+}
+
+static vector_t slider_axis(state_t *state1, state_t *state2, slider_t slider) {
+  vector_t s1 = rotate_vector(state1->orientation, rotate_vector(slider.q1, vector(1, 0, 0)));
+  vector_t s2 = rotate_vector(state2->orientation, rotate_vector(slider.q2, vector(1, 0, 0)));
+  return vector_scale(vector_add(s1, s2), 0.5);
+}
+
+large_matrix_t slider_jacobian(state_t *state1, state_t *state2, slider_t slider) {
+  large_matrix_t result = allocate_large_matrix(5, 12);
+  memset(result.data, 0, result.rows * result.cols * sizeof(double));
+  vector_t ri = rotate_vector(state1->orientation, slider.r1);
+  vector_t rj = rotate_vector(state2->orientation, slider.r2);
+  vector_t c = vector_subtract(rj, ri);
+  vector_t s = slider_axis(state1, state2, slider);
+  vector_t t1 = orthogonal1(s);
+  vector_t t2 = orthogonal2(s);
+  vector_t ct1 = vector_scale(cross_product(c, t1), 0.5);
+  vector_t ct2 = vector_scale(cross_product(c, t2), 0.5);
+  double *p0 = result.data + 3 * 12;
+  *p0++ = t1.x; *p0++ = t1.y; *p0++ = t1.z; p0 += 9;
+  *p0++ = t2.x; *p0++ = t2.y; *p0++ = t2.z; p0 += 9;
+  double *p1 = result.data + 3;
+  *p1 = 1; p1 += 13; *p1 = 1; p1 += 13; *p1 = 1; p1 += 10;
+  *p1++ = ct1.x; *p1++ = ct1.y; *p1++ = ct1.z; p1 += 9;
+  *p1++ = ct2.x; *p1++ = ct2.y; *p1++ = ct2.z;
+  double *p2 = result.data + 6 + 3 * 12;
+  *p2++ = -t1.x; *p2++ = -t1.y; *p2++ = -t1.z; p2 += 9;
+  *p2++ = -t2.x; *p2++ = -t2.y; *p2++ = -t2.z; p2 += 9;
+  double *p3 = result.data + 9;
+  *p3 = -1; p3 += 13; *p3 = -1; p3 += 13; *p3 = -1; p3 += 10;
+  *p3++ = ct1.x; *p3++ = ct1.y; *p3++ = ct1.z; p3 += 9;
+  *p3++ = ct2.x; *p3++ = ct2.y; *p3++ = ct2.z;
+  return result;
+}
+
+// Determine correcting impulse for a given joint.
+void joint_impulse(body_t body1, body_t body2, joint_t joint, state_t *state1, state_t *state2,
+                   vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2) {
+  large_matrix_t j;
+  large_vector_t b;
+  switch (joint.joint_type) {
+    case BALL_IN_SOCKET:
+      j = ball_in_socket_jacobian(state1, state2, joint.ball_in_socket);
+      b = ball_in_socket_correction(state1, state2, joint.ball_in_socket);
+      break;
+    case HINGE:
+      j = hinge_jacobian(state1, state2, joint.hinge);
+      b = hinge_correction(state1, state2, joint.hinge);
+      break;
+    default:
+      assert(false);
+  };
+  correcting_impulse(body1, body2, state1, state2, j, b, impulse1, impulse2, tau1, tau2);
 }

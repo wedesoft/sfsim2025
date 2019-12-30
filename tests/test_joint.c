@@ -138,13 +138,56 @@ static MunitResult test_hinge_jacobian(const MunitParameter params[], void *data
 static MunitResult test_hinge_correction(const MunitParameter params[], void *data) {
   state_t *s1 = state(vector(-4, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector( 5, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  large_vector_t b = hinge_correction(s1, s2, hinge(0, 1, vector(2, 0, 0), vector(-3, 0, 0), vector(1, 0, 0.1), vector(1, 0, -0.1)).hinge);
+  large_vector_t b =
+    hinge_correction(s1, s2, hinge(0, 1, vector(2, 0, 0), vector(-3, 0, 0), vector(1, 0, 0.1), vector(1, 0, -0.1)).hinge);
   munit_assert_int(b.rows, ==, 5);
   munit_assert_double_equal(b.data[0], -4  , 6);
   munit_assert_double_equal(b.data[1],  0  , 6);
   munit_assert_double_equal(b.data[2],  0  , 6);
   munit_assert_double_equal(b.data[3], -0.2, 6);
   munit_assert_double_equal(b.data[4],  0  , 6);
+  return MUNIT_OK;
+}
+
+static MunitResult test_slider(const MunitParameter params[], void *data) {
+  joint_t joint = slider(2, 3, vector(5, 7, 11), vector(13, 17, 19), quaternion(2, 3, 5, 7), quaternion(11, 13, 17, 19));
+  munit_assert_int(joint.joint_type, ==, SLIDER);
+  munit_assert_int(joint.i, ==, 2);
+  munit_assert_int(joint.j, ==, 3);
+  munit_assert_double(joint.slider.r1.x, ==, 5);
+  munit_assert_double(joint.slider.r2.x, ==, 13);
+  munit_assert_double(joint.slider.q1.a, ==, 2);
+  munit_assert_double(joint.slider.q2.a, ==, 11);
+  return MUNIT_OK;
+}
+
+static MunitResult test_slider_jacobian(const MunitParameter params[], void *data) {
+  state_t *s1 = state(vector(0, -2, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  state_t *s2 = state(vector(4, 0, -3), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
+  joint_t joint = slider(0, 1, vector(0, 2, 0), vector(0, 0, 3), quaternion(1, 0, 0, 0), quaternion(1, 0, 0, 0));
+  large_matrix_t j = slider_jacobian(s1, s2, joint.slider);
+  munit_assert_int(j.rows, ==,  5);
+  munit_assert_int(j.cols, ==, 12);
+  munit_assert_double(j.data[ 0], ==,  0); munit_assert_double(j.data[ 1], ==,  0); munit_assert_double(j.data[ 2], ==,  0);
+  munit_assert_double(j.data[12], ==,  0); munit_assert_double(j.data[13], ==,  0); munit_assert_double(j.data[14], ==,  0);
+  munit_assert_double(j.data[24], ==,  0); munit_assert_double(j.data[25], ==,  0); munit_assert_double(j.data[26], ==,  0);
+  munit_assert_double(j.data[36], ==,  0); munit_assert_double(j.data[37], ==,  1); munit_assert_double(j.data[38], ==,  0);
+  munit_assert_double(j.data[48], ==,  0); munit_assert_double(j.data[49], ==,  0); munit_assert_double(j.data[50], ==,  1);
+  munit_assert_double(j.data[ 6], ==,  0); munit_assert_double(j.data[ 7], ==,  0); munit_assert_double(j.data[ 8], ==,  0);
+  munit_assert_double(j.data[18], ==,  0); munit_assert_double(j.data[19], ==,  0); munit_assert_double(j.data[20], ==,  0);
+  munit_assert_double(j.data[30], ==,  0); munit_assert_double(j.data[31], ==,  0); munit_assert_double(j.data[32], ==,  0);
+  munit_assert_double(j.data[42], ==,  0); munit_assert_double(j.data[43], ==, -1); munit_assert_double(j.data[44], ==,  0);
+  munit_assert_double(j.data[54], ==,  0); munit_assert_double(j.data[55], ==,  0); munit_assert_double(j.data[56], ==, -1);
+  munit_assert_double(j.data[ 3], ==,  1); munit_assert_double(j.data[ 4], ==,  0); munit_assert_double(j.data[ 5], ==,  0);
+  munit_assert_double(j.data[15], ==,  0); munit_assert_double(j.data[16], ==,  1); munit_assert_double(j.data[17], ==,  0);
+  munit_assert_double(j.data[27], ==,  0); munit_assert_double(j.data[28], ==,  0); munit_assert_double(j.data[29], ==,  1);
+  munit_assert_double(j.data[39], ==, -1.5); munit_assert_double(j.data[40], ==,  0); munit_assert_double(j.data[41], ==, 0);
+  munit_assert_double(j.data[51], ==, -1  ); munit_assert_double(j.data[52], ==,  0); munit_assert_double(j.data[53], ==, 0);
+  munit_assert_double(j.data[ 9], ==, -1); munit_assert_double(j.data[10], ==,  0); munit_assert_double(j.data[11], ==,  0);
+  munit_assert_double(j.data[21], ==,  0); munit_assert_double(j.data[22], ==, -1); munit_assert_double(j.data[23], ==,  0);
+  munit_assert_double(j.data[33], ==,  0); munit_assert_double(j.data[34], ==,  0); munit_assert_double(j.data[35], ==, -1);
+  munit_assert_double(j.data[45], ==, -1.5); munit_assert_double(j.data[46], ==,  0); munit_assert_double(j.data[47], ==,  0);
+  munit_assert_double(j.data[57], ==, -1  ); munit_assert_double(j.data[58], ==,  0); munit_assert_double(j.data[59], ==,  0);
   return MUNIT_OK;
 }
 
@@ -160,5 +203,7 @@ MunitTest test_joint[] = {
   {"/joint_impulse"     , test_joint_impulse     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/hinge_jacobian"    , test_hinge_jacobian    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/hinge_correction"  , test_hinge_correction  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/slider"            , test_slider            , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/slider_jacobian"   , test_slider_jacobian   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                 , NULL                   , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
