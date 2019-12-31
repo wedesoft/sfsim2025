@@ -158,9 +158,7 @@ static vector_t slider_axis(state_t *state1, state_t *state2, slider_t slider) {
 large_matrix_t slider_jacobian(state_t *state1, state_t *state2, slider_t slider) {
   large_matrix_t result = allocate_large_matrix(5, 12);
   memset(result.data, 0, result.rows * result.cols * sizeof(double));
-  vector_t ri = rotate_vector(state1->orientation, slider.r1);
-  vector_t rj = rotate_vector(state2->orientation, slider.r2);
-  vector_t c = vector_subtract(rj, ri);
+  vector_t c = vector_subtract(state2->position, state1->position);
   vector_t s = slider_axis(state1, state2, slider);
   vector_t t1 = orthogonal1(s);
   vector_t t2 = orthogonal2(s);
@@ -183,6 +181,21 @@ large_matrix_t slider_jacobian(state_t *state1, state_t *state2, slider_t slider
   return result;
 }
 
+large_vector_t slider_correction(state_t *state1, state_t *state2, slider_t joint) {
+  large_vector_t result = allocate_large_vector(5);
+  vector_t c = vector_subtract(state2->position, state1->position);
+  vector_t s = slider_axis(state1, state2, joint);
+  vector_t ri = rotate_vector(state1->orientation, joint.r1);
+  vector_t rj = rotate_vector(state2->orientation, joint.r2);
+  vector_t r_off = vector_subtract(rj, ri);
+  vector_t t1 = orthogonal1(s);
+  vector_t t2 = orthogonal2(s);
+  vector_t v = vector_add(c, r_off);
+  result.data[3] = inner_product(t1, vector_add(c, r_off));
+  result.data[4] = inner_product(t2, vector_add(c, r_off));
+  return result;
+}
+
 // Determine correcting impulse for a given joint.
 void joint_impulse(body_t body1, body_t body2, joint_t joint, state_t *state1, state_t *state2,
                    vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2) {
@@ -196,6 +209,10 @@ void joint_impulse(body_t body1, body_t body2, joint_t joint, state_t *state1, s
     case HINGE:
       j = hinge_jacobian(state1, state2, joint.hinge);
       b = hinge_correction(state1, state2, joint.hinge);
+      break;
+    case SLIDER:
+      j = slider_jacobian(state1, state2, joint.slider);
+      b = slider_correction(state1, state2, joint.slider);
       break;
     default:
       assert(false);
