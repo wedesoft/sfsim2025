@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
   SDL_Init(SDL_INIT_VIDEO);
   SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 2);
   SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 1);
-  SDL_Window *window = SDL_CreateWindow("pendulum", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480,
+  SDL_Window *window = SDL_CreateWindow("spring", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480,
                                         SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
   SDL_GLContext context = SDL_GL_CreateContext(window);
   glViewport(0, 0, 640, 480);
