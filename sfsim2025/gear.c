@@ -12,9 +12,9 @@ world_t *world;
 world_info_t info;
 struct timespec t0;
 
-double w = 0.5;
+double w = 1.5;
 double h = 0.5;
-double d = 0.5;
+double d = 1.5;
 
 static void add_cube_faces(hull_t *body) {
   add_face(body, face(0, 1, 3));
@@ -96,14 +96,14 @@ int main(int argc, char *argv[]) {
   append_pointer(&info.rigid_bodies, make_cube(6370000, 6370000, 6370000));
   for (int i=0; i<2; i++) {
     append_pointer(&world->states, state(vector(0, 2 + i, 0), vector(0, 0, 0),
-                   quaternion_rotation(0, vector(0, 1, 0)), vector(0, 0, 0)));
+                   quaternion(1, 0, 0, 0), vector(0, -0.4, 0)));
     double mass = i == 0 ? 1 : 10;
     append_body(&info.bodies, body(mass, inertia_cuboid(mass, w, h, d)));
     append_pointer(&info.rigid_bodies, make_cube(w / 2, h / 2, d / 2));
     append_force(&info.forces, gravitation(0, i + 1));
   };
-  append_force(&info.forces, spring_damper(1, 2, vector(0, 0, 0), vector(0, 0, 0), 3, 100, 0.1));
-  append_joint(&info.joints, slider(1, 2, vector(0, 0, 0), vector(0, 0, 0),
+  append_force(&info.forces, spring_damper(1, 2, vector(0, 0, 0), vector(0, 0, 0), 3, 100, 50));
+  append_joint(&info.joints, slider(1, 2, vector(1, 0, 0), vector(1, 0, 0),
                                     quaternion_rotation(M_PI / 2, vector(0, 0, 1)), quaternion_rotation(M_PI / 2, vector(0, 0, 1))));
   clock_gettime(CLOCK_REALTIME, &t0);
   bool quit = false;
