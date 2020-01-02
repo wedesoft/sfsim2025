@@ -192,7 +192,6 @@ large_vector_t slider_correction(state_t *state1, state_t *state2, slider_t join
   vector_t t2 = orthogonal2(s);
   vector_t v = quaternion_to_vector(quaternion_product(quaternion_product(state1->orientation, joint.q1),
                                                        quaternion_conjugate(quaternion_product(state2->orientation, joint.q2))));
-  // v = vector(0, 0, 0);
   result.data[0] = 2 * v.x;
   result.data[1] = 2 * v.y;
   result.data[2] = 2 * v.z;
