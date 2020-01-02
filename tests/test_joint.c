@@ -197,8 +197,8 @@ static MunitResult test_slider_correction(const MunitParameter params[], void *d
   joint_t joint = slider(0, 1, vector(0, 2, 0), vector(0, 0, 3), quaternion(1, 0, 0, 0), quaternion(1, 0, 0, 0));
   large_vector_t b = slider_correction(s1, s2, joint.slider);
   munit_assert_int(b.rows, ==, 5);
-  munit_assert_double(b.data[3], ==,  1);
-  munit_assert_double(b.data[4], ==, -2);
+  munit_assert_double(b.data[3], ==, -5);
+  munit_assert_double(b.data[4], ==,  8);
   return MUNIT_OK;
 }
 
