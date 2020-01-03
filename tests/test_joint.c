@@ -194,7 +194,7 @@ static MunitResult test_slider_jacobian(const MunitParameter params[], void *dat
 static MunitResult test_slider_correction(const MunitParameter params[], void *data) {
   state_t *s1 = state(vector(0, 3, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector(4, 0, 5), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  joint_t joint = slider(0, 1, vector(0, 2, 0), vector(0, 0, 3), quaternion(1, 0, 0, 0), quaternion(1, 0, 0, 0));
+  joint_t joint = slider(0, 1, vector(0, -2, 0), vector(0, 0, -3), quaternion(1, 0, 0, 0), quaternion(1, 0, 0, 0));
   large_vector_t b = slider_correction(s1, s2, joint.slider);
   munit_assert_int(b.rows, ==, 5);
   munit_assert_double(b.data[3], ==,  1);

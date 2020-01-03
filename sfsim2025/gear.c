@@ -95,8 +95,8 @@ int main(int argc, char *argv[]) {
   append_body(&info.bodies, body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000)));
   append_pointer(&info.rigid_bodies, make_cube(6370000, 6370000, 6370000));
   for (int i=0; i<2; i++) {
-    append_pointer(&world->states, state(vector(0, 2 + i, 0), vector(0, 0, 0),
-                   quaternion(1, 0, 0, 0), vector(0, -0.4, 0)));
+    append_pointer(&world->states, state(vector(0, 4 + i, 0), vector(0, 0, 0),
+                   quaternion(1, 0, 0, 0), vector(0, 0, 0)));
     double mass = i == 0 ? 1 : 10;
     append_body(&info.bodies, body(mass, inertia_cuboid(mass, w, h, d)));
     append_pointer(&info.rigid_bodies, make_cube(w / 2, h / 2, d / 2));

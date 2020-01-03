@@ -155,6 +155,8 @@ static vector_t slider_axis(state_t *state1, state_t *state2, slider_t slider) {
   return vector_scale(vector_add(s1, s2), 0.5);
 }
 
+// Construct Jacobian for slider joint.
+// http://image.diku.dk/kenny/download/erleben.05.thesis.pdf
 large_matrix_t slider_jacobian(state_t *state1, state_t *state2, slider_t slider) {
   large_matrix_t result = allocate_large_matrix(5, 12);
   memset(result.data, 0, result.rows * result.cols * sizeof(double));
@@ -181,13 +183,15 @@ large_matrix_t slider_jacobian(state_t *state1, state_t *state2, slider_t slider
   return result;
 }
 
+// Compute error correction term for slider joint.
+// http://image.diku.dk/kenny/download/erleben.05.thesis.pdf
 large_vector_t slider_correction(state_t *state1, state_t *state2, slider_t joint) {
   large_vector_t result = allocate_large_vector(5);
   vector_t c = vector_subtract(state1->position, state2->position);
   vector_t s = slider_axis(state1, state2, joint);
   vector_t ri = rotate_vector(state1->orientation, joint.r1);
   vector_t rj = rotate_vector(state2->orientation, joint.r2);
-  vector_t r_off = vector_subtract(ri, rj);
+  vector_t r_off = vector_subtract(rj, ri);
   vector_t t1 = orthogonal1(s);
   vector_t t2 = orthogonal2(s);
   vector_t v = quaternion_to_vector(quaternion_product(quaternion_product(state1->orientation, joint.q1),
