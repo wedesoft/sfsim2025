@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
     append_pointer(&info.rigid_bodies, make_cube(w / 2, h / 2, d / 2));
     append_force(&info.forces, gravitation(0, i + 1));
   };
-  append_force(&info.forces, spring_damper(1, 2, vector(0, 0, 0), vector(0, 0, 0), 3, 100, 50));
+  append_force(&info.forces, spring_damper(1, 2, vector(0, 0, 0), vector(0, 0, 0), 3, 75, 30));
   append_joint(&info.joints, slider(1, 2, vector(1, 0, 0), vector(1, 0, 0),
                                     quaternion_rotation(M_PI / 2, vector(0, 0, 1)), quaternion_rotation(M_PI / 2, vector(0, 0, 1))));
   clock_gettime(CLOCK_REALTIME, &t0);
