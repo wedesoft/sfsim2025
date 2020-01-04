@@ -87,20 +87,22 @@ void *world_change(double time, double dt, void *world_, void *data_) {
   vector_t a_i_friction1[contacts_.size]; memset(a_i_friction1, 0, sizeof(a_i_friction1));
   vector_t a_i_friction2[contacts_.size]; memset(a_i_friction2, 0, sizeof(a_i_friction2));
   // Determine forces and torques.
-  for (int k=0; k<data->forces.size; k++) {
-    force_t f = get_force(data->forces)[k];
-    int i = f.i;
-    int j = f.j;
-    state_t *s1 = get_pointer(world->states)[i];
-    state_t *s2 = get_pointer(world->states)[j];
-    body_t body1 = get_body(data->bodies)[i];
-    body_t body2 = get_body(data->bodies)[j];
-    vector_t force1; vector_t force2; vector_t tau1; vector_t tau2;
-    exert_force(body1, body2, f, s1, s2, &force1, &force2, &tau1, &tau2);
-    force[i] = vector_add(force[i], force1);
-    force[j] = vector_add(force[j], force2);
-    torque[i] = vector_add(torque[i], tau1);
-    torque[j] = vector_add(torque[j], tau2);
+  if (dt > 0) {  // Only required if time step is not zero.
+    for (int k=0; k<data->forces.size; k++) {
+      force_t f = get_force(data->forces)[k];
+      int i = f.i;
+      int j = f.j;
+      state_t *s1 = get_pointer(world->states)[i];
+      state_t *s2 = get_pointer(world->states)[j];
+      body_t body1 = get_body(data->bodies)[i];
+      body_t body2 = get_body(data->bodies)[j];
+      vector_t force1; vector_t force2; vector_t tau1; vector_t tau2;
+      exert_force(body1, body2, f, s1, s2, &force1, &force2, &tau1, &tau2);
+      force[i] = vector_add(force[i], force1);
+      force[j] = vector_add(force[j], force2);
+      torque[i] = vector_add(torque[i], tau1);
+      torque[j] = vector_add(torque[j], tau2);
+    };
   };
   // Perform sequential impulses for several iterations.
   for (int c=0; c<data->iterations; c++) {
