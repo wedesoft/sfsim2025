@@ -12,12 +12,18 @@ void display() {
   for (int i=0; i<n; i++) {
     double angle0 = 2 * M_PI * i / n;
     double angle1 = angle0 + 2 * M_PI / n;
-    glVertex3d(cos(angle0), sin(angle0), -3.2);
-    glVertex3d(cos(angle1), sin(angle1), -3.2);
-    glVertex3d(cos(angle0), sin(angle0), -3.0);
-    glVertex3d(cos(angle0), sin(angle0), -3.0);
-    glVertex3d(cos(angle1), sin(angle1), -3.0);
-    glVertex3d(cos(angle1), sin(angle1), -3.2);
+    glVertex3d(cos(angle0), sin(angle0), -3.1);
+    glVertex3d(cos(angle1), sin(angle1), -3.1);
+    glVertex3d(cos(angle0), sin(angle0), -2.9);
+    glVertex3d(cos(angle0), sin(angle0), -2.9);
+    glVertex3d(cos(angle1), sin(angle1), -2.9);
+    glVertex3d(cos(angle1), sin(angle1), -3.1);
+    glVertex3d(0, 0, -3.1);
+    glVertex3d(cos(angle0), sin(angle0), -3.1);
+    glVertex3d(cos(angle1), sin(angle1), -3.1);
+    glVertex3d(0, 0, -2.9);
+    glVertex3d(cos(angle1), sin(angle1), -2.9);
+    glVertex3d(cos(angle0), sin(angle0), -2.9);
   };
   glEnd();
   glFlush();
