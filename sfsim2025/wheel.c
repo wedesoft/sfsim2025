@@ -13,13 +13,14 @@ struct timespec t0;
 
 static hull_t *make_wheel(int n) {
   hull_t *result = make_hull();
+  const double d = 0.1;
   for (int i=0; i<n; i++) {
     double angle0 = 2 * M_PI * i / n;
-    add_point(result, vector(cos(angle0), sin(angle0), +0.1));
-    add_point(result, vector(cos(angle0), sin(angle0), -0.1));
+    add_point(result, vector(cos(angle0), sin(angle0), +d));
+    add_point(result, vector(cos(angle0), sin(angle0), -d));
   };
-  add_point(result, vector(0, 0, +0.1));
-  add_point(result, vector(0, 0, -0.1));
+  add_point(result, vector(0, 0, +d));
+  add_point(result, vector(0, 0, -d));
   for (int i=0; i<n; i++) {
     int j = (i + 1) % n;
     add_face(result, face(2 * i, 2 * i + 1, 2 * j + 1));
@@ -61,8 +62,6 @@ static hull_t *make_cube(double w2, double h2, double d2) {
 
 void display() {
   glClear(GL_COLOR_BUFFER_BIT);
-  glMatrixMode(GL_MODELVIEW);
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   hull_t *wheel = get_pointer(info.rigid_bodies)[1];
   state_t *s = get_pointer(world->states)[1];
   matrix_t r = rotation_matrix(s->orientation);
@@ -72,17 +71,19 @@ void display() {
     r.m13, r.m23, r.m33, 0,
     0, 0, -10, 1
   };
-  printf("%f %f %f\n", s->position.x, s->position.y, s->position.z);
+  // printf("%f %f %f\n", s->position.x, s->position.y, s->position.z);
+  glMatrixMode(GL_MODELVIEW);
   glLoadMatrixd(m);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   glBegin(GL_TRIANGLES);
   for (int i=0; i<wheel->faces.size; i++) {
     face_t face = get_face(wheel->faces)[i];
     vector_t a = get_vector(wheel->points)[face.a];
     vector_t b = get_vector(wheel->points)[face.b];
     vector_t c = get_vector(wheel->points)[face.c];
-    glVertex3d(a.x, a.y, a.z - 3);
-    glVertex3d(b.x, b.y, b.z - 3);
-    glVertex3d(c.x, c.y, c.z - 3);
+    glVertex3d(a.x, a.y, a.z);
+    glVertex3d(b.x, b.y, b.z);
+    glVertex3d(c.x, c.y, c.z);
   };
   glEnd();
   glFlush();
@@ -118,10 +119,10 @@ int main(int argc, char *argv[]) {
   append_pointer(&world->states, state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
   append_body(&info.bodies, body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000)));
   append_pointer(&info.rigid_bodies, make_cube(6370000, 6370000, 6370000));
-  append_pointer(&world->states, state(vector(-4, 4, 0), vector(2, -2, 0), quaternion(1, 0, 0, 0), vector(0, 0, 2)));
+  append_pointer(&world->states, state(vector(0, 2, 0), vector(2, -2, 2), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
   append_body(&info.bodies, body(1, inertia_sphere(1, 1)));
   append_pointer(&info.rigid_bodies, make_wheel(20));
-  // append_force(&info.forces, gravitation(0, 1));
+  append_force(&info.forces, gravitation(0, 1));
   clock_gettime(CLOCK_REALTIME, &t0);
   bool quit = false;
   while (!quit) {
