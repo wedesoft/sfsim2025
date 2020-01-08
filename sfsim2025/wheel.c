@@ -71,7 +71,6 @@ void display() {
     r.m13, r.m23, r.m33, 0,
     s->position.x, s->position.y, s->position.z -10, 1
   };
-  // printf("%f %f %f\n", s->position.x, s->position.y, s->position.z);
   glMatrixMode(GL_MODELVIEW);
   glLoadMatrixd(m);
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
