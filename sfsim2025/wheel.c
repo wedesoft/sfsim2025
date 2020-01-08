@@ -69,7 +69,7 @@ void display() {
     r.m11, r.m21, r.m31, 0,
     r.m12, r.m22, r.m32, 0,
     r.m13, r.m23, r.m33, 0,
-    0, 0, -10, 1
+    s->position.x, s->position.y, s->position.z -10, 1
   };
   // printf("%f %f %f\n", s->position.x, s->position.y, s->position.z);
   glMatrixMode(GL_MODELVIEW);
