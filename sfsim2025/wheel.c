@@ -69,7 +69,7 @@ void display() {
     r.m11, r.m21, r.m31, 0,
     r.m12, r.m22, r.m32, 0,
     r.m13, r.m23, r.m33, 0,
-    s->position.x, s->position.y, s->position.z -10, 1
+    0, s->position.y, -10, 1
   };
   glMatrixMode(GL_MODELVIEW);
   glLoadMatrixd(m);
@@ -115,10 +115,11 @@ int main(int argc, char *argv[]) {
   gluPerspective(65.0, (GLfloat)640/(GLfloat)480, 1.0, 20.0);
   world = make_world();
   info = make_world_info();
+  info.restitution = 0.2;
   append_pointer(&world->states, state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
   append_body(&info.bodies, body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000)));
   append_pointer(&info.rigid_bodies, make_cube(6370000, 6370000, 6370000));
-  append_pointer(&world->states, state(vector(0, 2, 0), vector(2, -2, 2), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
+  append_pointer(&world->states, state(vector(0, 2, 0), vector(20, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
   append_body(&info.bodies, body(1, inertia_sphere(1, 1)));
   append_pointer(&info.rigid_bodies, make_wheel(20));
   append_force(&info.forces, gravitation(0, 1));
