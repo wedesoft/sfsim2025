@@ -85,6 +85,15 @@ static inline coordinate_t *get_coordinate(list_t list) {
   return (coordinate_t *)list.element;
 }
 
+static inline void append_contact_candidate(list_t *list, contact_candidate_t value) {
+  grow_list(list, sizeof(contact_candidate_t), true);
+  ((contact_candidate_t *)list->element)[list->size++] = value;
+}
+
+static inline contact_candidate_t *get_contact_candidate(list_t list) {
+  return (contact_candidate_t *)list.element;
+}
+
 static inline void append_contact(list_t *list, contact_t value) {
   grow_list(list, sizeof(contact_t), true);
   ((contact_t *)list->element)[list->size++] = value;
