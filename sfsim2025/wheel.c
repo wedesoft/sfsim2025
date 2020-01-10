@@ -69,7 +69,7 @@ void display() {
     r.m11, r.m21, r.m31, 0,
     r.m12, r.m22, r.m32, 0,
     r.m13, r.m23, r.m33, 0,
-    0, s->position.y, -10, 1
+    fmod(s->position.x + 8, 16) - 8, s->position.y, -10, 1
   };
   glMatrixMode(GL_MODELVIEW);
   glLoadMatrixd(m);
