@@ -46,18 +46,20 @@ static inline list_t transform_bodies(list_t bodies, list_t states) {
   return result;
 }
 
-static inline list_t determine_contacts(list_t bodies, list_t states, double restitution, double friction) {
+static inline list_t determine_contacts(list_t bodies, list_t states, list_t contact_candidates, double restitution,
+                                        double friction) {
   list_t result = make_list();
-  for (int i=0; i<bodies.size; i++) {
-    for (int j=i+1; j<bodies.size; j++) {
-      hull_t *body = get_pointer(bodies)[i];
-      hull_t *other = get_pointer(bodies)[j];
-      state_t *state1 = get_pointer(states)[i];
-      state_t *state2 = get_pointer(states)[j];
-      list_t contacts_of_bodies = contacts(i, j, body, other, restitution, friction, state1, state2);
-      for (int c=0; c<contacts_of_bodies.size; c++)
-        append_contact(&result, get_contact(contacts_of_bodies)[c]);
-    };
+  for (int k=0; k<contact_candidates.size; k++) {
+    contact_candidate_t candidate = get_contact_candidate(contact_candidates)[k];
+    int i = candidate.i;
+    int j = candidate.j;
+    hull_t *body = get_pointer(bodies)[i];
+    hull_t *other = get_pointer(bodies)[j];
+    state_t *state1 = get_pointer(states)[i];
+    state_t *state2 = get_pointer(states)[j];
+    list_t contacts_of_bodies = contacts(i, j, body, other, restitution, friction, state1, state2);
+    for (int c=0; c<contacts_of_bodies.size; c++)
+      append_contact(&result, get_contact(contacts_of_bodies)[c]);
   };
   return result;
 }
@@ -71,7 +73,7 @@ void *world_change(double time, double dt, void *world_, void *data_) {
   // Rotate and translate the rigid bodies.
   list_t rigid_bodies = transform_bodies(data->rigid_bodies, world->states);
   // Determine all contacts between rigid bodies.
-  list_t contacts_ = determine_contacts(rigid_bodies, world->states, data->restitution, data->friction);
+  list_t contacts_ = determine_contacts(rigid_bodies, world->states, data->contact_candidates, data->restitution, data->friction);
   // Initialise forces and torques to zero.
   vector_t force[data->bodies.size]; memset(force, 0, sizeof(force));
   vector_t torque[data->bodies.size]; memset(torque, 0, sizeof(torque));

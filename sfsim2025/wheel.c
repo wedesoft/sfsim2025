@@ -123,6 +123,7 @@ int main(int argc, char *argv[]) {
   append_body(&info.bodies, body(1, inertia_sphere(1, 1)));
   append_pointer(&info.rigid_bodies, make_wheel(20));
   append_force(&info.forces, gravitation(0, 1));
+  append_contact_candidate(&info.contact_candidates, contact_candidate(0, 1));
   clock_gettime(CLOCK_REALTIME, &t0);
   bool quit = false;
   while (!quit) {

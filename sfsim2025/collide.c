@@ -101,6 +101,9 @@ int main(int argc, char *argv[]) {
     append_body(&info.bodies, body(1.0, inertia_cuboid(1.0, w, h, d)));
     append_pointer(&info.rigid_bodies, make_cube(w / 2, h / 2, d / 2));
     append_force(&info.forces, gravitation(0, i + 1));
+    append_contact_candidate(&info.contact_candidates, contact_candidate(0, i + 1));
+    for (int j=0; j<i; j++)
+      append_contact_candidate(&info.contact_candidates, contact_candidate(j + 1, i + 1));
   };
   clock_gettime(CLOCK_REALTIME, &t0);
   bool quit = false;
