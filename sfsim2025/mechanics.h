@@ -14,6 +14,7 @@ static inline void *euler(void *y0, double dt, void *f(double, double, void *, v
 }
 
 // Compute inertial matrix of cuboid.
+// https://en.wikipedia.org/wiki/List_of_moments_of_inertia
 static inline matrix_t inertia_cuboid(double mass, double width, double height, double depth) {
   double width2 = width * width;
   double height2 = height * height;
@@ -22,12 +23,14 @@ static inline matrix_t inertia_cuboid(double mass, double width, double height, 
 }
 
 // Compute inertial matrix of solid sphere.
+// https://en.wikipedia.org/wiki/List_of_moments_of_inertia
 static inline matrix_t inertia_sphere(double mass, double radius) {
   double i = 2.0 / 5.0 * mass * radius * radius;
   return diagonal(i, i, i);
 }
 
 // Compute inertial matrix of cylinder.
+// https://en.wikipedia.org/wiki/List_of_moments_of_inertia
 static inline matrix_t inertia_cylinder(double mass, double r, double h) {
   double r2 = r * r;
   double h2 = h * h;
