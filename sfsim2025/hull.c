@@ -257,3 +257,24 @@ hull_t *make_cube(double w, double h, double d) {
   add_face(result, face(2, 7, 6));
   return result;
 }
+
+// Generate approximation of a wheel.
+hull_t *make_wheel(double r, double d, int n) {
+  hull_t *result = make_hull();
+  double d2 = d / 2;
+  for (int i=0; i<n; i++) {
+    double angle0 = 2 * M_PI * i / n;
+    add_point(result, vector(r * cos(angle0), r * sin(angle0), +d2));
+    add_point(result, vector(r * cos(angle0), r * sin(angle0), -d2));
+  };
+  add_point(result, vector(0, 0, +d2));
+  add_point(result, vector(0, 0, -d2));
+  for (int i=0; i<n; i++) {
+    int j = (i + 1) % n;
+    add_face(result, face(2 * i    , 2 * i + 1, 2 * j + 1));
+    add_face(result, face(2 * i    , 2 * j + 1, 2 * j    ));
+    add_face(result, face(2 * n    , 2 * i    , 2 * j    ));
+    add_face(result, face(2 * n + 1, 2 * j + 1, 2 * i + 1));
+  };
+  return result;
+}

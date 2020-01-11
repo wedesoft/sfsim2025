@@ -27,6 +27,13 @@ static inline matrix_t inertia_sphere(double mass, double radius) {
   return diagonal(i, i, i);
 }
 
+// Compute inertial matrix of cylinder.
+static inline matrix_t inertia_cylinder(double mass, double r, double h) {
+  double r2 = r * r;
+  double h2 = h * h;
+  return matrix_scale(diagonal(3 * r2 + h2, 3 * r2 + h2, 6 * r2), mass / 12);
+}
+
 // Predict speed and rotation for next time step using specified forces and impulses.
 static inline state_t *predict(state_t *s, body_t b, vector_t force, vector_t torque,
                                vector_t linear_impulse, vector_t angular_impulse, double dt) {

@@ -11,26 +11,6 @@ world_t *world = 0;
 world_info_t info;
 struct timespec t0;
 
-static hull_t *make_wheel(int n) {
-  hull_t *result = make_hull();
-  const double d = 0.1;
-  for (int i=0; i<n; i++) {
-    double angle0 = 2 * M_PI * i / n;
-    add_point(result, vector(cos(angle0), sin(angle0), +d));
-    add_point(result, vector(cos(angle0), sin(angle0), -d));
-  };
-  add_point(result, vector(0, 0, +d));
-  add_point(result, vector(0, 0, -d));
-  for (int i=0; i<n; i++) {
-    int j = (i + 1) % n;
-    add_face(result, face(2 * i, 2 * i + 1, 2 * j + 1));
-    add_face(result, face(2 * i, 2 * j + 1, 2 * j));
-    add_face(result, face(2 * n, 2 * i, 2 * j));
-    add_face(result, face(2 * n + 1, 2 * j + 1, 2 * i + 1));
-  };
-  return result;
-}
-
 void display() {
   glClear(GL_COLOR_BUFFER_BIT);
   hull_t *wheel = get_pointer(info.rigid_bodies)[1];
@@ -91,8 +71,8 @@ int main(int argc, char *argv[]) {
   append_body(&info.bodies, body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000)));
   append_pointer(&info.rigid_bodies, make_cube(2 * 6370000, 2 * 6370000, 2 * 6370000));
   append_pointer(&world->states, state(vector(0, 2, 0), vector(20, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
-  append_body(&info.bodies, body(1, inertia_sphere(1, 1)));
-  append_pointer(&info.rigid_bodies, make_wheel(20));
+  append_body(&info.bodies, body(1, inertia_cylinder(1, 1, 0.2)));
+  append_pointer(&info.rigid_bodies, make_wheel(1, 0.2, 20));
   append_force(&info.forces, gravitation(0, 1));
   append_contact_candidate(&info.contact_candidates, contact_candidate(0, 1));
   clock_gettime(CLOCK_REALTIME, &t0);
