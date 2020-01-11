@@ -228,3 +228,32 @@ hull_t *transform_body(hull_t *body, quaternion_t q, vector_t t) {
   };
   return result;
 }
+
+// Define a cube with 8 corners and 12 triangle faces.
+hull_t *make_cube(double w, double h, double d) {
+  hull_t *result = make_hull();
+  double w2 = w / 2;
+  double h2 = h / 2;
+  double d2 = d / 2;
+  add_point(result, vector(-w2, -h2, -d2));
+  add_point(result, vector(+w2, -h2, -d2));
+  add_point(result, vector(-w2, -h2, +d2));
+  add_point(result, vector(+w2, -h2, +d2));
+  add_point(result, vector(-w2, +h2, -d2));
+  add_point(result, vector(+w2, +h2, -d2));
+  add_point(result, vector(-w2, +h2, +d2));
+  add_point(result, vector(+w2, +h2, +d2));
+  add_face(result, face(0, 1, 3));
+  add_face(result, face(0, 3, 2));
+  add_face(result, face(5, 4, 7));
+  add_face(result, face(5, 6, 7));
+  add_face(result, face(4, 0, 2));
+  add_face(result, face(4, 2, 6));
+  add_face(result, face(1, 5, 7));
+  add_face(result, face(1, 7, 3));
+  add_face(result, face(0, 5, 1));
+  add_face(result, face(0, 4, 5));
+  add_face(result, face(2, 3, 7));
+  add_face(result, face(2, 7, 6));
+  return result;
+}

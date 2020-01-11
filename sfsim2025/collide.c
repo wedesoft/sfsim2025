@@ -17,35 +17,6 @@ double h = 0.4;
 double d = 1.0;
 int n = 2;
 
-static void add_cube_faces(hull_t *body) {
-  add_face(body, face(0, 1, 3));
-  add_face(body, face(0, 3, 2));
-  add_face(body, face(5, 4, 7));
-  add_face(body, face(5, 6, 7));
-  add_face(body, face(4, 0, 2));
-  add_face(body, face(4, 2, 6));
-  add_face(body, face(1, 5, 7));
-  add_face(body, face(1, 7, 3));
-  add_face(body, face(0, 5, 1));
-  add_face(body, face(0, 4, 5));
-  add_face(body, face(2, 3, 7));
-  add_face(body, face(2, 7, 6));
-}
-
-static hull_t *make_cube(double w2, double h2, double d2) {
-  hull_t *result = make_hull();
-  add_point(result, vector(-w2, -h2, -d2));
-  add_point(result, vector(+w2, -h2, -d2));
-  add_point(result, vector(-w2, -h2, +d2));
-  add_point(result, vector(+w2, -h2, +d2));
-  add_point(result, vector(-w2, +h2, -d2));
-  add_point(result, vector(+w2, +h2, -d2));
-  add_point(result, vector(-w2, +h2, +d2));
-  add_point(result, vector(+w2, +h2, +d2));
-  add_cube_faces(result);
-  return result;
-}
-
 void display() {
   glClear(GL_COLOR_BUFFER_BIT);
   glMatrixMode(GL_MODELVIEW);
@@ -94,12 +65,12 @@ int main(int argc, char *argv[]) {
   append_pointer(&world->states, state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
   info = make_world_info();
   append_body(&info.bodies, body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000)));
-  append_pointer(&info.rigid_bodies, make_cube(6370000, 6370000, 6370000));
+  append_pointer(&info.rigid_bodies, make_cube(2 * 6370000, 2 * 6370000, 2 * 6370000));
   for (int i=0; i<n; i++) {
     append_pointer(&world->states, state(vector(0, 2 + 0.5 * h + 2 * h * i, 0), vector(0, 0, 0),
                    quaternion(1, 0, 0, 0), vector(1, 0, 2)));
     append_body(&info.bodies, body(1.0, inertia_cuboid(1.0, w, h, d)));
-    append_pointer(&info.rigid_bodies, make_cube(w / 2, h / 2, d / 2));
+    append_pointer(&info.rigid_bodies, make_cube(w, h, d));
     append_force(&info.forces, gravitation(0, i + 1));
     append_contact_candidate(&info.contact_candidates, contact_candidate(0, i + 1));
     for (int j=0; j<i; j++)

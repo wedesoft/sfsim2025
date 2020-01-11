@@ -36,7 +36,7 @@ static void add_cube_faces(hull_t *body) {
   add_face(body, face(2, 7, 6));
 }
 
-static hull_t *make_cube(double x, double y, double z) {
+static hull_t *make_test_cube(double x, double y, double z) {
   //   6-------7
   //  /       /|        ^  ^
   // 2-------3 |       z| /y
@@ -306,7 +306,7 @@ static MunitResult test_penetration(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_separating_plane(const MunitParameter params[], void *data) {
-  hull_t *cube = make_cube(0, 0, 0);
+  hull_t *cube = make_test_cube(0, 0, 0);
   hull_t *tetrahedron = make_tetrahedron(2, 4);
   double distance;
   plane_t result = separating_plane(cube, tetrahedron, &distance);
@@ -320,7 +320,7 @@ static MunitResult test_separating_plane(const MunitParameter params[], void *da
 
 static MunitResult test_separating_plane2(const MunitParameter params[], void *data) {
   hull_t *tetrahedron = make_tetrahedron(2, 0);
-  hull_t *cube = make_cube(0, 0, 4);
+  hull_t *cube = make_test_cube(0, 0, 4);
   double distance;
   plane_t result = separating_plane(tetrahedron, cube, &distance);
   munit_assert_double(distance, ==, 2.0);
@@ -345,8 +345,8 @@ static MunitResult test_separating_plane3(const MunitParameter params[], void *d
 }
 
 static MunitResult test_contact_points(const MunitParameter params[], void *data) {
-  hull_t *cube1 = make_cube(0, 0, 0);
-  hull_t *cube2 = make_cube(1, 1, 1.9);
+  hull_t *cube1 = make_test_cube(0, 0, 0);
+  hull_t *cube2 = make_test_cube(1, 1, 1.9);
   double distance;
   vector_t normal;
   list_t points = contact_points(cube1, cube2, &distance, &normal);
@@ -396,8 +396,8 @@ static MunitResult test_empty_objects(const MunitParameter params[], void *data)
 }
 
 static MunitResult test_no_contact(const MunitParameter params[], void *data) {
-  hull_t *cube1 = make_cube(0, 0, 0);
-  hull_t *cube2 = make_cube(0, 0, 3);
+  hull_t *cube1 = make_test_cube(0, 0, 0);
+  hull_t *cube2 = make_test_cube(0, 0, 3);
   double distance;
   vector_t normal;
   list_t points = contact_points(cube1, cube2, &distance, &normal);
@@ -407,7 +407,7 @@ static MunitResult test_no_contact(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_transform(const MunitParameter params[], void *data) {
-  hull_t *body = make_cube(0, 0, 0);
+  hull_t *body = make_test_cube(0, 0, 0);
   hull_t *result = transform_body(body, quaternion_rotation(M_PI / 2, vector(1, 0, 0)), vector(1, 2, 3));
   list_t points = result->points;
   munit_assert_memory_equal(sizeof(list_t), &result->edges, &body->edges);
@@ -422,8 +422,8 @@ static MunitResult test_transform(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_contacts(const MunitParameter params[], void *data) {
-  hull_t *cube1 = make_cube(0, 0, 0);
-  hull_t *cube2 = make_cube(1, 1, 1.9);
+  hull_t *cube1 = make_test_cube(0, 0, 0);
+  hull_t *cube2 = make_test_cube(1, 1, 1.9);
   state_t *s1 = state(vector(0, 0, 0), vector(0, 0, 0.1), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector(1, 1, 1.9), vector(0, 0, -0.1), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   list_t contacts_ = contacts(2, 3, cube1, cube2, 0, 1, s1, s2);

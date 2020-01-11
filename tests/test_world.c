@@ -182,7 +182,7 @@ static void add_cube_faces(hull_t *body) {
   add_face(body, face(2, 7, 6));
 }
 
-static hull_t *make_cube(double w2, double h2, double d2) {
+static hull_t *make_test_cube(double w2, double h2, double d2) {
   hull_t *result = make_hull();
   add_point(result, vector(-w2, -h2, -d2));
   add_point(result, vector(+w2, -h2, -d2));
@@ -202,10 +202,10 @@ static world_info_t world_info6(void) {
   result.restitution = 0.5;
   result.friction = 0.4;
   append_body(&result.bodies, body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000)));
-  append_pointer(&result.rigid_bodies, make_cube(6370000, 6370000, 6370000));
+  append_pointer(&result.rigid_bodies, make_test_cube(6370000, 6370000, 6370000));
   append_body(&result.bodies, body(1.0, inertia_cuboid(1.0, 1, 1, 1)));
   append_force(&result.forces, gravitation(0, 1));
-  append_pointer(&result.rigid_bodies, make_cube(0.5, 0.5, 0.5));
+  append_pointer(&result.rigid_bodies, make_test_cube(0.5, 0.5, 0.5));
   append_contact_candidate(&result.contact_candidates, contact_candidate(0, 1));
   return result;
 }
