@@ -16,7 +16,7 @@ double h = 0.4;
 double d = 1.0;
 
 
-void display() {
+void display(void) {
   glClear(GL_COLOR_BUFFER_BIT);
   glMatrixMode(GL_MODELVIEW);
   state_t *s = get_pointer(world->states)[0];
@@ -33,7 +33,7 @@ void display() {
   glFlush();
 }
 
-void step() {
+void step(void) {
   struct timespec t1;
   clock_gettime(CLOCK_REALTIME, &t1);
   double elapsed = fmin(t1.tv_sec - t0.tv_sec + (t1.tv_nsec - t0.tv_nsec) * 1e-9, 0.1);

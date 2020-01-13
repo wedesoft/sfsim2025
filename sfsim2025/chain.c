@@ -16,7 +16,7 @@ double h = 2.0;
 double d = 0.1;
 
 
-void display() {
+void display(void) {
   glClear(GL_COLOR_BUFFER_BIT);
   glMatrixMode(GL_MODELVIEW);
   for (int i=1; i<n + 1; i++) {
@@ -35,7 +35,7 @@ void display() {
   glFlush();
 }
 
-void step() {
+void step(void) {
   double dt = 0.04;
   int iterations = 10;
   for (int i=0; i<iterations; i++) {

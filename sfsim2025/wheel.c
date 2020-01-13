@@ -11,7 +11,7 @@ world_t *world = 0;
 world_info_t info;
 struct timespec t0;
 
-void display() {
+void display(void) {
   glClear(GL_COLOR_BUFFER_BIT);
   hull_t *wheel = get_pointer(info.rigid_bodies)[1];
   state_t *s = get_pointer(world->states)[1];

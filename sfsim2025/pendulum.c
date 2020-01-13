@@ -15,7 +15,7 @@ double h = 2.0;
 double d = 0.1;
 
 
-void display() {
+void display(void) {
   glClear(GL_COLOR_BUFFER_BIT);
   glMatrixMode(GL_MODELVIEW);
   state_t *s = get_pointer(world->states)[1];
@@ -32,7 +32,7 @@ void display() {
   glFlush();
 }
 
-void step() {
+void step(void) {
   double dt = 0.01;
   int n = 10;
   for (int i=0; i<n; i++) {

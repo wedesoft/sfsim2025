@@ -17,7 +17,7 @@ double h = 0.4;
 double d = 1.0;
 int n = 2;
 
-void display() {
+void display(void) {
   glClear(GL_COLOR_BUFFER_BIT);
   glMatrixMode(GL_MODELVIEW);
   for (int i=0; i<n; i++) {
@@ -36,7 +36,7 @@ void display() {
   glFlush();
 }
 
-void step() {
+void step(void) {
   struct timespec t1;
   clock_gettime(CLOCK_REALTIME, &t1);
   double dt = fmin(t1.tv_sec - t0.tv_sec + (t1.tv_nsec - t0.tv_nsec) * 1e-9, 0.25);
