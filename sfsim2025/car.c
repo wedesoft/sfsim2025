@@ -18,7 +18,7 @@ void display(void) {
       r.m11, r.m21, r.m31, 0,
       r.m12, r.m22, r.m32, 0,
       r.m13, r.m23, r.m33, 0,
-      s->position.x, s->position.y, s->position.z - 10, 1
+      s->position.x, s->position.y, s->position.z - 5, 1
     };
     glMatrixMode(GL_MODELVIEW);
     glLoadMatrixd(m);
@@ -43,7 +43,7 @@ void step(void) {
   struct timespec t1;
   clock_gettime(CLOCK_REALTIME, &t1);
   double dt = fmin(t1.tv_sec - t0.tv_sec + (t1.tv_nsec - t0.tv_nsec) * 1e-9, 0.1);
-  int iterations = 2;
+  int iterations = 1;
   for (int i=0; i<iterations; i++) {
     world = euler(world, 0, world_change, add_worlds, scale_world, &info);
     world = runge_kutta(world, dt / iterations, world_change, add_worlds, scale_world, &info);
@@ -74,25 +74,25 @@ int main(int argc, char *argv[]) {
   append_pointer(&info.rigid_bodies, make_cube(2 * 6370000, 2 * 6370000, 2 * 6370000));
   // 1. main body
   append_pointer(&world->states, state(vector(0, 2, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
-  append_body(&info.bodies, body(10, inertia_cuboid(10, 4, 1, 2)));
+  append_body(&info.bodies, body(10, inertia_cuboid(20, 4, 1, 2)));
   append_pointer(&info.rigid_bodies, make_cube(4, 1, 2));
   append_force(&info.forces, gravitation(0, 1));
   append_contact_candidate(&info.contact_candidates, contact_candidate(0, 1));
   // 2. front mount
   append_pointer(&world->states, state(vector(2, 1.5, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
-  append_body(&info.bodies, body(0.1, inertia_cuboid(0.1, 0.1, 0.1, 0.1)));
+  append_body(&info.bodies, body(0.1, inertia_cuboid(0.4, 0.4, 0.4, 0.4)));
   append_pointer(&info.rigid_bodies, make_cube(0.1, 0.1, 0.1));
   append_joint(&info.joints, slider(1, 2, vector(2, -0.5, 0), vector(0, 0, 0),
                                     quaternion_rotation(M_PI / 2, vector(0, 0, 1)), quaternion_rotation(M_PI / 2, vector(0, 0, 1))));
   // 3. back mount 1
   append_pointer(&world->states, state(vector(-2, 1.5, -1), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
-  append_body(&info.bodies, body(0.1, inertia_cuboid(0.1, 0.1, 0.1, 0.1)));
+  append_body(&info.bodies, body(0.1, inertia_cuboid(0.4, 0.4, 0.4, 0.4)));
   append_pointer(&info.rigid_bodies, make_cube(0.1, 0.1, 0.1));
   append_joint(&info.joints, slider(1, 3, vector(-2, -0.5, -1), vector(0, 0, 0),
                                     quaternion_rotation(M_PI / 2, vector(0, 0, 1)), quaternion_rotation(M_PI / 2, vector(0, 0, 1))));
   // 4. back mount 2
   append_pointer(&world->states, state(vector(-2, 1.5, +1), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
-  append_body(&info.bodies, body(0.1, inertia_cuboid(0.1, 0.1, 0.1, 0.1)));
+  append_body(&info.bodies, body(0.1, inertia_cuboid(0.4, 0.4, 0.4, 0.4)));
   append_pointer(&info.rigid_bodies, make_cube(0.1, 0.1, 0.1));
   append_joint(&info.joints, slider(1, 4, vector(-2, -0.5, +1), vector(0, 0, 0),
                                     quaternion_rotation(M_PI / 2, vector(0, 0, 1)), quaternion_rotation(M_PI / 2, vector(0, 0, 1))));
@@ -117,7 +117,6 @@ int main(int argc, char *argv[]) {
   append_force(&info.forces, gravitation(0, 7));
   append_contact_candidate(&info.contact_candidates, contact_candidate(0, 7));
   append_joint(&info.joints, hinge(4, 7, vector(0, 0, 0), vector(0, 0, 0), vector(0, 0, 1), vector(0, 0, 1)));
-
   clock_gettime(CLOCK_REALTIME, &t0);
   bool quit = false;
   while (!quit) {
