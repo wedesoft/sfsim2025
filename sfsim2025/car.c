@@ -69,59 +69,45 @@ int main(int argc, char *argv[]) {
   world = make_world();
   info = make_world_info();
   info.iterations = 10;
-  double v0 = 10;
+  info.friction = 0.1;
+  double v0 = 0;
   // 0. cube-shaped planet
   append_pointer(&world->states, state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
   append_body(&info.bodies, body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000)));
   append_pointer(&info.rigid_bodies, make_cube(2 * 6370000, 2 * 6370000, 2 * 6370000));
   // 1. main body
   append_pointer(&world->states, state(vector(0, 2, 0), vector(v0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
-  append_body(&info.bodies, body(10, inertia_cuboid(20, 4, 1, 2)));
+  append_body(&info.bodies, body(10, inertia_cuboid(10, 4, 1, 2)));
   append_pointer(&info.rigid_bodies, make_cube(4, 1, 2));
   append_force(&info.forces, gravitation(0, 1));
   append_contact_candidate(&info.contact_candidates, contact_candidate(0, 1));
   // 2. front mount
   append_pointer(&world->states, state(vector(2, 1, 0), vector(v0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
-  append_body(&info.bodies, body(0.1, inertia_cuboid(0.8, 0.8, 0.8, 0.8)));
-  append_pointer(&info.rigid_bodies, make_cube(0.1, 0.1, 0.1));
+  append_body(&info.bodies, body(0.1, inertia_cuboid(3.2, 0.8, 0.8, 0.8)));
+  append_pointer(&info.rigid_bodies, make_cube(0.4, 0.8, 0.4));
+  append_force(&info.forces, gravitation(0, 2));
   append_joint(&info.joints, slider(1, 2, vector(2, -0.5, 0), vector(0, 0, 0),
                                     quaternion_rotation(M_PI / 2, vector(0, 0, 1)), quaternion_rotation(M_PI / 2, vector(0, 0, 1))));
-  append_force(&info.forces, spring_damper(1, 5, vector(2, 2, 0), vector(0, 0, 0), 3, 200, 10));
+  append_force(&info.forces, spring_damper(1, 2, vector(2, 2, 0), vector(0, 0, 0), 3, 400, 5));
+  append_contact_candidate(&info.contact_candidates, contact_candidate(0, 2));
   // 3. back mount 1
   append_pointer(&world->states, state(vector(-2, 1, -1), vector(v0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
-  append_body(&info.bodies, body(0.1, inertia_cuboid(0.8, 0.8, 0.8, 0.8)));
-  append_pointer(&info.rigid_bodies, make_cube(0.1, 0.1, 0.1));
+  append_body(&info.bodies, body(0.1, inertia_cuboid(3.2, 0.8, 0.8, 0.8)));
+  append_pointer(&info.rigid_bodies, make_cube(0.4, 0.8, 0.4));
+  append_force(&info.forces, gravitation(0, 3));
   append_joint(&info.joints, slider(1, 3, vector(-2, -0.5, -1), vector(0, 0, 0),
                                     quaternion_rotation(M_PI / 2, vector(0, 0, 1)), quaternion_rotation(M_PI / 2, vector(0, 0, 1))));
-  append_force(&info.forces, spring_damper(1, 6, vector(-2, 2, -1), vector(0, 0, 0), 3, 100, 5));
+  append_force(&info.forces, spring_damper(1, 3, vector(-2, 2, -1), vector(0, 0, 0), 3, 200, 2));
+  append_contact_candidate(&info.contact_candidates, contact_candidate(0, 3));
   // 4. back mount 2
   append_pointer(&world->states, state(vector(-2, 1, +1), vector(v0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
-  append_body(&info.bodies, body(0.1, inertia_cuboid(0.8, 0.8, 0.8, 0.8)));
-  append_pointer(&info.rigid_bodies, make_cube(0.1, 0.1, 0.1));
+  append_body(&info.bodies, body(0.1, inertia_cuboid(3.2, 0.8, 0.8, 0.8)));
+  append_pointer(&info.rigid_bodies, make_cube(0.4, 0.8, 0.4));
+  append_force(&info.forces, gravitation(0, 4));
   append_joint(&info.joints, slider(1, 4, vector(-2, -0.5, +1), vector(0, 0, 0),
                                     quaternion_rotation(M_PI / 2, vector(0, 0, 1)), quaternion_rotation(M_PI / 2, vector(0, 0, 1))));
-  append_force(&info.forces, spring_damper(1, 7, vector(-2, 2, +1), vector(0, 0, 0), 3, 100, 5));
-  // 5. front wheel
-  append_pointer(&world->states, state(vector(2, 1, 0), vector(v0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
-  append_body(&info.bodies, body(1, inertia_cylinder(1, 0.5, 0.1)));
-  append_pointer(&info.rigid_bodies, make_wheel(0.5, 0.1, 20));
-  append_force(&info.forces, gravitation(0, 5));
-  append_contact_candidate(&info.contact_candidates, contact_candidate(0, 5));
-  append_joint(&info.joints, hinge(2, 5, vector(0, 0, 0), vector(0, 0, 0), vector(0, 0, 1), vector(0, 0, 1)));
-  // 6. back wheel 1
-  append_pointer(&world->states, state(vector(-2, 1, -1), vector(v0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
-  append_body(&info.bodies, body(1, inertia_cylinder(1, 0.5, 0.1)));
-  append_pointer(&info.rigid_bodies, make_wheel(0.5, 0.1, 20));
-  append_force(&info.forces, gravitation(0, 6));
-  append_contact_candidate(&info.contact_candidates, contact_candidate(0, 6));
-  append_joint(&info.joints, hinge(3, 6, vector(0, 0, 0), vector(0, 0, 0), vector(0, 0, 1), vector(0, 0, 1)));
-  // 7. back wheel 2
-  append_pointer(&world->states, state(vector(-2, 1, +1), vector(v0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
-  append_body(&info.bodies, body(1, inertia_cylinder(1, 0.5, 0.1)));
-  append_pointer(&info.rigid_bodies, make_wheel(0.5, 0.1, 20));
-  append_force(&info.forces, gravitation(0, 7));
-  append_contact_candidate(&info.contact_candidates, contact_candidate(0, 7));
-  append_joint(&info.joints, hinge(4, 7, vector(0, 0, 0), vector(0, 0, 0), vector(0, 0, 1), vector(0, 0, 1)));
+  append_force(&info.forces, spring_damper(1, 4, vector(-2, 2, +1), vector(0, 0, 0), 3, 200, 2));
+  append_contact_candidate(&info.contact_candidates, contact_candidate(0, 4));
   clock_gettime(CLOCK_REALTIME, &t0);
   bool quit = false;
   while (!quit) {
