@@ -44,6 +44,22 @@ large_vector_t contact_correction(contact_t contact, bool do_restitution) {
   return result;
 }
 
+// Compute impulse caused by contact point of two objects.
+void contact_impulse(body_t body1, body_t body2, state_t *state1, state_t *state2, contact_t contact, bool do_restitution,
+                     vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2, double *lambda_) {
+  large_matrix_t contact_j = contact_jacobian(contact, state1, state2);
+  large_vector_t contact_b = contact_correction(contact, do_restitution);
+  large_vector_t lambda_contact = lambda(body1, body2, state1, state2, contact_j, contact_b);
+  // Only separating impulses are allowed.
+  if (lambda_contact.data[0] < 0)
+    lambda_contact.data[0] = 0;
+  if (lambda_)
+    *lambda_ = lambda_contact.data[0];
+  vector_t contact_impulse1, contact_impulse2, contact_tau1, contact_tau2;
+  apply_lambda(contact_j, lambda_contact, impulse1, impulse2, tau1, tau2);
+}
+
+// Contact friction Jacobian.
 large_matrix_t friction_jacobian(contact_t contact, state_t *state1, state_t *state2) {
   large_matrix_t result = allocate_large_matrix(2, 12);
   vector_t u = orthogonal1(contact.normal);
@@ -69,28 +85,17 @@ large_matrix_t friction_jacobian(contact_t contact, state_t *state1, state_t *st
   return result;
 }
 
+// Target velocity of friction is zero.
+// http://myselph.de/gamePhysics/friction.html
 large_vector_t friction_correction(contact_t contact) {
   large_vector_t result = allocate_large_vector(2);
-  double correction;
   result.data[1] = 0;
   result.data[2] = 0;
   return result;
 }
-// Compute impulse caused by contact point of two objects.
-void contact_impulse(body_t body1, body_t body2, state_t *state1, state_t *state2, contact_t contact, bool do_restitution,
-                     vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2, double *lambda_) {
-  large_matrix_t contact_j = contact_jacobian(contact, state1, state2);
-  large_vector_t contact_b = contact_correction(contact, do_restitution);
-  large_vector_t lambda_contact = lambda(body1, body2, state1, state2, contact_j, contact_b);
-  // Only separating impulses are allowed.
-  if (lambda_contact.data[0] < 0)
-    lambda_contact.data[0] = 0;
-  if (lambda_)
-    *lambda_ = lambda_contact.data[0];
-  vector_t contact_impulse1, contact_impulse2, contact_tau1, contact_tau2;
-  apply_lambda(contact_j, lambda_contact, impulse1, impulse2, tau1, tau2);
-}
 
+// Compute the friction impulse and limit it if necessary.
+// http://myselph.de/gamePhysics/friction.html
 void friction_impulse(body_t body1, body_t body2, state_t *state1, state_t *state2, contact_t contact,
                       vector_t *impulse1, vector_t *impulse2, vector_t *tau1, vector_t *tau2, double contact_lambda) {
   large_matrix_t friction_j = friction_jacobian(contact, state1, state2);
