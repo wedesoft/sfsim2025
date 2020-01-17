@@ -69,8 +69,8 @@ int main(int argc, char *argv[]) {
   world = make_world();
   info = make_world_info();
   info.iterations = 10;
-  info.friction = 0.2;
-  double v0 = 50;
+  info.friction = 0.5;
+  double v0 = 20;
   // 0. cube-shaped planet
   append_pointer(&world->states, state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
   append_body(&info.bodies, body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000)));
@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
   append_force(&info.forces, gravitation(0, 2));
   append_joint(&info.joints, slider(1, 2, vector(2, -0.5, 0), vector(0, 0, 0),
                                     quaternion_rotation(M_PI / 2, vector(0, 0, 1)), quaternion_rotation(M_PI / 2, vector(0, 0, 1))));
-  append_force(&info.forces, spring_damper(1, 2, vector(2, 2, 0), vector(0, 0, 0), 3, 400, 5));
+  append_force(&info.forces, spring_damper(1, 2, vector(2, 2, 0), vector(0, 0, 0), 3, 300, 10));
   append_contact_candidate(&info.contact_candidates, contact_candidate(0, 2));
   // 3. back mount 1
   append_pointer(&world->states, state(vector(-2, 1, -1), vector(v0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
@@ -97,7 +97,7 @@ int main(int argc, char *argv[]) {
   append_force(&info.forces, gravitation(0, 3));
   append_joint(&info.joints, slider(1, 3, vector(-2, -0.5, -1), vector(0, 0, 0),
                                     quaternion_rotation(M_PI / 2, vector(0, 0, 1)), quaternion_rotation(M_PI / 2, vector(0, 0, 1))));
-  append_force(&info.forces, spring_damper(1, 3, vector(-2, 2, -1), vector(0, 0, 0), 3, 200, 2));
+  append_force(&info.forces, spring_damper(1, 3, vector(-2, 2, -1), vector(0, 0, 0), 3, 150, 4));
   append_contact_candidate(&info.contact_candidates, contact_candidate(0, 3));
   // 4. back mount 2
   append_pointer(&world->states, state(vector(-2, 1, +1), vector(v0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
   append_force(&info.forces, gravitation(0, 4));
   append_joint(&info.joints, slider(1, 4, vector(-2, -0.5, +1), vector(0, 0, 0),
                                     quaternion_rotation(M_PI / 2, vector(0, 0, 1)), quaternion_rotation(M_PI / 2, vector(0, 0, 1))));
-  append_force(&info.forces, spring_damper(1, 4, vector(-2, 2, +1), vector(0, 0, 0), 3, 200, 2));
+  append_force(&info.forces, spring_damper(1, 4, vector(-2, 2, +1), vector(0, 0, 0), 3, 150, 4));
   append_contact_candidate(&info.contact_candidates, contact_candidate(0, 4));
   clock_gettime(CLOCK_REALTIME, &t0);
   bool quit = false;
