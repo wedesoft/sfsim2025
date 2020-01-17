@@ -49,8 +49,6 @@ void step(void) {
     world = runge_kutta(world, dt / iterations, world_change, add_worlds, scale_world, &info);
   };
   t0 = t1;
-  printf(".");
-  fflush(stdout);
 }
 
 int main(int argc, char *argv[]) {
