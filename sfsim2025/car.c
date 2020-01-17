@@ -42,7 +42,7 @@ void display(void) {
 void step(void) {
   struct timespec t1;
   clock_gettime(CLOCK_REALTIME, &t1);
-  double dt = fmin(t1.tv_sec - t0.tv_sec + (t1.tv_nsec - t0.tv_nsec) * 1e-9, 0.02);
+  double dt = fmin(t1.tv_sec - t0.tv_sec + (t1.tv_nsec - t0.tv_nsec) * 1e-9, 0.1);
   int iterations = 1;
   for (int i=0; i<iterations; i++) {
     world = euler(world, 0, world_change, add_worlds, scale_world, &info);
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
   append_contact_candidate(&info.contact_candidates, contact_candidate(0, 1));
   // 2. front mount
   append_pointer(&world->states, state(vector(2, 1, 0), vector(v0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
-  append_body(&info.bodies, body(0.1, inertia_cuboid(3.2, 0.8, 0.8, 0.8)));
+  append_body(&info.bodies, body(0.5, inertia_cuboid(0.5, 0.8, 0.8, 0.8)));
   append_pointer(&info.rigid_bodies, make_cube(0.4, 0.8, 0.4));
   append_force(&info.forces, gravitation(0, 2));
   append_joint(&info.joints, slider(1, 2, vector(2, -0.5, 0), vector(0, 0, 0),
@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
   append_contact_candidate(&info.contact_candidates, contact_candidate(0, 2));
   // 3. back mount 1
   append_pointer(&world->states, state(vector(-2, 1, -1), vector(v0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
-  append_body(&info.bodies, body(0.1, inertia_cuboid(3.2, 0.8, 0.8, 0.8)));
+  append_body(&info.bodies, body(0.5, inertia_cuboid(0.5, 0.8, 0.8, 0.8)));
   append_pointer(&info.rigid_bodies, make_cube(0.4, 0.8, 0.4));
   append_force(&info.forces, gravitation(0, 3));
   append_joint(&info.joints, slider(1, 3, vector(-2, -0.5, -1), vector(0, 0, 0),
@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
   append_contact_candidate(&info.contact_candidates, contact_candidate(0, 3));
   // 4. back mount 2
   append_pointer(&world->states, state(vector(-2, 1, +1), vector(v0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
-  append_body(&info.bodies, body(0.1, inertia_cuboid(3.2, 0.8, 0.8, 0.8)));
+  append_body(&info.bodies, body(0.5, inertia_cuboid(0.5, 0.8, 0.8, 0.8)));
   append_pointer(&info.rigid_bodies, make_cube(0.4, 0.8, 0.4));
   append_force(&info.forces, gravitation(0, 4));
   append_joint(&info.joints, slider(1, 4, vector(-2, -0.5, +1), vector(0, 0, 0),
