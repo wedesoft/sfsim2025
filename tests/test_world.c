@@ -201,6 +201,7 @@ static world_info_t world_info6(void) {
   result.iterations = 20;
   result.restitution = 0.5;
   result.friction = 0.4;
+  result.resting_threshold = 0.2;
   append_body(&result.bodies, body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000)));
   append_pointer(&result.rigid_bodies, make_test_cube(6370000, 6370000, 6370000));
   append_body(&result.bodies, body(1.0, inertia_cuboid(1.0, 1, 1, 1)));
