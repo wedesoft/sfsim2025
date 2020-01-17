@@ -36,7 +36,7 @@ static inline world_info_t make_world_info(void) {
   result.iterations = 10;
   result.restitution = 0.4;
   result.friction = 0.5;
-  result.resting_threshold = 0.2;
+  result.resting_threshold = 0.8;
   result.bodies = make_list();
   result.contact_candidates = make_list();
   result.forces = make_list();
