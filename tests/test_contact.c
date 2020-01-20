@@ -154,6 +154,15 @@ static MunitResult test_friction_jacobian(const MunitParameter params[], void *d
   return MUNIT_OK;
 }
 
+static MunitResult test_friction_correction(const MunitParameter params[], void *data) {
+  contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), 0.1, 0.4, 2.0, 1.0);
+  large_vector_t b = friction_correction(c);
+  munit_assert_int(b.rows, ==, 2);
+  munit_assert_double(b.data[0], ==, 0);
+  munit_assert_double(b.data[1], ==, 0);
+  return MUNIT_OK;
+}
+
 static MunitResult test_contact_impulse(const MunitParameter params[], void *data) {
   body_t body1 = body(5.9722e+24, inertia_sphere(5.9722e+24, 6370000));
   body_t body2 = body(1.0, inertia_cuboid(1.0, 0.1, 2, 0.1));
@@ -266,6 +275,7 @@ MunitTest test_contact[] = {
   {"/negative_correction", test_negative_correction, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/restitution"        , test_restitution        , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/friction_jacobian"  , test_friction_jacobian  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/friction_correction", test_friction_correction, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/contact_impulse"    , test_contact_impulse    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/separating_objects" , test_separating_objects , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/collision"          , test_collision          , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
