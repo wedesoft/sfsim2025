@@ -63,5 +63,3 @@ hull_t *transform_body(hull_t *body, quaternion_t q, vector_t t);
 hull_t *make_cube(double w, double h, double d);
 
 hull_t *make_wheel(double r, double d, int n);
-
-hull_t *make_wheel(double r, double d, int n);

@@ -59,11 +59,31 @@ void contact_impulse(body_t body1, body_t body2, state_t *state1, state_t *state
   apply_lambda(contact_j, lambda_contact, impulse1, impulse2, tau1, tau2);
 }
 
+// Have second friction tangential point in the general direction of the object's z-axis.
+void friction_tangentials(quaternion_t orientation, vector_t normal, vector_t *t1, vector_t *t2) {
+  vector_t z = rotate_vector(orientation, vector(0, 0, 1));// z-axis of oriented object.
+  vector_t u = orthogonal1(normal);
+  vector_t v = orthogonal2(normal);
+  double a = inner_product(u, z);
+  double b = inner_product(v, z);
+  double norm = sqrt(a * a + b * b);
+  if (norm > 1e-6) {
+    double cs = b / norm;
+    double sn = a / norm;
+    *t1 = vector_add(vector_scale(u, cs), vector_scale(v, -sn));
+    *t2 = vector_add(vector_scale(u, sn), vector_scale(v,  cs));
+  } else {
+    *t1 = u;
+    *t2 = v;
+  };
+}
+
 // Contact friction Jacobian.
 large_matrix_t friction_jacobian(contact_t contact, state_t *state1, state_t *state2) {
   large_matrix_t result = allocate_large_matrix(2, 12);
-  vector_t u = orthogonal1(contact.normal);
-  vector_t v = orthogonal2(contact.normal);
+  vector_t u;
+  vector_t v;
+  friction_tangentials(state2->orientation, contact.normal, &u, &v);
   vector_t r1 = vector_subtract(contact.point, state1->position);
   vector_t r2 = vector_subtract(contact.point, state2->position);
   vector_t ru1 = cross_product(r1, u);

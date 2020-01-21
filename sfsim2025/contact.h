@@ -40,6 +40,8 @@ large_matrix_t contact_jacobian(contact_t contact, state_t *state1, state_t *sta
 
 large_vector_t contact_correction(contact_t contact, bool do_restitution);
 
+void friction_tangentials(quaternion_t orientation, vector_t normal, vector_t *t1, vector_t *t2);
+
 large_matrix_t friction_jacobian(contact_t contact, state_t *state1, state_t *state2);
 
 large_vector_t friction_correction(contact_t contact);

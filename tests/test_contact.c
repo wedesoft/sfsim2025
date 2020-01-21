@@ -120,6 +120,36 @@ static MunitResult test_restitution(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_ortho_vector(const MunitParameter params[], void *data) {
+  quaternion_t q = quaternion(1, 0, 0, 0);
+  vector_t m;
+  vector_t o;
+  friction_tangentials(q, vector(1, 0, 0), &m, &o);
+  munit_assert_double_equal(m.x, 0, 6); munit_assert_double_equal(m.y, 1, 6); munit_assert_double_equal(m.z, 0, 6);
+  munit_assert_double_equal(o.x, 0, 6); munit_assert_double_equal(o.y, 0, 6); munit_assert_double_equal(o.z, 1, 6);
+  return MUNIT_OK;
+}
+
+static MunitResult test_ortho_vector2(const MunitParameter params[], void *data) {
+  quaternion_t q = quaternion_rotation(-M_PI / 2, vector(1, 0, 0));
+  vector_t m;
+  vector_t o;
+  friction_tangentials(q, vector(1, 0, 0), &m, &o);
+  munit_assert_double_equal(m.x, 0, 6); munit_assert_double_equal(m.y, 0, 6); munit_assert_double_equal(m.z, -1, 6);
+  munit_assert_double_equal(o.x, 0, 6); munit_assert_double_equal(o.y, 1, 6); munit_assert_double_equal(o.z,  0, 6);
+  return MUNIT_OK;
+}
+
+static MunitResult test_ortho_vector3(const MunitParameter params[], void *data) {
+  quaternion_t q = quaternion_rotation(-M_PI / 2, vector(0, 1, 0));
+  vector_t m;
+  vector_t o;
+  friction_tangentials(q, vector(1, 0, 0), &m, &o);
+  munit_assert_double_equal(m.x, 0, 6); munit_assert_double_equal(m.y, 1, 6); munit_assert_double_equal(m.z, 0, 6);
+  munit_assert_double_equal(o.x, 0, 6); munit_assert_double_equal(o.y, 0, 6); munit_assert_double_equal(o.z, 1, 6);
+  return MUNIT_OK;
+}
+
 static MunitResult test_friction_jacobian(const MunitParameter params[], void *data) {
   state_t *s1 = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector(3, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
@@ -274,6 +304,9 @@ MunitTest test_contact[] = {
   {"/positive_correction", test_positive_correction, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/negative_correction", test_negative_correction, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/restitution"        , test_restitution        , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/ortho_vector"       , test_ortho_vector       , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/ortho_vector2"      , test_ortho_vector2      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/ortho_vector3"      , test_ortho_vector3      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/friction_jacobian"  , test_friction_jacobian  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/friction_correction", test_friction_correction, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/contact_impulse"    , test_contact_impulse    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
