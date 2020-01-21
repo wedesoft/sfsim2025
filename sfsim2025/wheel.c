@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
   append_pointer(&world->states, state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
   append_body(&info.bodies, body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000)));
   append_pointer(&info.rigid_bodies, make_cube(2 * 6370000, 2 * 6370000, 2 * 6370000));
-  append_pointer(&world->states, state(vector(0, 2, 0), vector(20, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
+  append_pointer(&world->states, state(vector(0, 4, 0), vector(20, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
   append_body(&info.bodies, body(1, inertia_cylinder(1, 1, 0.2)));
   append_pointer(&info.rigid_bodies, make_wheel(1, 0.2, 20));
   append_force(&info.forces, gravitation(0, 1));
