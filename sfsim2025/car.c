@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
   // 2. front mount
   append_pointer(&world->states, state(vector(2, 1, 0), vector(v0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
   append_body(&info.bodies, body(0.5, inertia_cuboid(0.5, 0.8, 0.8, 0.8)));
-  append_pointer(&info.rigid_bodies, make_cube(0.4, 0.8, 0.4));
+  append_pointer(&info.rigid_bodies, make_wheel(0.4, 0.2, 12));
   append_force(&info.forces, gravitation(0, 2));
   append_joint(&info.joints, slider(1, 2, vector(2, -0.5, 0), vector(0, 0, 0),
                                     quaternion_rotation(M_PI / 2, vector(0, 0, 1)), quaternion_rotation(M_PI / 2, vector(0, 0, 1))));
@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
   // 3. back mount 1
   append_pointer(&world->states, state(vector(-2, 1, -1), vector(v0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
   append_body(&info.bodies, body(0.5, inertia_cuboid(0.5, 0.8, 0.8, 0.8)));
-  append_pointer(&info.rigid_bodies, make_cube(0.4, 0.8, 0.4));
+  append_pointer(&info.rigid_bodies, make_wheel(0.4, 0.2, 12));
   append_force(&info.forces, gravitation(0, 3));
   append_joint(&info.joints, slider(1, 3, vector(-2, -0.5, -1), vector(0, 0, 0),
                                     quaternion_rotation(M_PI / 2, vector(0, 0, 1)), quaternion_rotation(M_PI / 2, vector(0, 0, 1))));
@@ -100,7 +100,7 @@ int main(int argc, char *argv[]) {
   // 4. back mount 2
   append_pointer(&world->states, state(vector(-2, 1, +1), vector(v0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
   append_body(&info.bodies, body(0.5, inertia_cuboid(0.5, 0.8, 0.8, 0.8)));
-  append_pointer(&info.rigid_bodies, make_cube(0.4, 0.8, 0.4));
+  append_pointer(&info.rigid_bodies, make_wheel(0.4, 0.2, 12));
   append_force(&info.forces, gravitation(0, 4));
   append_joint(&info.joints, slider(1, 4, vector(-2, -0.5, +1), vector(0, 0, 0),
                                     quaternion_rotation(M_PI / 2, vector(0, 0, 1)), quaternion_rotation(M_PI / 2, vector(0, 0, 1))));
