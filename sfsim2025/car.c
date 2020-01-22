@@ -67,7 +67,6 @@ int main(int argc, char *argv[]) {
   world = make_world();
   info = make_world_info();
   info.iterations = 10;
-  info.friction = 0.5;
   double v0 = 20;
   // 0. cube-shaped planet
   append_pointer(&world->states, state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
@@ -78,7 +77,7 @@ int main(int argc, char *argv[]) {
   append_body(&info.bodies, body(10, inertia_cuboid(10, 4, 1, 2)));
   append_pointer(&info.rigid_bodies, make_cube(4, 1, 2));
   append_force(&info.forces, gravitation(0, 1));
-  append_contact_candidate(&info.contact_candidates, contact_candidate(0, 1));
+  append_contact_candidate(&info.contact_candidates, contact_candidate(0, 1, 0.5));
   // 2. front mount
   append_pointer(&world->states, state(vector(2, 1, 0), vector(v0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
   append_body(&info.bodies, body(0.5, inertia_cuboid(0.5, 0.8, 0.8, 0.8)));
@@ -87,7 +86,7 @@ int main(int argc, char *argv[]) {
   append_joint(&info.joints, slider(1, 2, vector(2, -0.5, 0), vector(0, 0, 0),
                                     quaternion_rotation(M_PI / 2, vector(0, 0, 1)), quaternion_rotation(M_PI / 2, vector(0, 0, 1))));
   append_force(&info.forces, spring_damper(1, 2, vector(2, 2, 0), vector(0, 0, 0), 3, 300, 25));
-  append_contact_candidate(&info.contact_candidates, contact_candidate(0, 2));
+  append_contact_candidate(&info.contact_candidates, contact_candidate(0, 2, 0.5));
   // 3. back mount 1
   append_pointer(&world->states, state(vector(-2, 1, -1), vector(v0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
   append_body(&info.bodies, body(0.5, inertia_cuboid(0.5, 0.8, 0.8, 0.8)));
@@ -96,7 +95,7 @@ int main(int argc, char *argv[]) {
   append_joint(&info.joints, slider(1, 3, vector(-2, -0.5, -1), vector(0, 0, 0),
                                     quaternion_rotation(M_PI / 2, vector(0, 0, 1)), quaternion_rotation(M_PI / 2, vector(0, 0, 1))));
   append_force(&info.forces, spring_damper(1, 3, vector(-2, 2, -1), vector(0, 0, 0), 3, 150, 12));
-  append_contact_candidate(&info.contact_candidates, contact_candidate(0, 3));
+  append_contact_candidate(&info.contact_candidates, contact_candidate(0, 3, 0.5));
   // 4. back mount 2
   append_pointer(&world->states, state(vector(-2, 1, +1), vector(v0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0)));
   append_body(&info.bodies, body(0.5, inertia_cuboid(0.5, 0.8, 0.8, 0.8)));
@@ -105,7 +104,7 @@ int main(int argc, char *argv[]) {
   append_joint(&info.joints, slider(1, 4, vector(-2, -0.5, +1), vector(0, 0, 0),
                                     quaternion_rotation(M_PI / 2, vector(0, 0, 1)), quaternion_rotation(M_PI / 2, vector(0, 0, 1))));
   append_force(&info.forces, spring_damper(1, 4, vector(-2, 2, +1), vector(0, 0, 0), 3, 150, 12));
-  append_contact_candidate(&info.contact_candidates, contact_candidate(0, 4));
+  append_contact_candidate(&info.contact_candidates, contact_candidate(0, 4, 0.5));
   clock_gettime(CLOCK_REALTIME, &t0);
   bool quit = false;
   while (!quit) {

@@ -9,6 +9,7 @@
 typedef struct {
   int i;
   int j;
+  double friction;
 } contact_candidate_t;
 
 typedef struct {
@@ -25,8 +26,8 @@ typedef struct {
 vector_t relative_speed(state_t *state1, state_t *state2, vector_t point);
 
 // Initialize contact candidate.
-static inline contact_candidate_t contact_candidate(int i, int j) {
-  return (contact_candidate_t){.i = i, .j = j};
+static inline contact_candidate_t contact_candidate(int i, int j, double friction) {
+  return (contact_candidate_t){.i = i, .j = j, .friction=friction};
 }
 
 // Initialize contact.

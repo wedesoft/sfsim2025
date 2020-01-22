@@ -200,14 +200,13 @@ static world_info_t world_info6(void) {
   world_info_t result = make_world_info();
   result.iterations = 20;
   result.restitution = 0.5;
-  result.friction = 0.4;
   result.resting_threshold = 0.2;
   append_body(&result.bodies, body(5.9742e+24, inertia_sphere(5.9742e+24, 6370000)));
   append_pointer(&result.rigid_bodies, make_test_cube(6370000, 6370000, 6370000));
   append_body(&result.bodies, body(1.0, inertia_cuboid(1.0, 1, 1, 1)));
   append_force(&result.forces, gravitation(0, 1));
   append_pointer(&result.rigid_bodies, make_test_cube(0.5, 0.5, 0.5));
-  append_contact_candidate(&result.contact_candidates, contact_candidate(0, 1));
+  append_contact_candidate(&result.contact_candidates, contact_candidate(0, 1, 0.4));
   return result;
 }
 
