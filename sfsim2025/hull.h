@@ -56,7 +56,7 @@ plane_t separating_plane(hull_t *body, hull_t *other, double *distance);
 list_t contact_points(hull_t *body, hull_t *other, double *distance, vector_t *normal);
 
 list_t contacts(int i, int j, hull_t *transformed_body, hull_t *transformed_other, double restitution,
-                double friction, state_t *state1, state_t *state2);
+                friction_t friction, state_t *state1, state_t *state2);
 
 hull_t *transform_body(hull_t *body, quaternion_t q, vector_t t);
 

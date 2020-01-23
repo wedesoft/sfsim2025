@@ -201,7 +201,7 @@ list_t contact_points(hull_t *body, hull_t *other, double *distance, vector_t *n
 
 // Get list of contacts for two objects.
 list_t contacts(int i, int j, hull_t *transformed_body, hull_t *transformed_other, double restitution,
-                double friction, state_t *state1, state_t *state2) {
+                friction_t friction, state_t *state1, state_t *state2) {
   double distance;
   vector_t normal;
   list_t points = contact_points(transformed_body, transformed_other, &distance, &normal);

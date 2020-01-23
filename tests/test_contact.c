@@ -4,14 +4,14 @@
 
 
 static MunitResult test_body_indices(const MunitParameter params[], void *data) {
-  contact_t c = contact(2, 3, vector(5, 7, 11), vector(1, 2, 3), 0.1, 0.4, 2.0, 1.0);
+  contact_t c = contact(2, 3, vector(5, 7, 11), vector(1, 2, 3), 0.1, 0.4, 2.0, uniform_friction(1.0));
   munit_assert_int(c.i, ==, 2);
   munit_assert_int(c.j, ==, 3);
   return MUNIT_OK;
 }
 
 static MunitResult test_normal(const MunitParameter params[], void *data) {
-  contact_t c = contact(2, 3, vector(5, 7, 11), vector(1, 2, 3), 0.1, 0.4, 2.0, 1.0);
+  contact_t c = contact(2, 3, vector(5, 7, 11), vector(1, 2, 3), 0.1, 0.4, 2.0, uniform_friction(1.0));
   munit_assert_double(c.normal.x, ==,  5);
   munit_assert_double(c.normal.y, ==,  7);
   munit_assert_double(c.normal.z, ==, 11);
@@ -19,7 +19,7 @@ static MunitResult test_normal(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_point(const MunitParameter params[], void *data) {
-  contact_t c = contact(2, 3, vector(5, 7, 11), vector(1, 2, 3), 0.1, 0.4, 2.0, 1.0);
+  contact_t c = contact(2, 3, vector(5, 7, 11), vector(1, 2, 3), 0.1, 0.4, 2.0, uniform_friction(1.0));
   munit_assert_double(c.point.x, ==, 1);
   munit_assert_double(c.point.y, ==, 2);
   munit_assert_double(c.point.z, ==, 3);
@@ -27,19 +27,19 @@ static MunitResult test_point(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_distance(const MunitParameter params[], void *data) {
-  contact_t c = contact(2, 3, vector(5, 7, 11), vector(1, 2, 3), 0.1, 0.4, 2.0, 1.0);
+  contact_t c = contact(2, 3, vector(5, 7, 11), vector(1, 2, 3), 0.1, 0.4, 2.0, uniform_friction(1.0));
   munit_assert_double(c.distance, ==, 0.1);
   return MUNIT_OK;
 }
 
 static MunitResult test_restitution_value(const MunitParameter params[], void *data) {
-  contact_t c = contact(2, 3, vector(5, 7, 11), vector(1, 2, 3), 0.1, 0.4, 2.0, 1.0);
+  contact_t c = contact(2, 3, vector(5, 7, 11), vector(1, 2, 3), 0.1, 0.4, 2.0, uniform_friction(1.0));
   munit_assert_double(c.restitution, ==, 0.4);
   return MUNIT_OK;
 }
 
 static MunitResult test_speed_value(const MunitParameter params[], void *data) {
-  contact_t c = contact(2, 3, vector(5, 7, 11), vector(1, 2, 3), 0.1, 0.4, 2.0, 1.0);
+  contact_t c = contact(2, 3, vector(5, 7, 11), vector(1, 2, 3), 0.1, 0.4, 2.0, uniform_friction(1.0));
   munit_assert_double(c.normal_speed, ==, 2.0);
   return MUNIT_OK;
 }
@@ -67,7 +67,7 @@ static MunitResult test_relative_rotation(const MunitParameter params[], void *d
 static MunitResult test_jacobian_linear(const MunitParameter params[], void *data) {
   state_t *s1 = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector(3, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), 0.1, 0.4, 2.0, 1.0);
+  contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), 0.1, 0.4, 2.0, uniform_friction(1.0));
   large_matrix_t j = contact_jacobian(c, s1, s2);
   munit_assert_int(j.rows, ==, 1);
   munit_assert_int(j.cols, ==, 12);
@@ -83,7 +83,7 @@ static MunitResult test_jacobian_linear(const MunitParameter params[], void *dat
 static MunitResult test_jacobian_angular(const MunitParameter params[], void *data) {
   state_t *s1 = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector(3, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), 0.1, 0.4, 2.0, 1.0);
+  contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), 0.1, 0.4, 2.0, uniform_friction(1.0));
   large_matrix_t j = contact_jacobian(c, s1, s2);
   munit_assert_int(j.rows, ==, 1);
   munit_assert_int(j.cols, ==, 12);
@@ -97,7 +97,7 @@ static MunitResult test_jacobian_angular(const MunitParameter params[], void *da
 }
 
 static MunitResult test_positive_correction(const MunitParameter params[], void *data) {
-  contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), 0.1, 0.0, 2.0, 1.0);
+  contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), 0.1, 0.0, 2.0, uniform_friction(1.0));
   large_vector_t b = contact_correction(c, false);
   munit_assert_int(b.rows, ==, 1);
   munit_assert_double(b.data[0], ==, 0.1);
@@ -105,7 +105,7 @@ static MunitResult test_positive_correction(const MunitParameter params[], void 
 }
 
 static MunitResult test_negative_correction(const MunitParameter params[], void *data) {
-  contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), -0.1, 0.0, -2.0, 1.0);
+  contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), -0.1, 0.0, -2.0, uniform_friction(1.0));
   large_vector_t b = contact_correction(c, false);
   munit_assert_int(b.rows, ==, 1);
   munit_assert_double(b.data[0], ==, -0.1);
@@ -113,7 +113,7 @@ static MunitResult test_negative_correction(const MunitParameter params[], void 
 }
 
 static MunitResult test_restitution(const MunitParameter params[], void *data) {
-  contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), 0.1, 0.5, -2.0, 1.0);
+  contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), 0.1, 0.5, -2.0, uniform_friction(1.0));
   large_vector_t b = contact_correction(c, true);
   munit_assert_int(b.rows, ==, 1);
   munit_assert_double(b.data[0], ==, -1);
@@ -153,7 +153,7 @@ static MunitResult test_ortho_vector3(const MunitParameter params[], void *data)
 static MunitResult test_friction_jacobian(const MunitParameter params[], void *data) {
   state_t *s1 = state(vector(0, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector(3, 0, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), 0.1, 0.4, 2.0, 1.0);
+  contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), 0.1, 0.4, 2.0, uniform_friction(1.0));
   large_matrix_t j = friction_jacobian(c, s1, s2);
   munit_assert_int(j.rows, ==, 2);
   munit_assert_int(j.cols, ==, 12);
@@ -185,7 +185,7 @@ static MunitResult test_friction_jacobian(const MunitParameter params[], void *d
 }
 
 static MunitResult test_friction_correction(const MunitParameter params[], void *data) {
-  contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), 0.1, 0.4, 2.0, 1.0);
+  contact_t c = contact(2, 3, vector(0, 0, 1), vector(1, 2, 3), 0.1, 0.4, 2.0, uniform_friction(1.0));
   large_vector_t b = friction_correction(c);
   munit_assert_int(b.rows, ==, 2);
   munit_assert_double(b.data[0], ==, 0);
@@ -198,7 +198,7 @@ static MunitResult test_contact_impulse(const MunitParameter params[], void *dat
   body_t body2 = body(1.0, inertia_cuboid(1.0, 0.1, 2, 0.1));
   state_t *s1 = state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector(0, 1, 0), vector(0, -0.01, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  contact_t c = contact(0, 1, vector(0, 1, 0), vector(0, 0, 0), 0, 0.5, -2.0, 1.0);
+  contact_t c = contact(0, 1, vector(0, 1, 0), vector(0, 0, 0), 0, 0.5, -2.0, uniform_friction(1.0));
   vector_t p1; vector_t t1; vector_t p2; vector_t t2; double lambda_;
   contact_impulse(body1, body2, s1, s2, c, false, &p1, &p2, &t1, &t2, &lambda_);
   munit_assert_double_equal(p1.x,  0.0 , 6);
@@ -216,7 +216,7 @@ static MunitResult test_separating_objects(const MunitParameter params[], void *
   body_t body2 = body(1.0, inertia_cuboid(1.0, 0.1, 2, 0.1));
   state_t *s1 = state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector(0, 1, 0), vector(0, 0.01, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  contact_t c = contact(0, 1, vector(0, 1, 0), vector(0, 0, 0), 0, 0, 0.01, 1.0);
+  contact_t c = contact(0, 1, vector(0, 1, 0), vector(0, 0, 0), 0, 0, 0.01, uniform_friction(1.0));
   vector_t p1; vector_t t1; vector_t p2; vector_t t2; double lambda_;
   contact_impulse(body1, body2, s1, s2, c, false, &p1, &p2, &t1, &t2, &lambda_);
   munit_assert_double_equal(p1.x, 0.0, 6);
@@ -234,7 +234,7 @@ static MunitResult test_collision(const MunitParameter params[], void *data) {
   body_t body2 = body(1.0, inertia_cuboid(1.0, 0.1, 2, 0.1));
   state_t *s1 = state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector(0, 1, 0), vector(0, -0.1, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  contact_t c = contact(0, 1, vector(0, 1, 0), vector(0, 0, 0), 0, 0.5, -0.1, 1.0);
+  contact_t c = contact(0, 1, vector(0, 1, 0), vector(0, 0, 0), 0, 0.5, -0.1, uniform_friction(1.0));
   vector_t p1; vector_t t1; vector_t p2; vector_t t2; double lambda_;
   contact_impulse(body1, body2, s1, s2, c, true, &p1, &p2, &t1, &t2, &lambda_);
   munit_assert_double_equal(p2.x,  0.0 , 6);
@@ -245,19 +245,19 @@ static MunitResult test_collision(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_is_resting(const MunitParameter params[], void *data) {
-  contact_t c = contact(0, 1, vector(0, 1, 0), vector(0, 0, 0), 0, 0.2, -0.2, 1.0);
+  contact_t c = contact(0, 1, vector(0, 1, 0), vector(0, 0, 0), 0, 0.2, -0.2, uniform_friction(1.0));
   munit_assert_true(is_resting(c, 0.1));
   return MUNIT_OK;
 }
 
 static MunitResult test_is_not_resting(const MunitParameter params[], void *data) {
-  contact_t c = contact(0, 1, vector(0, 1, 0), vector(0, 0, 0), 0, 0.2, -0.6, 1.0);
+  contact_t c = contact(0, 1, vector(0, 1, 0), vector(0, 0, 0), 0, 0.2, -0.6, uniform_friction(1.0));
   munit_assert_false(is_resting(c, 0.1));
   return MUNIT_OK;
 }
 
 static MunitResult test_is_not_resting2(const MunitParameter params[], void *data) {
-  contact_t c = contact(0, 1, vector(0, 1, 0), vector(0, 0, 0), 0, 0.2, 0.6, 1.0);
+  contact_t c = contact(0, 1, vector(0, 1, 0), vector(0, 0, 0), 0, 0.2, 0.6, uniform_friction(1.0));
   munit_assert_false(is_resting(c, 0.1));
   return MUNIT_OK;
 }
@@ -267,7 +267,7 @@ static MunitResult test_friction(const MunitParameter params[], void *data) {
   body_t body2 = body(1.0, inertia_cuboid(1.0, 0.1, 2, 0.1));
   state_t *s1 = state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector(0, 1, 0), vector(0.1, 0.0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  contact_t c = contact(0, 1, vector(0, 1, 0), vector(0, 1, 0), 0, 0.5, -0.1, 1.0);
+  contact_t c = contact(0, 1, vector(0, 1, 0), vector(0, 1, 0), 0, 0.5, -0.1, uniform_friction(1.0));
   vector_t p1; vector_t t1; vector_t p2; vector_t t2;
   friction_impulse(body1, body2, s1, s2, c, &p1, &p2, &t1, &t2, 1.0);
   munit_assert_double_equal(p2.x, -0.1, 6);
@@ -281,7 +281,7 @@ static MunitResult test_friction_limit(const MunitParameter params[], void *data
   body_t body2 = body(1.0, inertia_cuboid(1.0, 0.1, 2, 0.1));
   state_t *s1 = state(vector(0, -6370000, 0), vector(0, 0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
   state_t *s2 = state(vector(0, 1, 0), vector(1.0, 0.0, 0), quaternion(1, 0, 0, 0), vector(0, 0, 0));
-  contact_t c = contact(0, 1, vector(0, 1, 0), vector(0, 1, 0), 0, 0.5, -0.1, 0.5);
+  contact_t c = contact(0, 1, vector(0, 1, 0), vector(0, 1, 0), 0, 0.5, -0.1, uniform_friction(0.5));
   vector_t p1; vector_t t1; vector_t p2; vector_t t2;
   friction_impulse(body1, body2, s1, s2, c, &p1, &p2, &t1, &t2, 1.0);
   munit_assert_double_equal(p2.x, -0.5, 6);

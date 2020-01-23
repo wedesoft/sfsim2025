@@ -206,7 +206,7 @@ static world_info_t world_info6(void) {
   append_body(&result.bodies, body(1.0, inertia_cuboid(1.0, 1, 1, 1)));
   append_force(&result.forces, gravitation(0, 1));
   append_pointer(&result.rigid_bodies, make_test_cube(0.5, 0.5, 0.5));
-  append_contact_candidate(&result.contact_candidates, contact_candidate(0, 1, 0.4));
+  append_contact_candidate(&result.contact_candidates, contact_candidate(0, 1, uniform_friction(0.4)));
   return result;
 }
 

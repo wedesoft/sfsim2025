@@ -124,8 +124,8 @@ void friction_impulse(body_t body1, body_t body2, state_t *state1, state_t *stat
   assert(lambda_friction.rows == 2);
   double friction = sqrt(lambda_friction.data[0] * lambda_friction.data[0] + lambda_friction.data[1] * lambda_friction.data[1]);
   // Limit friction.
-  if (friction > contact_lambda * contact.friction) {
-    double factor = contact_lambda * contact.friction / friction;
+  if (friction > contact_lambda * contact.friction.uniform) {
+    double factor = contact_lambda * contact.friction.uniform / friction;
     lambda_friction.data[0] *= factor;
     lambda_friction.data[1] *= factor;
   };

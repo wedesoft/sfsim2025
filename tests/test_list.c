@@ -166,7 +166,7 @@ static MunitResult test_get_coordinate(const MunitParameter params[], void *data
 }
 
 static MunitResult test_append_contact_candidate(const MunitParameter params[], void *data) {
-  contact_candidate_t c = contact_candidate(2, 3, 0.5);
+  contact_candidate_t c = contact_candidate(2, 3, uniform_friction(0.5));
   list_t list = make_list();
   append_contact_candidate(&list, c);
   munit_assert_int(list.size, ==, 1);
@@ -174,17 +174,17 @@ static MunitResult test_append_contact_candidate(const MunitParameter params[], 
 }
 
 static MunitResult test_get_contact_candidate(const MunitParameter params[], void *data) {
-  contact_candidate_t c = contact_candidate(2, 3, 0.5);
+  contact_candidate_t c = contact_candidate(2, 3, uniform_friction(0.5));
   list_t list = make_list();
   append_contact_candidate(&list, c);
   munit_assert_int(get_contact_candidate(list)[0].i, ==, 2);
   munit_assert_int(get_contact_candidate(list)[0].j, ==, 3);
-  munit_assert_double(get_contact_candidate(list)[0].friction, ==, 0.5);
+  munit_assert_double(get_contact_candidate(list)[0].friction.uniform, ==, 0.5);
   return MUNIT_OK;
 }
 
 static MunitResult test_append_contact(const MunitParameter params[], void *data) {
-  contact_t c = contact(2, 3, vector(1, 2, 3), vector(3, 4, 5), 0.1, 0, -2.0, 1.0);
+  contact_t c = contact(2, 3, vector(1, 2, 3), vector(3, 4, 5), 0.1, 0, -2.0, uniform_friction(1.0));
   list_t list = make_list();
   append_contact(&list, c);
   munit_assert_int(list.size, ==, 1);
@@ -192,7 +192,7 @@ static MunitResult test_append_contact(const MunitParameter params[], void *data
 }
 
 static MunitResult test_get_contact(const MunitParameter params[], void *data) {
-  contact_t c = contact(2, 3, vector(1, 2, 3), vector(3, 4, 5), 0.1, 0, -2.0, 1.0);
+  contact_t c = contact(2, 3, vector(1, 2, 3), vector(3, 4, 5), 0.1, 0, -2.0, uniform_friction(1.0));
   list_t list = make_list();
   append_contact(&list, c);
   munit_assert_int(get_contact(list)[0].i, ==, 2);

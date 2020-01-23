@@ -4,12 +4,13 @@
 #include "large_matrix.h"
 #include "state.h"
 #include "vector.h"
+#include "friction.h"
 
 
 typedef struct {
   int i;
   int j;
-  double friction;
+  friction_t friction;
 } contact_candidate_t;
 
 typedef struct {
@@ -20,19 +21,19 @@ typedef struct {
   double distance;
   double restitution;
   double normal_speed;
-  double friction;
+  friction_t friction;
 } contact_t;
 
 vector_t relative_speed(state_t *state1, state_t *state2, vector_t point);
 
 // Initialize contact candidate.
-static inline contact_candidate_t contact_candidate(int i, int j, double friction) {
+static inline contact_candidate_t contact_candidate(int i, int j, friction_t friction) {
   return (contact_candidate_t){.i = i, .j = j, .friction=friction};
 }
 
 // Initialize contact.
 static inline contact_t contact(int i, int j, vector_t normal, vector_t point, double distance, double restitution,
-                                double normal_speed, double friction) {
+                                double normal_speed, friction_t friction) {
   return (contact_t){.i = i, .j = j, .normal = normal, .point = point, .distance = distance, .restitution=restitution,
                      .normal_speed = normal_speed, .friction=friction};
 }

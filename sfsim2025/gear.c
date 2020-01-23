@@ -76,8 +76,8 @@ int main(int argc, char *argv[]) {
   append_force(&info.forces, spring_damper(1, 2, vector(0, 0, 0), vector(0, 0, 0), 3, 75, 30));
   append_joint(&info.joints, slider(1, 2, vector(1, 0, 0), vector(1, 0, 0),
                                     quaternion_rotation(M_PI / 2, vector(0, 0, 1)), quaternion_rotation(M_PI / 2, vector(0, 0, 1))));
-  append_contact_candidate(&info.contact_candidates, contact_candidate(0, 1, 0.5));
-  append_contact_candidate(&info.contact_candidates, contact_candidate(0, 2, 0.5));
+  append_contact_candidate(&info.contact_candidates, contact_candidate(0, 1, uniform_friction(0.5)));
+  append_contact_candidate(&info.contact_candidates, contact_candidate(0, 2, uniform_friction(0.5)));
   clock_gettime(CLOCK_REALTIME, &t0);
   bool quit = false;
   while (!quit) {

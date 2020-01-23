@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
   append_body(&info.bodies, body(1, inertia_cylinder(1, 1, 0.2)));
   append_pointer(&info.rigid_bodies, make_wheel(1, 0.2, 20));
   append_force(&info.forces, gravitation(0, 1));
-  append_contact_candidate(&info.contact_candidates, contact_candidate(0, 1, 0.5));
+  append_contact_candidate(&info.contact_candidates, contact_candidate(0, 1, uniform_friction(0.5)));
   clock_gettime(CLOCK_REALTIME, &t0);
   bool quit = false;
   while (!quit) {

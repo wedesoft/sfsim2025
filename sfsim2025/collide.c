@@ -72,9 +72,9 @@ int main(int argc, char *argv[]) {
     append_body(&info.bodies, body(1.0, inertia_cuboid(1.0, w, h, d)));
     append_pointer(&info.rigid_bodies, make_cube(w, h, d));
     append_force(&info.forces, gravitation(0, i + 1));
-    append_contact_candidate(&info.contact_candidates, contact_candidate(0, i + 1, 0.5));
+    append_contact_candidate(&info.contact_candidates, contact_candidate(0, i + 1, uniform_friction(0.5)));
     for (int j=0; j<i; j++)
-      append_contact_candidate(&info.contact_candidates, contact_candidate(j + 1, i + 1, 0.5));
+      append_contact_candidate(&info.contact_candidates, contact_candidate(j + 1, i + 1, uniform_friction(0.5)));
   };
   clock_gettime(CLOCK_REALTIME, &t0);
   bool quit = false;
