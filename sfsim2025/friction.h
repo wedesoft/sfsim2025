@@ -1,4 +1,5 @@
 #pragma once
+#include "large_vector.h"
 
 
 typedef enum {UNIFORM_FRICTION, ANISOTROPIC_FRICTION} friction_type_t;
@@ -23,3 +24,5 @@ static inline friction_t uniform_friction(double uniform) {
 static inline friction_t anisotropic_friction(double value1, double value2) {
   return (friction_t){.type=ANISOTROPIC_FRICTION, .anisotropic.value1=value1, .anisotropic.value2=value2};
 }
+
+large_vector_t limit_friction(friction_t friction, double contact_lambda, large_vector_t lambda);

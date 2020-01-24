@@ -121,13 +121,6 @@ void friction_impulse(body_t body1, body_t body2, state_t *state1, state_t *stat
   large_matrix_t friction_j = friction_jacobian(contact, state1, state2);
   large_vector_t friction_b = friction_correction(contact);
   large_vector_t lambda_friction = lambda(body1, body2, state1, state2, friction_j, friction_b);
-  assert(lambda_friction.rows == 2);
-  double friction = sqrt(lambda_friction.data[0] * lambda_friction.data[0] + lambda_friction.data[1] * lambda_friction.data[1]);
-  // Limit friction.
-  if (friction > contact_lambda * contact.friction.uniform) {
-    double factor = contact_lambda * contact.friction.uniform / friction;
-    lambda_friction.data[0] *= factor;
-    lambda_friction.data[1] *= factor;
-  };
-  apply_lambda(friction_j, lambda_friction, impulse1, impulse2, tau1, tau2);
+  large_vector_t limited_friction = limit_friction(contact.friction, contact_lambda, lambda_friction);
+  apply_lambda(friction_j, limited_friction, impulse1, impulse2, tau1, tau2);
 }
