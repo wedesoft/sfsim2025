@@ -456,6 +456,17 @@ static MunitResult test_cube(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_wheel(const MunitParameter params[], void *data) {
+  hull_t *wheel = make_wheel(2, 1, 4);
+  munit_assert_double_equal(get_vector(wheel->points)[0].x, 2  , 6);
+  munit_assert_double_equal(get_vector(wheel->points)[0].y, 0  , 6);
+  munit_assert_double_equal(get_vector(wheel->points)[0].z, 0.5, 6);
+  munit_assert_double_equal(get_vector(wheel->points)[2].x, 0  , 6);
+  munit_assert_double_equal(get_vector(wheel->points)[2].y, 2  , 6);
+  munit_assert_double_equal(get_vector(wheel->points)[2].z, 0.5, 6);
+  return MUNIT_OK;
+}
+
 MunitTest test_hull[] = {
   {"/create"           , test_create           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/add_point"        , test_add_point        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -487,5 +498,6 @@ MunitTest test_hull[] = {
   {"/transform"        , test_transform        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/contacts"         , test_contacts         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/cube"             , test_cube             , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/wheel"            , test_wheel            , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                , NULL                  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
