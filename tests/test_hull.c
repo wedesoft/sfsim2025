@@ -458,12 +458,22 @@ static MunitResult test_cube(const MunitParameter params[], void *data) {
 
 static MunitResult test_wheel(const MunitParameter params[], void *data) {
   hull_t *wheel = make_wheel(2, 1, 4);
+  munit_assert_int(wheel->points.size, ==, 10);
   munit_assert_double_equal(get_vector(wheel->points)[0].x, 2  , 6);
   munit_assert_double_equal(get_vector(wheel->points)[0].y, 0  , 6);
   munit_assert_double_equal(get_vector(wheel->points)[0].z, 0.5, 6);
   munit_assert_double_equal(get_vector(wheel->points)[2].x, 0  , 6);
   munit_assert_double_equal(get_vector(wheel->points)[2].y, 2  , 6);
   munit_assert_double_equal(get_vector(wheel->points)[2].z, 0.5, 6);
+  return MUNIT_OK;
+}
+
+static MunitResult test_icosahedron(const MunitParameter params[], void *data) {
+  hull_t *icosahedron = make_icosahedron(3.0 / 4.0 * sqrt(10.0 + 2 * sqrt(5)));
+  munit_assert_int(icosahedron->points.size, ==, 12);
+  munit_assert_double_equal(get_vector(icosahedron->points)[0].x, 0, 6);
+  munit_assert_double_equal(get_vector(icosahedron->points)[0].y, -1.5, 6);
+  munit_assert_double_equal(get_vector(icosahedron->points)[0].z, -3.0 / 4.0 * (1 + sqrt(5)), 6);
   return MUNIT_OK;
 }
 
@@ -499,5 +509,6 @@ MunitTest test_hull[] = {
   {"/contacts"         , test_contacts         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/cube"             , test_cube             , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/wheel"            , test_wheel            , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/icosahedron"      , test_icosahedron      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                , NULL                  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

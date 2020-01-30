@@ -278,3 +278,24 @@ hull_t *make_wheel(double r, double d, int n) {
   };
   return result;
 }
+
+// Define an icosahedron (12 corners, 20 surfaces)
+// https://de.wikipedia.org/wiki/Ikosaeder
+hull_t *make_icosahedron(double r) {
+  hull_t *result = make_hull();
+  double a2 = 2 * r / sqrt(10 + 2 * sqrt(5));
+  double phi = 0.5 * a2 * (1 + sqrt(5));
+  add_point(result, vector(0, -a2, -phi));
+  add_point(result, vector(0, -a2, +phi));
+  add_point(result, vector(0, +a2, -phi));
+  add_point(result, vector(0, +a2, +phi));
+  add_point(result, vector(-a2, -phi, 0));
+  add_point(result, vector(-a2, +phi, 0));
+  add_point(result, vector(+a2, -phi, 0));
+  add_point(result, vector(+a2, +phi, 0));
+  add_point(result, vector(-phi, 0, -a2));
+  add_point(result, vector(+phi, 0, -a2));
+  add_point(result, vector(-phi, 0, +a2));
+  add_point(result, vector(+phi, 0, +a2));
+  return result;
+}
