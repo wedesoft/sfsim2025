@@ -442,6 +442,20 @@ static MunitResult test_contacts(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_cube(const MunitParameter params[], void *data) {
+  hull_t *cube = make_cube(2, 3, 5);
+  munit_assert_int(cube->points.size, ==, 8);
+  for (int i=0; i<8; i++) {
+    int x = (i & 1) == 0 ? -1 : 1;
+    int z = (i & 2) == 0 ? -1 : 1;
+    int y = (i & 4) == 0 ? -1 : 1;
+    munit_assert_double(get_vector(cube->points)[i].x, ==, 1   * x);
+    munit_assert_double(get_vector(cube->points)[i].y, ==, 1.5 * y);
+    munit_assert_double(get_vector(cube->points)[i].z, ==, 2.5 * z);
+  };
+  return MUNIT_OK;
+}
+
 MunitTest test_hull[] = {
   {"/create"           , test_create           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/add_point"        , test_add_point        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -472,5 +486,6 @@ MunitTest test_hull[] = {
   {"/no_contact"       , test_no_contact       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/transform"        , test_transform        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/contacts"         , test_contacts         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/cube"             , test_cube             , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                , NULL                  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
