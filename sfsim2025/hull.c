@@ -283,7 +283,7 @@ hull_t *make_wheel(double r, double d, int n) {
 // https://de.wikipedia.org/wiki/Ikosaeder
 hull_t *make_icosahedron(double r) {
   hull_t *result = make_hull();
-  double a2 = 2 * r / sqrt(10 + 2 * sqrt(5));
+  double a2 = 2.0 * r / sqrt(10.0 + 2.0 * sqrt(5.0));
   double phi = 0.5 * a2 * (1 + sqrt(5));
   add_point(result, vector(0, -a2, -phi));
   add_point(result, vector(0, -a2, +phi));
@@ -297,5 +297,25 @@ hull_t *make_icosahedron(double r) {
   add_point(result, vector(+phi, 0, -a2));
   add_point(result, vector(-phi, 0, +a2));
   add_point(result, vector(+phi, 0, +a2));
+  add_face(result, face( 0,  8,  2));
+  add_face(result, face( 0,  2,  9));
+  add_face(result, face( 1,  3, 10));
+  add_face(result, face( 1, 11,  3));
+  add_face(result, face( 5,  7,  2));
+  add_face(result, face( 3,  7,  5));
+  add_face(result, face( 1,  4,  6));
+  add_face(result, face( 0,  6,  4));
+  add_face(result, face( 5,  8, 10));
+  add_face(result, face(10,  8,  4));
+  add_face(result, face( 6,  9, 11));
+  add_face(result, face(11,  9,  7));
+  add_face(result, face( 1, 10,  4));
+  add_face(result, face( 6, 11,  1));
+  add_face(result, face( 6,  0,  9));
+  add_face(result, face( 0,  4,  8));
+  add_face(result, face(10,  3,  5));
+  add_face(result, face( 3, 11,  7));
+  add_face(result, face( 7,  9,  2));
+  add_face(result, face( 2,  8,  5));
   return result;
 }
