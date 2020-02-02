@@ -3,6 +3,7 @@
 #include "test_contact.h"
 #include "test_force.h"
 #include "test_friction.h"
+#include "test_image.h"
 #include "test_joint.h"
 #include "test_large_matrix.h"
 #include "test_large_vector.h"
@@ -37,6 +38,7 @@ static MunitSuite test_sfsim[] = {
   {"/world"               , test_world               , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/force"               , test_force               , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/friction"            , test_friction            , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/image"               , test_image               , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {NULL                   , NULL                     , NULL, 0, MUNIT_SUITE_OPTION_NONE}
 };
 
