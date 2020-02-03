@@ -55,3 +55,31 @@ icosahedron_SOURCES = icosahedron.c
 icosahedron_CFLAGS = $(GLEW_CFLAGS) $(GL_CFLAGS) $(ATLAS_CFLAGS) $(BOEHM_CFLAGS) $(SDL_CFLAGS)
 icosahedron_LDFLAGS =
 icosahedron_LDADD = libsfsim2025.la $(GLEW_LIBS) $(GL_LIBS) $(BOEHM_LIBS) $(SDL_LIBS) -lm
+
+bluemarble-local: world.200404.3x21600x21600.A1.png world.200404.3x21600x21600.A2.png world.200404.3x21600x21600.B1.png \
+	world.200404.3x21600x21600.B2.png world.200404.3x21600x21600.C1.png world.200404.3x21600x21600.C2.png \
+	world.200404.3x21600x21600.D1.png world.200404.3x21600x21600.D2.png
+
+world.200404.3x21600x21600.A1.png:
+	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.A1.png
+
+world.200404.3x21600x21600.A2.png:
+	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.A2.png
+
+world.200404.3x21600x21600.B1.png:
+	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.B1.png
+
+world.200404.3x21600x21600.B2.png:
+	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.B2.png
+
+world.200404.3x21600x21600.C1.png:
+	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.C1.png
+
+world.200404.3x21600x21600.C2.png:
+	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.C2.png
+
+world.200404.3x21600x21600.D1.png:
+	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.D1.png
+
+world.200404.3x21600x21600.D2.png:
+	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.D2.png

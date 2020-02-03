@@ -58,6 +58,8 @@ PKG_CHECK_MODULES(GLEW, glew >= 2.0.0)
 AC_SUBST(GLEW_CFLAGS)
 AC_SUBST(GLEW_LIBS)
 
+AM_EXTRA_RECURSIVE_TARGETS([bluemarble])
+
 AC_OUTPUT(Makefile
           sfsim2025/Makefile
           tests/Makefile)
