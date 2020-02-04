@@ -1,3 +1,5 @@
+noinst_DATA = black.png color.png
+
 check_PROGRAMS = suite
 
 check_HEADERS = munit.h test_contact.h test_helper.h test_force.h test_friction.h test_image.h test_joint.h test_large_matrix.h \

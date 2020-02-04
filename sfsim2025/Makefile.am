@@ -5,11 +5,11 @@ lib_LTLIBRARIES = libsfsim2025.la
 pkginclude_HEADERS = body.h contact.h coordinate.h edge.h face.h force.h friction.h image.h joint.h large_matrix.h large_vector.h \
 										 list.h matrix.h matrix43.h mechanics.h plane.h polygon.h quaternion.h hull.h state.h vector.h world.h
 
-libsfsim2025_la_SOURCES = contact.c force.c friction.c joint.c large_matrix.c large_vector.c list.c matrix.c mechanics.c plane.c \
-													polygon.c quaternion.c hull.c state.c vector.c world.c
-libsfsim2025_la_CFLAGS = $(GLEW_CFLAGS) $(GL_CFLAGS) $(ATLAS_CFLAGS) $(BOEHM_CFLAGS)
+libsfsim2025_la_SOURCES = contact.c force.c friction.c image.c joint.c large_matrix.c large_vector.c list.c matrix.c mechanics.c \
+													plane.c polygon.c quaternion.c hull.c state.c vector.c world.c
+libsfsim2025_la_CFLAGS = $(GLEW_CFLAGS) $(GL_CFLAGS) $(MAGICK_CFLAGS) $(ATLAS_CFLAGS) $(BOEHM_CFLAGS)
 libsfsim2025_la_LDFLAGS =
-libsfsim2025_la_LIBADD = $(GLEW_LIBS) $(GL_LIBS) -llapack_atlas $(ATLAS_LIBS) $(BOEHM_LIBS) -lm
+libsfsim2025_la_LIBADD = $(GLEW_LIBS) $(GL_LIBS) $(MAGICK_LIBS) -llapack_atlas $(ATLAS_LIBS) $(BOEHM_LIBS) -lm
 
 tumble_SOURCES = tumble.c
 tumble_CFLAGS = $(GLEW_CFLAGS) $(GL_CFLAGS) $(ATLAS_CFLAGS) $(BOEHM_CFLAGS) $(SDL_CFLAGS)
@@ -55,3 +55,31 @@ icosahedron_SOURCES = icosahedron.c
 icosahedron_CFLAGS = $(GLEW_CFLAGS) $(GL_CFLAGS) $(ATLAS_CFLAGS) $(BOEHM_CFLAGS) $(SDL_CFLAGS)
 icosahedron_LDFLAGS =
 icosahedron_LDADD = libsfsim2025.la $(GLEW_LIBS) $(GL_LIBS) $(BOEHM_LIBS) $(SDL_LIBS) -lm
+
+bluemarble-local: world.200404.3x21600x21600.A1.png world.200404.3x21600x21600.A2.png world.200404.3x21600x21600.B1.png \
+	world.200404.3x21600x21600.B2.png world.200404.3x21600x21600.C1.png world.200404.3x21600x21600.C2.png \
+	world.200404.3x21600x21600.D1.png world.200404.3x21600x21600.D2.png
+
+world.200404.3x21600x21600.A1.png:
+	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.A1.png
+
+world.200404.3x21600x21600.A2.png:
+	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.A2.png
+
+world.200404.3x21600x21600.B1.png:
+	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.B1.png
+
+world.200404.3x21600x21600.B2.png:
+	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.B2.png
+
+world.200404.3x21600x21600.C1.png:
+	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.C1.png
+
+world.200404.3x21600x21600.C2.png:
+	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.C2.png
+
+world.200404.3x21600x21600.D1.png:
+	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.D1.png
+
+world.200404.3x21600x21600.D2.png:
+	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.D2.png
