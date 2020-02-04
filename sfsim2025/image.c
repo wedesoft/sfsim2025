@@ -1,3 +1,4 @@
+#include <sys/stat.h>
 #include <string.h>
 #include <gc.h>
 #include <magick/MagickCore.h>
@@ -12,7 +13,6 @@ image_t read_image(const char *file_name) {
   CopyMagickString(image_info->filename, file_name, MaxTextExtent);
   Image *images = ReadImage(image_info, exception_info);
   if (exception_info->severity < ErrorException) {
-    CatchException(exception_info);
     Image *image = RemoveFirstImageFromList(&images);
     result.height = image->rows;
     result.width = image->columns;
@@ -31,6 +31,7 @@ image_t read_image(const char *file_name) {
     result.width = 0;
     result.data = NULL;
   };
+  CatchException(exception_info);
   DestroyImageInfo(image_info);
   DestroyExceptionInfo(exception_info);
   return result;
@@ -57,12 +58,28 @@ void write_image(image_t image, const char *file_name) {
   GetImageInfo(image_info);
   Image *frame = ConstituteImage(image.width, image.height, "RGB", CharPixel, image.data, exception_info);
   if (exception_info->severity < ErrorException) {
-    CatchException(exception_info);
     Image *images = NewImageList();
     AppendImageToList(&images, frame);
     WriteImages(image_info, images, file_name, exception_info);
+    CatchException(exception_info);
     DestroyImageList(images);
   };
+  CatchException(exception_info);
   DestroyImageInfo(image_info);
   DestroyExceptionInfo(exception_info);
+}
+
+// Create a directory and it's parents.
+void mkdir_p(const char *path) {
+  int i = 1;
+  while (i < strlen(path)) {
+    if (path[i] == '/') {
+      char *prefix = GC_MALLOC_ATOMIC(i + 1);
+      strncpy(prefix, path, i);
+      prefix[i] = 0;
+      mkdir(prefix, 0755);
+    };
+    i++;
+  };
+  mkdir(path, 0755);
 }

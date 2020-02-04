@@ -1,3 +1,4 @@
+#include <sys/stat.h>
 #include "sfsim2025/image.h"
 #include "test_image.h"
 #include "test_helper.h"
@@ -48,11 +49,19 @@ static MunitResult test_write(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_mkdir_p(const MunitParameter params[], void *data) {
+  const char *path = "/tmp/test-image-mkdir-p/dir/subdir";
+  mkdir_p(path);
+  struct stat statbuf;
+  munit_assert_int(stat(path, &statbuf), ==, 0);
+}
+
 MunitTest test_image[] = {
   {"/shape"   , test_shape   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/no_image", test_no_image, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/color"   , test_color   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/crop"    , test_crop    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/write"   , test_write   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/mkdir_p" , test_mkdir_p , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL       , NULL         , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
