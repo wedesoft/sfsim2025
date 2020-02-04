@@ -1,8 +1,10 @@
+#include <string.h>
 #include <gc.h>
 #include <magick/MagickCore.h>
 #include "image.h"
 
 
+// Load image from hard disk.
 image_t read_image(const char *file_name) {
   image_t result;
   ExceptionInfo *exception_info = AcquireExceptionInfo();
@@ -23,8 +25,8 @@ image_t read_image(const char *file_name) {
       result.data = NULL;
     };
     DestroyImage(image);
+    DestroyImageList(images);
   } else {
-    CatchException(exception_info);
     result.height = 0;
     result.width = 0;
     result.data = NULL;
@@ -32,4 +34,35 @@ image_t read_image(const char *file_name) {
   DestroyImageInfo(image_info);
   DestroyExceptionInfo(exception_info);
   return result;
+}
+
+image_t crop(image_t image, int y, int x, int height, int width) {
+  image_t result;
+  result.height = height;
+  result.width = width;
+  result.data = GC_MALLOC_ATOMIC(result.height * result.width * 3);
+  char *p = result.data;
+  char *q = image.data + y * 3 * image.width + x * 3;
+  for (int j=0; j<result.height; j++) {
+    memcpy(p, q, result.width * 3);
+    p += result.width * 3;
+    q += image.width * 3;
+  };
+  return result;
+}
+
+void write_image(image_t image, const char *file_name) {
+  ExceptionInfo *exception_info = AcquireExceptionInfo();
+  ImageInfo *image_info = AcquireImageInfo();
+  GetImageInfo(image_info);
+  Image *frame = ConstituteImage(image.width, image.height, "RGB", CharPixel, image.data, exception_info);
+  if (exception_info->severity < ErrorException) {
+    CatchException(exception_info);
+    Image *images = NewImageList();
+    AppendImageToList(&images, frame);
+    WriteImages(image_info, images, file_name, exception_info);
+    DestroyImageList(images);
+  };
+  DestroyImageInfo(image_info);
+  DestroyExceptionInfo(exception_info);
 }
