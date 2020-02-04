@@ -1,4 +1,4 @@
-noinst_PROGRAMS = tumble pendulum chain collide spring gear wheel car icosahedron
+noinst_PROGRAMS = tumble pendulum chain collide spring gear wheel car icosahedron maptiles
 
 lib_LTLIBRARIES = libsfsim2025.la
 
@@ -55,6 +55,11 @@ icosahedron_SOURCES = icosahedron.c
 icosahedron_CFLAGS = $(GLEW_CFLAGS) $(GL_CFLAGS) $(ATLAS_CFLAGS) $(BOEHM_CFLAGS) $(SDL_CFLAGS)
 icosahedron_LDFLAGS =
 icosahedron_LDADD = libsfsim2025.la $(GLEW_LIBS) $(GL_LIBS) $(BOEHM_LIBS) $(SDL_LIBS) -lm
+
+maptiles_SOURCES = maptiles.c
+maptiles_CFLAGS = $(BOEHM_CFLAGS)
+maptiles_LDFLAGS =
+maptiles_LDADD = libsfsim2025.la $(BOEHM_LIBS) -lm
 
 bluemarble-local: world.200404.3x21600x21600.A1.png world.200404.3x21600x21600.A2.png world.200404.3x21600x21600.B1.png \
 	world.200404.3x21600x21600.B2.png world.200404.3x21600x21600.C1.png world.200404.3x21600x21600.C2.png \
