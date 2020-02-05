@@ -54,6 +54,14 @@ static MunitResult test_mkdir_p(const MunitParameter params[], void *data) {
   mkdir_p(path);
   struct stat statbuf;
   munit_assert_int(stat(path, &statbuf), ==, 0);
+  return MUNIT_OK;
+}
+
+static MunitResult test_tilepath(const MunitParameter params[], void *data) {
+  munit_assert_string_equal(tilepath("test", 0, 0, 0), "test.png");
+  munit_assert_string_equal(tilepath("test", 1, 1, 0), "test/10.png");
+  munit_assert_string_equal(tilepath("test", 2, 3, 1), "test/10/11.png");
+  return MUNIT_OK;
 }
 
 MunitTest test_image[] = {
@@ -63,5 +71,6 @@ MunitTest test_image[] = {
   {"/crop"    , test_crop    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/write"   , test_write   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/mkdir_p" , test_mkdir_p , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/tilepath", test_tilepath, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL       , NULL         , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
