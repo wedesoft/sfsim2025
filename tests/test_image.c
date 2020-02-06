@@ -1,3 +1,4 @@
+#include <gc.h>
 #include <sys/stat.h>
 #include "sfsim2025/image.h"
 #include "test_image.h"
@@ -64,6 +65,21 @@ static MunitResult test_tilepath(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_scale50(const MunitParameter params[], void *data) {
+  char *pixels = GC_MALLOC_ATOMIC(12);
+  image_t image = (image_t){.height = 2, .width = 2, .data = pixels};
+  pixels[0] =   4; pixels[3] =   6; pixels[6] =   8; pixels[ 9] =  10;
+  pixels[1] = 104; pixels[4] = 106; pixels[7] = 108; pixels[10] = 110;
+  pixels[2] = 204; pixels[5] = 206; pixels[8] = 208; pixels[11] = 210;
+  image_t result = scale50(image);
+  munit_assert_int(result.height, ==, 1);
+  munit_assert_int(result.width, ==, 1);
+  munit_assert_int(result.data[0], ==,   7);
+  munit_assert_int(result.data[1], ==, 107);
+  munit_assert_int(result.data[2], ==, 207);
+  return MUNIT_OK;
+}
+
 MunitTest test_image[] = {
   {"/shape"   , test_shape   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/no_image", test_no_image, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -72,5 +88,6 @@ MunitTest test_image[] = {
   {"/write"   , test_write   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/mkdir_p" , test_mkdir_p , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/tilepath", test_tilepath, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/scale50" , test_scale50 , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL       , NULL         , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

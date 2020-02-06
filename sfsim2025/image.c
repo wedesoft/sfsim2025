@@ -42,8 +42,8 @@ image_t crop(image_t image, int y, int x, int height, int width) {
   result.height = height;
   result.width = width;
   result.data = GC_MALLOC_ATOMIC(result.height * result.width * 3);
-  char *p = result.data;
-  char *q = image.data + y * 3 * image.width + x * 3;
+  unsigned char *p = result.data;
+  unsigned char *q = image.data + y * 3 * image.width + x * 3;
   for (int j=0; j<result.height; j++) {
     memcpy(p, q, result.width * 3);
     p += result.width * 3;
@@ -95,5 +95,28 @@ char *tilepath(const char *prefix, int levels, int y, int x) {
     strcat(result, buf);
   };
   strcat(result, ".png");
+  return result;
+}
+
+image_t scale50(image_t image) {
+  int width = image.width / 2;
+  int height = image.height / 2;
+  image_t result = (image_t){.width = width, .height = height, .data = GC_MALLOC_ATOMIC(width * height * 3)};
+  unsigned char *p0 = result.data;
+  unsigned char *q0 = image.data;
+  int row = 3 * image.width;
+  for (int j=0; j<height; j++) {
+    unsigned char *p = p0;
+    unsigned char *q = q0;
+    for (int i=0; i<width; i++) {
+      p[0] = ((int)q[0] + q[3] + q[row    ] + q[row + 3]) / 4;
+      p[1] = ((int)q[1] + q[4] + q[row + 1] + q[row + 4]) / 4;
+      p[2] = ((int)q[2] + q[5] + q[row + 2] + q[row + 5]) / 4;
+      p += 3;
+      q += 6;
+    };
+    q0 += result.width * 3;
+    p0 += 2 * image.width * 3;
+  };
   return result;
 }
