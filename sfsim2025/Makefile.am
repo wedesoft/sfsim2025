@@ -1,4 +1,4 @@
-noinst_PROGRAMS = tumble pendulum chain collide spring gear wheel car icosahedron maptiles
+noinst_PROGRAMS = tumble pendulum chain collide spring gear wheel car icosahedron maptiles scale50
 
 lib_LTLIBRARIES = libsfsim2025.la
 
@@ -60,6 +60,11 @@ maptiles_SOURCES = maptiles.c
 maptiles_CFLAGS = $(BOEHM_CFLAGS)
 maptiles_LDFLAGS =
 maptiles_LDADD = libsfsim2025.la $(BOEHM_LIBS) -lm
+
+scale50_SOURCES = scale50.c
+scale50_CFLAGS = $(BOEHM_CFLAGS)
+scale50_LDFLAGS =
+scale50_LDADD = libsfsim2025.la $(BOEHM_LIBS) -lm
 
 bluemarble-local: world.200404.3x21600x21600.A1.png world.200404.3x21600x21600.A2.png world.200404.3x21600x21600.B1.png \
 	world.200404.3x21600x21600.B2.png world.200404.3x21600x21600.C1.png world.200404.3x21600x21600.C2.png \

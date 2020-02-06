@@ -115,8 +115,8 @@ image_t scale50(image_t image) {
       p += 3;
       q += 6;
     };
-    q0 += result.width * 3;
-    p0 += 2 * image.width * 3;
+    p0 += result.width * 3;
+    q0 += 2 * image.width * 3;
   };
   return result;
 }

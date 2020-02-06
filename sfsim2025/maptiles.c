@@ -12,10 +12,9 @@ int main(int argc, char *argv[]) {
     return 1;
   };
   GC_INIT();
-  const char *filename = argv[1];
   int tilesize = atoi(argv[2]);
   int levels = atoi(argv[3]);
-  image_t image = read_image(filename);
+  image_t image = read_image(argv[1]);
   for (int j=0; j<image.height / tilesize; j++) {
     for (int i=0; i<image.width / tilesize; i++) {
       image_t tile = crop(image, j * tilesize, i * tilesize, tilesize, tilesize);
