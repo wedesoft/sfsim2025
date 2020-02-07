@@ -1,5 +1,7 @@
 noinst_PROGRAMS = tumble pendulum chain collide spring gear wheel car icosahedron maptiles scale50
 
+noinst_SCRIPTS = multiresmap.sh
+
 lib_LTLIBRARIES = libsfsim2025.la
 
 pkginclude_HEADERS = body.h contact.h coordinate.h edge.h face.h force.h friction.h image.h joint.h large_matrix.h large_vector.h \
@@ -66,10 +68,6 @@ scale50_CFLAGS = $(BOEHM_CFLAGS)
 scale50_LDFLAGS =
 scale50_LDADD = libsfsim2025.la $(BOEHM_LIBS) -lm
 
-bluemarble-local: world.200404.3x21600x21600.A1.png world.200404.3x21600x21600.A2.png world.200404.3x21600x21600.B1.png \
-	world.200404.3x21600x21600.B2.png world.200404.3x21600x21600.C1.png world.200404.3x21600x21600.C2.png \
-	world.200404.3x21600x21600.D1.png world.200404.3x21600x21600.D2.png
-
 world.200404.3x21600x21600.A1.png:
 	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.A1.png
 
@@ -93,3 +91,29 @@ world.200404.3x21600x21600.D1.png:
 
 world.200404.3x21600x21600.D2.png:
 	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.D2.png
+
+bluemarble-local: 00/00.png 00/01.png 00/10.png 00/11.png 01/00.png 01/01.png 01/10.png 01/11.png
+
+00/00.png: world.200404.3x21600x21600.A1.png
+	sh ./multiresmap.sh $< $(basename $@)
+
+00/10.png: world.200404.3x21600x21600.A2.png
+	sh ./multiresmap.sh $< $(basename $@)
+
+00/01.png: world.200404.3x21600x21600.B1.png
+	sh ./multiresmap.sh $< $(basename $@)
+
+00/11.png: world.200404.3x21600x21600.B2.png
+	sh ./multiresmap.sh $< $(basename $@)
+
+01/00.png: world.200404.3x21600x21600.C1.png
+	sh ./multiresmap.sh $< $(basename $@)
+
+01/10.png: world.200404.3x21600x21600.C2.png
+	sh ./multiresmap.sh $< $(basename $@)
+
+01/01.png: world.200404.3x21600x21600.D1.png
+	sh ./multiresmap.sh $< $(basename $@)
+
+01/11.png: world.200404.3x21600x21600.D2.png
+	sh ./multiresmap.sh $< $(basename $@)
