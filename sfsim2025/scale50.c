@@ -5,8 +5,8 @@
 
 int main(int argc, char *argv[]) {
   if (argc != 3) {
-    fprintf(stderr, "Syntax: ./maptiles [input image] [output image]\n");
-    fprintf(stderr, "Example: ./maptiles world.200404.3x21600x21600.C1.png map2.png\n");
+    fprintf(stderr, "Syntax: ./scale50 [input image] [output image]\n");
+    fprintf(stderr, "Example: ./scale50 world.200404.3x21600x21600.C1.png map2.png\n");
     return 1;
   };
   GC_INIT();
