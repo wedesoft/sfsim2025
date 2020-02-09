@@ -13,6 +13,11 @@ AC_LANG(C)
 PKG_PROG_PKG_CONFIG
 AM_CONFIG_HEADER(config.h)
 
+AC_CHECK_PROG(WGET,wget,wget,no)
+if test "x$WGET" = xno; then
+  AC_MSG_ERROR([Could not find 'wget' in path.])
+fi
+
 AC_CHECK_LIB([m], [sqrt])
 
 PKG_CHECK_MODULES(BOEHM, bdw-gc >= 7.4.2)
@@ -58,7 +63,7 @@ PKG_CHECK_MODULES(GLEW, glew >= 2.0.0)
 AC_SUBST(GLEW_CFLAGS)
 AC_SUBST(GLEW_LIBS)
 
-AM_EXTRA_RECURSIVE_TARGETS([bluemarble])
+AM_EXTRA_RECURSIVE_TARGETS([bluemarble elevation])
 
 AC_OUTPUT(Makefile
           sfsim2025/Makefile

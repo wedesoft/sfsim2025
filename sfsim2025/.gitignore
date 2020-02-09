@@ -8,5 +8,8 @@ tumble
 wheel
 icosahedron
 maptiles
+world
+all10
 scale50
 *.png
+*.tgz

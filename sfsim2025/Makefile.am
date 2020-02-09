@@ -69,31 +69,28 @@ scale50_LDFLAGS =
 scale50_LDADD = libsfsim2025.la $(BOEHM_LIBS) -lm
 
 world.200404.3x21600x21600.A1.png:
-	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.A1.png
+	$(WGET) https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.A1.png
 
 world.200404.3x21600x21600.A2.png:
-	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.A2.png
+	$(WGET) https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.A2.png
 
 world.200404.3x21600x21600.B1.png:
-	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.B1.png
+	$(WGET) https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.B1.png
 
 world.200404.3x21600x21600.B2.png:
-	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.B2.png
+	$(WGET) https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.B2.png
 
 world.200404.3x21600x21600.C1.png:
-	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.C1.png
+	$(WGET) https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.C1.png
 
 world.200404.3x21600x21600.C2.png:
-	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.C2.png
+	$(WGET) https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.C2.png
 
 world.200404.3x21600x21600.D1.png:
-	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.D1.png
+	$(WGET) https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.D1.png
 
 world.200404.3x21600x21600.D2.png:
-	wget https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.D2.png
-
-bluemarble-local: world/00/00.png world/00/01.png world/00/10.png world/00/11.png \
-	world/01/00.png world/01/01.png world/01/10.png world/01/11.png
+	$(WGET) https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.D2.png
 
 world/00/00.png: world.200404.3x21600x21600.A1.png
 	sh ./multiresmap.sh $< $(basename $@)
@@ -118,3 +115,15 @@ world/01/01.png: world.200404.3x21600x21600.D1.png
 
 world/01/11.png: world.200404.3x21600x21600.D2.png
 	sh ./multiresmap.sh $< $(basename $@)
+
+bluemarble-local: world/00/00.png world/00/01.png world/00/10.png world/00/11.png \
+	world/01/00.png world/01/01.png world/01/10.png world/01/11.png
+
+elevation-local: all10
+
+all10g.tgz:
+	$(WGET) https://www.ngdc.noaa.gov/mgg/topo/DATATILES/elev/all10g.tgz
+
+all10: all10g.tgz
+	tar -xvf $<
+	touch $@
