@@ -1,4 +1,4 @@
-noinst_DATA = black.png color.png indices.png zeros.raw
+noinst_DATA = black.png color.png indices.png zeros.raw data.raw
 
 check_PROGRAMS = suite
 
