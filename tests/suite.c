@@ -1,6 +1,7 @@
 #include <gc.h>
 #include "munit.h"
 #include "test_contact.h"
+#include "test_elevation.h"
 #include "test_force.h"
 #include "test_friction.h"
 #include "test_image.h"
@@ -39,6 +40,7 @@ static MunitSuite test_sfsim[] = {
   {"/force"               , test_force               , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/friction"            , test_friction            , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/image"               , test_image               , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/elevation"           , test_elevation           , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {NULL                   , NULL                     , NULL, 0, MUNIT_SUITE_OPTION_NONE}
 };
 
