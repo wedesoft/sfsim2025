@@ -17,4 +17,4 @@ void mkdir_p(const char *path);
 
 char *tilepath(const char *prefix, int levels, int y, int x);
 
-image_t scale50(image_t image);
+image_t scale_image(image_t image);

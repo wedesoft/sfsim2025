@@ -98,7 +98,7 @@ char *tilepath(const char *prefix, int levels, int y, int x) {
   return result;
 }
 
-image_t scale50(image_t image) {
+image_t scale_image(image_t image) {
   int width = image.width / 2;
   int height = image.height / 2;
   image_t result = (image_t){.width = width, .height = height, .data = GC_MALLOC_ATOMIC(width * height * 3)};

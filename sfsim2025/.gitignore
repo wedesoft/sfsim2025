@@ -10,7 +10,7 @@ icosahedron
 maptiles
 world
 all10
-scale50
+scale-image
 *.png
 *.raw
 *.tgz
