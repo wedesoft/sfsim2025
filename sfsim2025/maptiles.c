@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
   image_t image = read_image(argv[1]);
   for (int j=0; j<image.height / tilesize; j++) {
     for (int i=0; i<image.width / tilesize; i++) {
-      image_t tile = crop(image, j * tilesize, i * tilesize, tilesize, tilesize);
+      image_t tile = crop_image(image, j * tilesize, i * tilesize, tilesize, tilesize);
       mkdir_p(dirname(tilepath(argv[4], levels, j, i)));
       write_image(tile, tilepath(argv[4], levels, j, i));
     };

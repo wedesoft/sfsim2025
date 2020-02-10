@@ -30,7 +30,7 @@ static MunitResult test_color(const MunitParameter params[], void *data) {
 
 static MunitResult test_crop(const MunitParameter params[], void *data) {
   image_t image = read_image("indices.png");
-  image_t cropped = crop(image, 1, 2, 3, 4);
+  image_t cropped = crop_image(image, 1, 2, 3, 4);
   munit_assert_int(cropped.height, ==, 3);
   munit_assert_int(cropped.width, ==, 4);
   munit_assert_int(cropped.data[0], ==, 12);
