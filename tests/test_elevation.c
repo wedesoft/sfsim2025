@@ -47,11 +47,22 @@ static MunitResult test_scale_data(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_crop_data(const MunitParameter params[], void *data) {
+  elevation_t elevation = read_elevation("indices.raw");
+  elevation_t cropped = crop_elevation(elevation, 1, 2, 3, 4);
+  munit_assert_int(cropped.height, ==, 3);
+  munit_assert_int(cropped.width, ==, 4);
+  munit_assert_int(cropped.data[0], ==, 12);
+  munit_assert_int(cropped.data[4], ==, 22);
+  return MUNIT_OK;
+}
+
 MunitTest test_elevation[] = {
   {"/shape"      , test_shape      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/no_data"    , test_no_data    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/read_data"  , test_read_data  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/write_data" , test_write_data , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/scale_data" , test_scale_data , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/crop_data"  , test_crop_data  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL          , NULL            , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

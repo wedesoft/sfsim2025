@@ -12,6 +12,7 @@ world
 all10
 scale-image
 scale-elevation
+elevationtiles
 *.png
 *.raw
 *.tgz

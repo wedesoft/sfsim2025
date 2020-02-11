@@ -1,6 +1,7 @@
 #include <gc.h>
 #include <tgmath.h>
 #include <stdio.h>
+#include <string.h>
 #include <sys/stat.h>
 #include "elevation.h"
 
@@ -52,6 +53,21 @@ elevation_t scale_elevation(elevation_t elevation) {
     };
     p0 += result.width;
     q0 += 2 * elevation.width;
+  };
+  return result;
+}
+
+elevation_t crop_elevation(elevation_t elevation, int y, int x, int height, int width) {
+  elevation_t result;
+  result.height = height;
+  result.width = width;
+  result.data = GC_MALLOC_ATOMIC(height * width * 2);
+  short int *p = result.data;
+  short int *q = elevation.data + y * elevation.width + x;
+  for (int j=0; j<result.height; j++) {
+    memcpy(p, q, result.width * 2);
+    p += result.width;
+    q += elevation.width;
   };
   return result;
 }

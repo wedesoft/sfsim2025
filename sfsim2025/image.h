@@ -15,6 +15,6 @@ image_t crop_image(image_t image, int y, int x, int height, int width);
 
 void mkdir_p(const char *path);
 
-char *tilepath(const char *prefix, int levels, int y, int x);
+char *tilepath(const char *prefix, int levels, int y, int x, const char *suffix);
 
 image_t scale_image(image_t image);

@@ -86,7 +86,7 @@ void mkdir_p(const char *path) {
   mkdir(path, 0755);
 }
 
-char *tilepath(const char *prefix, int levels, int y, int x) {
+char *tilepath(const char *prefix, int levels, int y, int x, const char *suffix) {
   char *result = GC_MALLOC_ATOMIC(4096);
   sprintf(result, "%s", prefix);
   for (int l=levels-1; l>=0; l--) {
@@ -96,7 +96,7 @@ char *tilepath(const char *prefix, int levels, int y, int x) {
     sprintf(buf, "/%d%d", yb, xb);
     strcat(result, buf);
   };
-  strcat(result, ".png");
+  strcat(result, suffix);
   return result;
 }
 
