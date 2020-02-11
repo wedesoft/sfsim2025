@@ -1,4 +1,4 @@
-noinst_PROGRAMS = tumble pendulum chain collide spring gear wheel car icosahedron maptiles scale-image
+noinst_PROGRAMS = tumble pendulum chain collide spring gear wheel car icosahedron maptiles scale-image scale-elevation
 
 noinst_SCRIPTS = multiresmap.sh
 
@@ -68,6 +68,11 @@ scale_image_SOURCES = scale_image.c
 scale_image_CFLAGS = $(BOEHM_CFLAGS)
 scale_image_LDFLAGS =
 scale_image_LDADD = libsfsim2025.la $(BOEHM_LIBS) -lm
+
+scale_elevation_SOURCES = scale_elevation.c
+scale_elevation_CFLAGS = $(BOEHM_CFLAGS)
+scale_elevation_LDFLAGS =
+scale_elevation_LDADD = libsfsim2025.la $(BOEHM_LIBS) -lm
 
 world.200404.3x21600x21600.A1.png:
 	$(WGET) https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.A1.png
