@@ -37,10 +37,21 @@ static MunitResult test_write_data(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_scale_data(const MunitParameter params[], void *data) {
+  short int values[] = {4, 6, 8, 10};
+  elevation_t elevation = (elevation_t){.width = 2, .height = 2, .data = values};
+  elevation_t result = scale_elevation(elevation);
+  munit_assert_int(result.width, ==, 1);
+  munit_assert_int(result.height, ==, 1);
+  munit_assert_int(result.data[0], ==, 7);
+  return MUNIT_OK;
+}
+
 MunitTest test_elevation[] = {
   {"/shape"      , test_shape      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/no_data"    , test_no_data    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/read_data"  , test_read_data  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/write_data" , test_write_data , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/scale_data" , test_scale_data , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL          , NULL            , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

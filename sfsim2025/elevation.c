@@ -33,3 +33,25 @@ void write_elevation(elevation_t elevation, const char *file_name) {
   fwrite(elevation.data, 2 * elevation.width, elevation.height, f);
   fclose(f);
 }
+
+// Scale elevation data to 50% of its size.
+elevation_t scale_elevation(elevation_t elevation) {
+  elevation_t result;
+  result.width = elevation.width / 2;
+  result.height = elevation.height / 2;
+  result.data = GC_MALLOC_ATOMIC(2 * result.width * result.height);
+  short int *p0 = result.data;
+  short int *q0 = elevation.data;
+  for (int j=0; j<result.height; j++) {
+    short int *p = p0;
+    short int *q = q0;
+    for (int i=0; i<result.width; i++) {
+      *p = ((int)q[0] + q[1] + q[elevation.width] + q[elevation.width + 1]) / 4;
+      p++;
+      q += 2;
+    };
+    p0 += result.width;
+    q0 += 2 * elevation.width;
+  };
+  return result;
+}
