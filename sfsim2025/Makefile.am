@@ -1,6 +1,6 @@
 noinst_PROGRAMS = tumble pendulum chain collide spring gear wheel car icosahedron maptiles scale-image scale-elevation elevationtiles
 
-noinst_SCRIPTS = multiresmap.sh
+noinst_SCRIPTS = multiresmap.sh multireselevation.sh
 
 lib_LTLIBRARIES = libsfsim2025.la
 

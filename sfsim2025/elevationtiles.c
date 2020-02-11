@@ -19,9 +19,8 @@ int main(int argc, char *argv[]) {
   for (int j=0; j<elevation.height / tilesize; j++) {
     for (int i=0; i<elevation.width / tilesize; i++) {
       elevation_t tile = crop_elevation(elevation, j * tilesize, i * tilesize, tilesize, tilesize);
-      char *path = tilepath(argv[4], levels, j, i, ".png");
-      mkdir_p(dirname(path));
-      write_elevation(tile, path);
+      mkdir_p(dirname(tilepath(argv[4], levels, j, i, ".raw")));
+      write_elevation(tile, tilepath(argv[4], levels, j, i, ".raw"));
     };
   };
   return 0;
