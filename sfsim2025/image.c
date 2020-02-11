@@ -5,7 +5,7 @@
 #include "image.h"
 
 
-// Load image from hard disk.
+// Load image from file.
 image_t read_image(const char *file_name) {
   image_t result;
   ExceptionInfo *exception_info = AcquireExceptionInfo();
@@ -37,6 +37,7 @@ image_t read_image(const char *file_name) {
   return result;
 }
 
+// Get cropped image.
 image_t crop_image(image_t image, int y, int x, int height, int width) {
   image_t result;
   result.height = height;
@@ -52,6 +53,7 @@ image_t crop_image(image_t image, int y, int x, int height, int width) {
   return result;
 }
 
+// Write image to file.
 void write_image(image_t image, const char *file_name) {
   ExceptionInfo *exception_info = AcquireExceptionInfo();
   ImageInfo *image_info = AcquireImageInfo();

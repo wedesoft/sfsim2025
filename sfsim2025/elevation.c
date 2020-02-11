@@ -5,7 +5,7 @@
 #include "elevation.h"
 
 
-// Load elevation data from hard disk.
+// Load elevation data from file.
 elevation_t read_elevation(const char *file_name) {
   elevation_t result;
   struct stat statbuf;
@@ -25,4 +25,11 @@ elevation_t read_elevation(const char *file_name) {
     result.data = NULL;
   };
   return result;
+}
+
+// Write elevation data to file.
+void write_elevation(elevation_t elevation, const char *file_name) {
+  FILE *f = fopen(file_name, "wb");
+  fwrite(elevation.data, 2 * elevation.width, elevation.height, f);
+  fclose(f);
 }
