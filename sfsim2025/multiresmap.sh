@@ -4,6 +4,7 @@ if [ -z $1 ] || [ -z $2 ]; then
   echo "Syntax: $0 [input image] [output prefix]" >&2
   exit 1
 fi
+# Set MAGICK_TMPDIR to file system location with plenty of space.
 ./scale-image $1 /tmp/map2.png
 ./scale-image /tmp/map2.png /tmp/map3.png
 ./scale-image /tmp/map3.png /tmp/map4.png
