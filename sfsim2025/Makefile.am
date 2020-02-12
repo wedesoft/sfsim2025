@@ -158,8 +158,32 @@ elevation.C2.raw: all10
 elevation.D2.raw: all10
 	cat all10/l10g all10/p10g > $@
 
-elevation-local: elevation.A1.raw elevation.A2.raw elevation.B1.raw elevation.B2.raw \
-	elevation.C1.raw elevation.C2.raw elevation.D1.raw elevation.D2.raw
+elevation/00/00.raw: elevation.A1.raw
+	sh ./multireselevation.sh $< $(basename $@)
+
+elevation/00/10.raw: elevation.A2.raw
+	sh ./multireselevation.sh $< $(basename $@)
+
+elevation/00/01.raw: elevation.B1.raw
+	sh ./multireselevation.sh $< $(basename $@)
+
+elevation/00/11.raw: elevation.B2.raw
+	sh ./multireselevation.sh $< $(basename $@)
+
+elevation/01/00.raw: elevation.C1.raw
+	sh ./multireselevation.sh $< $(basename $@)
+
+elevation/01/10.raw: elevation.C2.raw
+	sh ./multireselevation.sh $< $(basename $@)
+
+elevation/01/01.raw: elevation.D1.raw
+	sh ./multireselevation.sh $< $(basename $@)
+
+elevation/01/11.raw: elevation.D2.raw
+	sh ./multireselevation.sh $< $(basename $@)
+
+heightfield-local: elevation/00/00.raw elevation/00/01.raw elevation/00/10.raw elevation/00/11.raw \
+	elevation/01/00.raw elevation/01/01.raw elevation/01/10.raw elevation/01/11.raw
 
 all10g.tgz:
 	$(WGET) https://www.ngdc.noaa.gov/mgg/topo/DATATILES/elev/all10g.tgz

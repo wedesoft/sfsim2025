@@ -63,7 +63,7 @@ PKG_CHECK_MODULES(GLEW, glew >= 2.0.0)
 AC_SUBST(GLEW_CFLAGS)
 AC_SUBST(GLEW_LIBS)
 
-AM_EXTRA_RECURSIVE_TARGETS([bluemarble elevation])
+AM_EXTRA_RECURSIVE_TARGETS([bluemarble heightfield])
 
 AC_OUTPUT(Makefile
           sfsim2025/Makefile

@@ -13,6 +13,7 @@ all10
 scale-image
 scale-elevation
 elevationtiles
+elevation
 *.png
 *.raw
 *.tgz
