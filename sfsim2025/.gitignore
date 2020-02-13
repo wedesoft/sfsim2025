@@ -14,6 +14,7 @@ scale-image
 scale-elevation
 elevationtiles
 elevation
+grid
 *.png
 *.raw
 *.tgz
