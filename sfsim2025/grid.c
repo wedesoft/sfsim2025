@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <gc.h>
+#include <GL/glew.h>
 #include <GL/glut.h>
 #include <SDL.h>
 #include <SDL_opengl.h>
@@ -19,6 +20,8 @@ int main(int argc, char *argv[]) {
   SDL_Window *window = SDL_CreateWindow("grid", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480,
                                         SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
   SDL_GLContext context = SDL_GL_CreateContext(window);
+  glewExperimental = GL_TRUE;
+  glewInit();
   glViewport(0, 0, 640, 480);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -29,12 +32,6 @@ int main(int argc, char *argv[]) {
     SDL_WaitEvent(&e);
     if (e.type == SDL_QUIT)
       quit = true;
-    /*
-    while (SDL_PollEvent(&e) != 0) {
-      if (e.type == SDL_QUIT)
-        quit = true;
-    };
-    */
     display();
     SDL_GL_SwapWindow(window);
   };
