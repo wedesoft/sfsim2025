@@ -65,7 +65,6 @@ unsigned int indices[] = { 0, 1, 2 };
 
 void display(void) {
   glClear(GL_COLOR_BUFFER_BIT);
-  glMatrixMode(GL_MODELVIEW);
   glUseProgram(program);
   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void *)0);
   glFlush();
@@ -119,9 +118,6 @@ int main(int argc, char *argv[]) {
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
   glViewport(0, 0, 640, 480);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  gluPerspective(65.0, (GLfloat)640/(GLfloat)480, 1.0, 20.0);
   bool quit = false;
   while (!quit) {
     SDL_Event e;
