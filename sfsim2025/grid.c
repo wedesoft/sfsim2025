@@ -21,10 +21,11 @@ out mediump vec3 fragColor;\n\
 uniform sampler2D tex;\n\
 void main()\n\
 {\n\
-  fragColor = texture(tex, UV).rgb;\n\
+  fragColor = vec3(1, 1, 1);\n\
 }";
 
-GLuint program;
+// fragColor = texture(tex, UV).rgb;\n\
+//
 
 void printStatus(const char *step, GLuint context, GLuint status) {
   GLint result = GL_FALSE;
@@ -48,9 +49,25 @@ void printLinkStatus(const char *step, GLuint context) {
   printStatus(step, context, GL_LINK_STATUS);
 }
 
+GLuint vao;
+GLuint vbo;
+GLuint idx;
+GLuint tex;
+GLuint program;
+
+GLfloat vertices[] = {
+   0.5f,  0.5f,  0.0f, 1.0f, 1.0f,
+  -0.5f,  0.5f,  0.0f, 0.0f, 1.0f,
+  -0.5f, -0.5f,  0.0f, 0.0f, 0.0f
+};
+
+unsigned int indices[] = { 0, 1, 2 };
+
 void display(void) {
   glClear(GL_COLOR_BUFFER_BIT);
   glMatrixMode(GL_MODELVIEW);
+  glUseProgram(program);
+  glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void *)0);
   glFlush();
 }
 
@@ -82,19 +99,50 @@ int main(int argc, char *argv[]) {
   glLinkProgram(program);
   printLinkStatus("Shader program", program);
 
+  glGenVertexArrays(1, &vao);
+  glBindVertexArray(vao);
+
+  glGenBuffers(1, &vbo);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+  glGenBuffers(1, &idx);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idx);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+  glVertexAttribPointer(glGetAttribLocation(program, "point"), 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
+  glVertexAttribPointer(glGetAttribLocation(program, "texcoord"), 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
+
+  glEnableVertexAttribArray(0);
+  glEnableVertexAttribArray(1);
+
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
   glViewport(0, 0, 640, 480);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   gluPerspective(65.0, (GLfloat)640/(GLfloat)480, 1.0, 20.0);
   bool quit = false;
   while (!quit) {
-		SDL_Event e;
+    SDL_Event e;
     SDL_WaitEvent(&e);
     if (e.type == SDL_QUIT)
       quit = true;
     display();
     SDL_GL_SwapWindow(window);
   };
+
+  glDisableVertexAttribArray(1);
+  glDisableVertexAttribArray(0);
+
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  glDeleteBuffers(1, &idx);
+
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glDeleteBuffers(1, &vbo);
+
+  glBindVertexArray(0);
+  glDeleteVertexArrays(1, &vao);
 
   glDetachShader(program, vertexShader);
   glDetachShader(program, fragmentShader);
