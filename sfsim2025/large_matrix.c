@@ -74,3 +74,17 @@ large_vector_t large_matrix_vector_dot(large_matrix_t m, large_vector_t v) {
   };
   return result;
 }
+
+large_matrix_t projection(int width, int height, float near, float far, float field_of_view)
+{
+  large_matrix_t result = allocate_large_matrix(4, 4);
+  float d = 1 / tan(field_of_view * M_PI / 360);
+  float d2 = d * width / height;
+  memset(result.data, 0, 4 * 4 * sizeof(float));
+  result.data[ 0] = d;
+  result.data[ 5] = d2;
+  result.data[10] = (near + far) / (near - far);
+  result.data[14] = -1.0f;
+  result.data[11] = 2 * near * far / (near - far);
+  return result;
+}
