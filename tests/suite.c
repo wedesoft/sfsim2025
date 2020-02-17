@@ -10,7 +10,6 @@
 #include "test_large_vector.h"
 #include "test_list.h"
 #include "test_matrix.h"
-#include "test_matrix43.h"
 #include "test_mechanics.h"
 #include "test_plane.h"
 #include "test_polygon.h"
@@ -25,7 +24,6 @@ static MunitSuite test_sfsim[] = {
   {"/list"                , test_list                , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/vector"              , test_vector              , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/matrix"              , test_matrix              , NULL, 1, MUNIT_SUITE_OPTION_NONE},
-  {"/matrix43"            , test_matrix43            , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/large_vector"        , test_large_vector        , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/large_matrix"        , test_large_matrix        , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/quaternion"          , test_quaternion          , NULL, 1, MUNIT_SUITE_OPTION_NONE},
