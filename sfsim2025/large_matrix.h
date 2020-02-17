@@ -29,5 +29,3 @@ large_matrix_t large_transpose(large_matrix_t a);
 large_matrix_t large_inverse(large_matrix_t a);
 
 large_vector_t large_matrix_vector_dot(large_matrix_t m, large_vector_t v);
-
-large_matrix_t projection(int width, int height, float near, float far, float field_of_view);

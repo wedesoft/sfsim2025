@@ -13,6 +13,7 @@
 #include "test_mechanics.h"
 #include "test_plane.h"
 #include "test_polygon.h"
+#include "test_projection.h"
 #include "test_quaternion.h"
 #include "test_hull.h"
 #include "test_state.h"
@@ -39,6 +40,7 @@ static MunitSuite test_sfsim[] = {
   {"/friction"            , test_friction            , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/image"               , test_image               , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/elevation"           , test_elevation           , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/projection"          , test_projection          , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {NULL                   , NULL                     , NULL, 0, MUNIT_SUITE_OPTION_NONE}
 };
 

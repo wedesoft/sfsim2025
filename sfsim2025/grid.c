@@ -4,14 +4,17 @@
 #include <GL/glut.h>
 #include <SDL.h>
 #include <SDL_opengl.h>
+#include "sfsim2025/projection.h"
+
 
 const char *vertexSource = "#version 130\n\
 in mediump vec3 point;\n\
 in mediump vec2 texcoord;\n\
+uniform mat4 projection;\n\
 out mediump vec2 UV;\n\
 void main()\n\
 {\n\
-  gl_Position = vec4(point, 1);\n\
+  gl_Position = projection * vec4(point, 1);\n\
   UV = texcoord;\n\
 }";
 
@@ -24,8 +27,8 @@ void main()\n\
   fragColor = vec3(1, 1, 1);\n\
 }";
 
-// fragColor = texture(tex, UV).rgb;\n\
-//
+const int width = 640;
+const int height = 480;
 
 void printStatus(const char *step, GLuint context, GLuint status) {
   GLint result = GL_FALSE;
@@ -56,16 +59,18 @@ GLuint tex;
 GLuint program;
 
 GLfloat vertices[] = {
-   0.5f,  0.5f,  0.0f, 1.0f, 1.0f,
-  -0.5f,  0.5f,  0.0f, 0.0f, 1.0f,
-  -0.5f, -0.5f,  0.0f, 0.0f, 0.0f
+   0.5f,  0.5f, -5.0f, 1.0f, 1.0f,
+  -0.5f,  0.5f, -5.0f, 0.0f, 1.0f,
+  -0.5f, -0.5f, -5.0f, 0.0f, 0.0f
 };
 
 unsigned int indices[] = { 0, 1, 2 };
 
 void display(void) {
-  glClear(GL_COLOR_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glUseProgram(program);
+  float *proj = projection(width, height, 0.1, 20.0, 60.0);
+  glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, proj);
   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void *)0);
   glFlush();
 }
@@ -76,7 +81,7 @@ int main(int argc, char *argv[]) {
   SDL_Init(SDL_INIT_VIDEO);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-  SDL_Window *window = SDL_CreateWindow("grid", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480,
+  SDL_Window *window = SDL_CreateWindow("grid", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height,
                                         SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
   SDL_GLContext context = SDL_GL_CreateContext(window);
   glewExperimental = GL_TRUE;
@@ -117,7 +122,7 @@ int main(int argc, char *argv[]) {
 
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-  glViewport(0, 0, 640, 480);
+  glViewport(0, 0, width, height);
   bool quit = false;
   while (!quit) {
     SDL_Event e;
@@ -147,6 +152,7 @@ int main(int argc, char *argv[]) {
   glDeleteShader(fragmentShader);
 
   SDL_DestroyWindow(window);
+
   SDL_Quit();
   return EXIT_SUCCESS;
 }
