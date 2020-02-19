@@ -9,19 +9,14 @@
 
 const char *vertexSource = "#version 130\n\
 in mediump vec3 point;\n\
-in mediump vec2 texcoord;\n\
 uniform mat4 projection;\n\
-out mediump vec2 UV;\n\
 void main()\n\
 {\n\
-  gl_Position = projection * vec4(point, 1);\n\
-  UV = texcoord;\n\
+  gl_Position = projection * (vec4(point, 1) - vec4(0, 0, 5, 0));\n\
 }";
 
 const char *fragmentSource = "#version 130\n\
-in mediump vec2 UV;\n\
 out mediump vec3 fragColor;\n\
-uniform sampler2D tex;\n\
 void main()\n\
 {\n\
   fragColor = vec3(1, 1, 1);\n\
@@ -58,20 +53,12 @@ GLuint idx;
 GLuint tex;
 GLuint program;
 
-GLfloat vertices[] = {
-   0.5f,  0.5f, -5.0f, 1.0f, 1.0f,
-  -0.5f,  0.5f, -5.0f, 0.0f, 1.0f,
-  -0.5f, -0.5f, -5.0f, 0.0f, 0.0f
-};
-
-unsigned int indices[] = { 0, 1, 2 };
-
 void display(void) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glUseProgram(program);
   float *proj = projection(width, height, 0.1, 20.0, 60.0);
   glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, proj);
-  glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void *)0);
+  glDrawElements(GL_TRIANGLES, 10 * 10 * 2 * 3, GL_UNSIGNED_INT, (void *)0);
   glFlush();
 }
 
@@ -106,16 +93,49 @@ int main(int argc, char *argv[]) {
   glGenVertexArrays(1, &vao);
   glBindVertexArray(vao);
 
+  GLfloat *vertices = GC_MALLOC_ATOMIC(11 * 11 * 3 * sizeof(GLfloat));
+  {
+    GLfloat *p = vertices;
+    for (int j=0; j<11; j++) {
+      for (int i=0; i<11; i++) {
+        float x = -1 + 0.2 * i;
+        float y = -1 + 0.2 * j;
+        float z = 1;
+        double d = sqrt(x * x + y * y + z * z);
+        p[0] = x / d;
+        p[1] = y / d;
+        p[2] = z / d;
+        p += 3;
+      };
+    };
+  };
+
+  int *indices = GC_MALLOC_ATOMIC(10 * 10 * 2 * 3 * sizeof(int));
+  {
+    int *p = indices;
+    for (int j=0; j<10; j++) {
+      for (int i=0; i<10; i++) {
+        p[0] = j * 11 + i;
+        p[1] = j * 11 + i + 1;
+        p[2] = (j + 1) * 11 + i;
+        p += 3;
+        p[0] = (j + 1) * 11 + i;
+        p[1] = (j + 1) * 11 + i + 1;
+        p[2] = j * 11 + i + 1;
+        p += 3;
+      };
+    };
+  };
+
   glGenBuffers(1, &vbo);
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, 11 * 11 * 3 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
 
   glGenBuffers(1, &idx);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idx);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, 10 * 10 * 2 * 3 * sizeof(int), indices, GL_STATIC_DRAW);
 
-  glVertexAttribPointer(glGetAttribLocation(program, "point"), 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
-  glVertexAttribPointer(glGetAttribLocation(program, "texcoord"), 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
+  glVertexAttribPointer(glGetAttribLocation(program, "point"), 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
 
   glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
