@@ -58,7 +58,7 @@ void display(void) {
   glUseProgram(program);
   float *proj = projection(width, height, 0.1, 20.0, 60.0);
   glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, proj);
-  glDrawElements(GL_TRIANGLES, 10 * 10 * 2 * 3, GL_UNSIGNED_INT, (void *)0);
+  glDrawElements(GL_TRIANGLES, 6 * 10 * 10 * 2 * 3, GL_UNSIGNED_INT, (void *)0);
   glFlush();
 }
 
@@ -93,47 +93,81 @@ int main(int argc, char *argv[]) {
   glGenVertexArrays(1, &vao);
   glBindVertexArray(vao);
 
-  GLfloat *vertices = GC_MALLOC_ATOMIC(11 * 11 * 3 * sizeof(GLfloat));
+  GLfloat *vertices = GC_MALLOC_ATOMIC(6 * 11 * 11 * 3 * sizeof(GLfloat));
   {
     GLfloat *p = vertices;
-    for (int j=0; j<11; j++) {
-      for (int i=0; i<11; i++) {
-        float x = -1 + 0.2 * i;
-        float y = -1 + 0.2 * j;
-        float z = 1;
-        double d = sqrt(x * x + y * y + z * z);
-        p[0] = x / d;
-        p[1] = y / d;
-        p[2] = z / d;
-        p += 3;
+    for (int k=0; k<6; k++) {
+      for (int j=0; j<11; j++) {
+        for (int i=0; i<11; i++) {
+          float x, y, z;
+          switch (k) {
+            case 0:
+              x = -1 + 0.2 * i;
+              y = -1 + 0.2 * j;
+              z = 1;
+              break;
+            case 1:
+              x = -1 + 0.2 * i;
+              y = 1 - 0.2 * j;
+              z = -1;
+              break;
+            case 2:
+              x = 1 - 0.2 * i;
+              y = 1;
+              z = -1 + 0.2 * j;
+              break;
+            case 3:
+              x = 1 - 0.2 * i;
+              y = -1;
+              z = 1 - 0.2 * j;
+              break;
+            case 4:
+              x = 1;
+              y = -1 + 0.2 * i;
+              z = -1 + 0.2 * j;
+              break;
+            case 5:
+              x = -1;
+              y = -1 + 0.2 * i;
+              z = 1 - 0.2 * j;
+              break;
+          };
+          double d = sqrt(x * x + y * y + z * z);
+          p[0] = x / d;
+          p[1] = y / d;
+          p[2] = z / d;
+          p += 3;
+        };
       };
     };
   };
 
-  int *indices = GC_MALLOC_ATOMIC(10 * 10 * 2 * 3 * sizeof(int));
+  int *indices = GC_MALLOC_ATOMIC(6 * 10 * 10 * 2 * 3 * sizeof(int));
   {
     int *p = indices;
-    for (int j=0; j<10; j++) {
-      for (int i=0; i<10; i++) {
-        p[0] = j * 11 + i;
-        p[1] = j * 11 + i + 1;
-        p[2] = (j + 1) * 11 + i;
-        p += 3;
-        p[0] = (j + 1) * 11 + i;
-        p[1] = (j + 1) * 11 + i + 1;
-        p[2] = j * 11 + i + 1;
-        p += 3;
+    for (int k=0; k<6; k++) {
+      for (int j=0; j<10; j++) {
+        for (int i=0; i<10; i++) {
+          p[0] = k * 121 + j * 11 + i;
+          p[1] = k * 121 + j * 11 + i + 1;
+          p[2] = k * 121 + (j + 1) * 11 + i;
+          p += 3;
+          p[0] = k * 121 + (j + 1) * 11 + i;
+          p[1] = k * 121 + j * 11 + i + 1;
+          p[2] = k * 121 + (j + 1) * 11 + i + 1;
+          p += 3;
+        };
       };
     };
   };
 
   glGenBuffers(1, &vbo);
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, 11 * 11 * 3 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, 6 * 11 * 11 * 3 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
 
   glGenBuffers(1, &idx);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idx);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, 10 * 10 * 2 * 3 * sizeof(int), indices, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * 10 * 10 * 2 * 3 * sizeof(int), indices, GL_STATIC_DRAW);
 
   glVertexAttribPointer(glGetAttribLocation(program, "point"), 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
 
@@ -141,6 +175,9 @@ int main(int argc, char *argv[]) {
   glEnableVertexAttribArray(1);
 
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+  glEnable(GL_CULL_FACE);
+  glCullFace(GL_BACK);
 
   glViewport(0, 0, width, height);
   bool quit = false;
