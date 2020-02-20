@@ -10,9 +10,10 @@
 const char *vertexSource = "#version 130\n\
 in mediump vec3 point;\n\
 uniform mat4 projection;\n\
+uniform mat4 rotation;\n\
 void main()\n\
 {\n\
-  gl_Position = projection * (vec4(point, 1) - vec4(0, 0, 5, 0));\n\
+  gl_Position = projection * (rotation * vec4(point, 1) - vec4(0, 0, 5, 0));\n\
 }";
 
 const char *fragmentSource = "#version 130\n\
@@ -52,14 +53,25 @@ GLuint vbo;
 GLuint idx;
 GLuint tex;
 GLuint program;
+double angle = 0;
 
 void display(void) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glUseProgram(program);
+  float *rot = GC_MALLOC_ATOMIC(16 * sizeof(float));
+  rot[0] = cos(angle); rot[4] = 0; rot[ 8] = -sin(angle); rot[12] = 0;
+  rot[1] = 0; rot[5] = 1; rot[ 9] = 0; rot[13] = 0;
+  rot[2] = sin(angle); rot[6] = 0; rot[10] = cos(angle); rot[14] = 0;
+  rot[3] = 0; rot[7] = 0; rot[11] = 0; rot[15] = 1;
   float *proj = projection(width, height, 0.1, 20.0, 60.0);
+  glUniformMatrix4fv(glGetUniformLocation(program, "rotation"), 1, GL_FALSE, rot);
   glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, proj);
   glDrawElements(GL_TRIANGLES, 6 * 10 * 10 * 2 * 3, GL_UNSIGNED_INT, (void *)0);
   glFlush();
+}
+
+void step(void) {
+  angle = fmod(angle + 0.02, 2 * M_PI);
 }
 
 int main(int argc, char *argv[]) {
@@ -183,10 +195,12 @@ int main(int argc, char *argv[]) {
   bool quit = false;
   while (!quit) {
     SDL_Event e;
-    SDL_WaitEvent(&e);
-    if (e.type == SDL_QUIT)
-      quit = true;
+    while (SDL_PollEvent(&e) != 0) {
+      if (e.type == SDL_QUIT)
+        quit = true;
+    };
     display();
+    step();
     SDL_GL_SwapWindow(window);
   };
 
