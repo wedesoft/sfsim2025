@@ -48,25 +48,27 @@ void printLinkStatus(const char *step, GLuint context) {
   printStatus(step, context, GL_LINK_STATUS);
 }
 
-GLuint vao;
-GLuint vbo;
-GLuint idx;
-GLuint tex;
+GLuint vao[6];
+GLuint vbo[6];
+GLuint idx[6];
 GLuint program;
 double angle = 0;
 
 void display(void) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glUseProgram(program);
   float *rot = GC_MALLOC_ATOMIC(16 * sizeof(float));
   rot[0] = cos(angle); rot[4] = 0; rot[ 8] = -sin(angle); rot[12] = 0;
   rot[1] = 0; rot[5] = 1; rot[ 9] = 0; rot[13] = 0;
   rot[2] = sin(angle); rot[6] = 0; rot[10] = cos(angle); rot[14] = 0;
   rot[3] = 0; rot[7] = 0; rot[11] = 0; rot[15] = 1;
   float *proj = projection(width, height, 0.1, 20.0, 60.0);
-  glUniformMatrix4fv(glGetUniformLocation(program, "rotation"), 1, GL_FALSE, rot);
-  glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, proj);
-  glDrawElements(GL_TRIANGLES, 6 * 10 * 10 * 2 * 3, GL_UNSIGNED_INT, (void *)0);
+  for (int k=0; k<6; k++) {
+    glBindVertexArray(vao[k]);
+    glUseProgram(program);
+    glUniformMatrix4fv(glGetUniformLocation(program, "rotation"), 1, GL_FALSE, rot);
+    glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, proj);
+    glDrawElements(GL_TRIANGLES, 10 * 10 * 2 * 3, GL_UNSIGNED_INT, (void *)0);
+  };
   glFlush();
 }
 
@@ -102,89 +104,81 @@ int main(int argc, char *argv[]) {
   glLinkProgram(program);
   printLinkStatus("Shader program", program);
 
-  glGenVertexArrays(1, &vao);
-  glBindVertexArray(vao);
+  for (int k=0; k<6; k++) {
+    glGenVertexArrays(1, &vao[k]);
+    glBindVertexArray(vao[k]);
 
-  GLfloat *vertices = GC_MALLOC_ATOMIC(6 * 11 * 11 * 3 * sizeof(GLfloat));
-  {
+    GLfloat *vertices = GC_MALLOC_ATOMIC(11 * 11 * 3 * sizeof(GLfloat));
     GLfloat *p = vertices;
-    for (int k=0; k<6; k++) {
-      for (int j=0; j<11; j++) {
-        for (int i=0; i<11; i++) {
-          float x, y, z;
-          switch (k) {
-            case 0:
-              x = -1 + 0.2 * i;
-              y = -1 + 0.2 * j;
-              z = 1;
-              break;
-            case 1:
-              x = -1 + 0.2 * i;
-              y = 1 - 0.2 * j;
-              z = -1;
-              break;
-            case 2:
-              x = 1 - 0.2 * i;
-              y = 1;
-              z = -1 + 0.2 * j;
-              break;
-            case 3:
-              x = 1 - 0.2 * i;
-              y = -1;
-              z = 1 - 0.2 * j;
-              break;
-            case 4:
-              x = 1;
-              y = -1 + 0.2 * i;
-              z = -1 + 0.2 * j;
-              break;
-            case 5:
-              x = -1;
-              y = -1 + 0.2 * i;
-              z = 1 - 0.2 * j;
-              break;
-          };
-          double d = sqrt(x * x + y * y + z * z);
-          p[0] = x / d;
-          p[1] = y / d;
-          p[2] = z / d;
-          p += 3;
+    for (int j=0; j<11; j++) {
+      for (int i=0; i<11; i++) {
+        float x, y, z;
+        switch (k) {
+          case 0:
+            x = -1 + 0.2 * i;
+            y = -1 + 0.2 * j;
+            z = 1;
+            break;
+          case 1:
+            x = -1 + 0.2 * i;
+            y = 1 - 0.2 * j;
+            z = -1;
+            break;
+          case 2:
+            x = 1 - 0.2 * i;
+            y = 1;
+            z = -1 + 0.2 * j;
+            break;
+          case 3:
+            x = 1 - 0.2 * i;
+            y = -1;
+            z = 1 - 0.2 * j;
+            break;
+          case 4:
+            x = 1;
+            y = -1 + 0.2 * i;
+            z = -1 + 0.2 * j;
+            break;
+          case 5:
+            x = -1;
+            y = -1 + 0.2 * i;
+            z = 1 - 0.2 * j;
+            break;
         };
+        double d = sqrt(x * x + y * y + z * z);
+        p[0] = x / d;
+        p[1] = y / d;
+        p[2] = z / d;
+        p += 3;
       };
     };
-  };
 
-  int *indices = GC_MALLOC_ATOMIC(6 * 10 * 10 * 2 * 3 * sizeof(int));
-  {
-    int *p = indices;
-    for (int k=0; k<6; k++) {
-      for (int j=0; j<10; j++) {
-        for (int i=0; i<10; i++) {
-          p[0] = k * 121 + j * 11 + i;
-          p[1] = k * 121 + j * 11 + i + 1;
-          p[2] = k * 121 + (j + 1) * 11 + i;
-          p += 3;
-          p[0] = k * 121 + (j + 1) * 11 + i;
-          p[1] = k * 121 + j * 11 + i + 1;
-          p[2] = k * 121 + (j + 1) * 11 + i + 1;
-          p += 3;
-        };
+    int *indices = GC_MALLOC_ATOMIC(10 * 10 * 2 * 3 * sizeof(int));
+    int *q = indices;
+    for (int j=0; j<10; j++) {
+      for (int i=0; i<10; i++) {
+        q[0] = j * 11 + i;
+        q[1] = j * 11 + i + 1;
+        q[2] = (j + 1) * 11 + i;
+        q += 3;
+        q[0] = (j + 1) * 11 + i;
+        q[1] = j * 11 + i + 1;
+        q[2] = (j + 1) * 11 + i + 1;
+        q += 3;
       };
     };
+
+    glGenBuffers(1, &vbo[k]);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[k]);
+    glBufferData(GL_ARRAY_BUFFER, 11 * 11 * 3 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+
+    glGenBuffers(1, &idx[k]);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idx[k]);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 10 * 10 * 2 * 3 * sizeof(int), indices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(glGetAttribLocation(program, "point"), 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+    glEnableVertexAttribArray(0);
   };
-
-  glGenBuffers(1, &vbo);
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, 6 * 11 * 11 * 3 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
-
-  glGenBuffers(1, &idx);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idx);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * 10 * 10 * 2 * 3 * sizeof(int), indices, GL_STATIC_DRAW);
-
-  glVertexAttribPointer(glGetAttribLocation(program, "point"), 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
-
-  glEnableVertexAttribArray(0);
-  glEnableVertexAttribArray(1);
 
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -204,17 +198,19 @@ int main(int argc, char *argv[]) {
     SDL_GL_SwapWindow(window);
   };
 
-  glDisableVertexAttribArray(1);
-  glDisableVertexAttribArray(0);
+  for (int k=0; k<6; k++) {
+    glBindVertexArray(vao[k]);
+    glDisableVertexAttribArray(0);
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-  glDeleteBuffers(1, &idx);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glDeleteBuffers(1, &idx[k]);
 
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glDeleteBuffers(1, &vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glDeleteBuffers(1, &vbo[k]);
 
-  glBindVertexArray(0);
-  glDeleteVertexArrays(1, &vao);
+    glBindVertexArray(0);
+    glDeleteVertexArrays(1, &vao[k]);
+  };
 
   glDetachShader(program, vertexShader);
   glDetachShader(program, fragmentShader);
