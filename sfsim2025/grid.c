@@ -115,34 +115,34 @@ int main(int argc, char *argv[]) {
         float x, y, z;
         switch (k) {
           case 0:
-            x = -1 + 0.2 * i;
-            y = -1 + 0.2 * j;
-            z = 1;
-            break;
-          case 1:
-            x = -1 + 0.2 * i;
-            y = 1 - 0.2 * j;
-            z = -1;
-            break;
-          case 2:
-            x = 1 - 0.2 * i;
-            y = 1;
-            z = -1 + 0.2 * j;
-            break;
-          case 3:
-            x = 1 - 0.2 * i;
-            y = -1;
+            x = -1;
+            y = -1 + 0.2 * i;
             z = 1 - 0.2 * j;
             break;
-          case 4:
+          case 1:
             x = 1;
             y = -1 + 0.2 * i;
             z = -1 + 0.2 * j;
             break;
-          case 5:
-            x = -1;
-            y = -1 + 0.2 * i;
+          case 2:
+            x = -1 + 0.2 * i;
+            y = -1;
+            z = -1 + 0.2 * j;
+            break;
+          case 3:
+            x = -1 + 0.2 * i;
+            y = 1;
             z = 1 - 0.2 * j;
+            break;
+          case 4:
+            x = -1 + 0.2 * i;
+            y = 1 - 0.2 * j;
+            z = -1;
+            break;
+          case 5:
+            x = -1 + 0.2 * i;
+            y = -1 + 0.2 * j;
+            z = 1;
             break;
         };
         double d = sqrt(x * x + y * y + z * z);
