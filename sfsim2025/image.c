@@ -14,9 +14,7 @@ image_t read_image(const char *file_name) {
   Image *images = ReadImage(image_info, exception_info);
   if (exception_info->severity < ErrorException) {
     Image *image = RemoveFirstImageFromList(&images);
-    result.height = image->rows;
-    result.width = image->columns;
-    result.data = GC_MALLOC_ATOMIC(result.height * result.width * 3);
+    result = allocate_image(image->rows, image->columns);
     ExportImagePixels(image, 0, 0, result.width, result.height, "RGB", CharPixel, result.data, exception_info);
     if (exception_info->severity >= ErrorException) {
       CatchException(exception_info);

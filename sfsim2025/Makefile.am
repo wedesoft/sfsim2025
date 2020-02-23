@@ -1,5 +1,5 @@
 noinst_PROGRAMS = tumble pendulum chain collide spring gear wheel car icosahedron maptiles scale-image scale-elevation \
-									elevationtiles grid
+									elevationtiles grid warp
 
 noinst_SCRIPTS = multiresmap.sh multireselevation.sh
 
@@ -84,6 +84,11 @@ grid_SOURCES = grid.c
 grid_CFLAGS = $(GLEW_CFLAGS) $(GL_CFLAGS) $(ATLAS_CFLAGS) $(BOEHM_CFLAGS) $(SDL_CFLAGS)
 grid_LDFLAGS =
 grid_LDADD = libsfsim2025.la $(GLEW_LIBS) $(GL_LIBS) $(BOEHM_LIBS) $(SDL_LIBS) -lm
+
+warp_SOURCES = warp.c
+warp_CFLAGS = $(BOEHM_CFLAGS)
+warp_LDFLAGS =
+warp_LDADD = libsfsim2025.la $(BOEHM_LIBS)
 
 world.200404.3x21600x21600.A1.png:
 	$(WGET) https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.A1.png

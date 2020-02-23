@@ -1,4 +1,5 @@
 #pragma once
+#include <gc.h>
 
 
 typedef struct {
@@ -6,6 +7,10 @@ typedef struct {
   int width;
   unsigned char *data;
 } image_t;
+
+image_t allocate_image(int height, int width) {
+  return (image_t){.height = height, .width = width, .data = GC_MALLOC_ATOMIC(height * width * 3)};
+}
 
 image_t read_image(const char *file_name);
 
