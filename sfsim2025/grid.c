@@ -68,7 +68,7 @@ void display(void) {
   rot[1] = 0; rot[5] = 1; rot[ 9] = 0; rot[13] = 0;
   rot[2] = sin(angle); rot[6] = 0; rot[10] = cos(angle); rot[14] = 0;
   rot[3] = 0; rot[7] = 0; rot[11] = 0; rot[15] = 1;
-  float *proj = projection(width, height, 0.1, 20.0, 60.0);
+  float *proj = projection(width, height, 0.1, 20.0, 45.0);
   for (int k=0; k<6; k++) {
     glBindVertexArray(vao[k]);
     glUseProgram(program);
@@ -197,9 +197,9 @@ int main(int argc, char *argv[]) {
     glBindTexture(GL_TEXTURE_2D, tex[k]);
     glUniform1i(glGetUniformLocation(program, "tex"), 0);
     char buf[128];
-    sprintf(buf, "test%d.png", k);
+    sprintf(buf, "globe%d.png", k);
     image_t img = read_image(buf);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.width, img.height, 0, GL_BGR, GL_UNSIGNED_BYTE, img.data);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.width, img.height, 0, GL_RGB, GL_UNSIGNED_BYTE, img.data);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
