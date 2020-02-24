@@ -4,23 +4,29 @@
 #include <GL/glut.h>
 #include <SDL.h>
 #include <SDL_opengl.h>
+#include "sfsim2025/image.h"
 #include "sfsim2025/projection.h"
 
 
 const char *vertexSource = "#version 130\n\
 in mediump vec3 point;\n\
+in mediump vec2 texcoord;\n\
 uniform mat4 projection;\n\
 uniform mat4 rotation;\n\
+out mediump vec2 UV;\n\
 void main()\n\
 {\n\
   gl_Position = projection * (rotation * vec4(point, 1) - vec4(0, 0, 5, 0));\n\
+  UV = texcoord;\n\
 }";
 
 const char *fragmentSource = "#version 130\n\
+in mediump vec2 UV;\n\
 out mediump vec3 fragColor;\n\
+uniform sampler2D tex;\n\
 void main()\n\
 {\n\
-  fragColor = vec3(1, 1, 1);\n\
+  fragColor = texture(tex, UV).rgb;\n\
 }";
 
 const int width = 640;
@@ -51,6 +57,7 @@ void printLinkStatus(const char *step, GLuint context) {
 GLuint vao[6];
 GLuint vbo[6];
 GLuint idx[6];
+GLuint tex[6];
 GLuint program;
 double angle = 0;
 
@@ -67,6 +74,7 @@ void display(void) {
     glUseProgram(program);
     glUniformMatrix4fv(glGetUniformLocation(program, "rotation"), 1, GL_FALSE, rot);
     glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, proj);
+    glBindTexture(GL_TEXTURE_2D, tex[k]);
     glDrawElements(GL_TRIANGLES, 10 * 10 * 2 * 3, GL_UNSIGNED_INT, (void *)0);
   };
   glFlush();
@@ -108,41 +116,41 @@ int main(int argc, char *argv[]) {
     glGenVertexArrays(1, &vao[k]);
     glBindVertexArray(vao[k]);
 
-    GLfloat *vertices = GC_MALLOC_ATOMIC(11 * 11 * 3 * sizeof(GLfloat));
+    GLfloat *vertices = GC_MALLOC_ATOMIC(11 * 11 * 5 * sizeof(GLfloat));
     GLfloat *p = vertices;
     for (int j=0; j<11; j++) {
       for (int i=0; i<11; i++) {
         float x, y, z;
         switch (k) {
           case 0:
-            x = -1;
-            y = -1 + 0.2 * i;
-            z = 1 - 0.2 * j;
-            break;
-          case 1:
-            x = 1;
-            y = -1 + 0.2 * i;
-            z = -1 + 0.2 * j;
-            break;
-          case 2:
-            x = -1 + 0.2 * i;
-            y = -1;
-            z = -1 + 0.2 * j;
-            break;
-          case 3:
             x = -1 + 0.2 * i;
             y = 1;
-            z = 1 - 0.2 * j;
+            z = -1 + 0.2 * j;
             break;
-          case 4:
+          case 1:
             x = -1 + 0.2 * i;
+            y = 1 - 0.2 * j;
+            z = 1;
+            break;
+          case 2:
+            x = 1;
+            y = 1 - 0.2 * j;
+            z = 1 - 0.2 * i;
+            break;
+          case 3:
+            x = 1 - 0.2 * i;
             y = 1 - 0.2 * j;
             z = -1;
             break;
+          case 4:
+            x = -1;
+            y = 1 - 0.2 * j;
+            z = -1 + 0.2 * i;
+            break;
           case 5:
             x = -1 + 0.2 * i;
-            y = -1 + 0.2 * j;
-            z = 1;
+            y = -1;
+            z = 1 - 0.2 * j;
             break;
         };
         double d = sqrt(x * x + y * y + z * z);
@@ -150,6 +158,9 @@ int main(int argc, char *argv[]) {
         p[1] = y / d;
         p[2] = z / d;
         p += 3;
+        p[0] = i * 0.1;
+        p[1] = j * 0.1;
+        p += 2;
       };
     };
 
@@ -157,30 +168,43 @@ int main(int argc, char *argv[]) {
     int *q = indices;
     for (int j=0; j<10; j++) {
       for (int i=0; i<10; i++) {
-        q[0] = j * 11 + i;
-        q[1] = j * 11 + i + 1;
+        q[0] = j * 11 + i + 1;
+        q[1] = j * 11 + i;
         q[2] = (j + 1) * 11 + i;
         q += 3;
         q[0] = (j + 1) * 11 + i;
-        q[1] = j * 11 + i + 1;
-        q[2] = (j + 1) * 11 + i + 1;
+        q[1] = (j + 1) * 11 + i + 1;
+        q[2] = j * 11 + i + 1;
         q += 3;
       };
     };
 
     glGenBuffers(1, &vbo[k]);
     glBindBuffer(GL_ARRAY_BUFFER, vbo[k]);
-    glBufferData(GL_ARRAY_BUFFER, 11 * 11 * 3 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 11 * 11 * 5 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
 
     glGenBuffers(1, &idx[k]);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idx[k]);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, 10 * 10 * 2 * 3 * sizeof(int), indices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(glGetAttribLocation(program, "point"), 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+    glVertexAttribPointer(glGetAttribLocation(program, "point"), 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
+    glVertexAttribPointer(glGetAttribLocation(program, "texcoord"), 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
     glEnableVertexAttribArray(0);
-  };
+    glEnableVertexAttribArray(1);
 
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glGenTextures(1, &tex[k]);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex[k]);
+    glUniform1i(glGetUniformLocation(program, "tex"), 0);
+    char buf[128];
+    sprintf(buf, "test%d.png", k);
+    image_t img = read_image(buf);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.width, img.height, 0, GL_BGR, GL_UNSIGNED_BYTE, img.data);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glGenerateMipmap(GL_TEXTURE_2D);
+  };
 
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
@@ -210,6 +234,9 @@ int main(int argc, char *argv[]) {
 
     glBindVertexArray(0);
     glDeleteVertexArrays(1, &vao[k]);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDeleteTextures(1, &tex[k]);
   };
 
   glDetachShader(program, vertexShader);
