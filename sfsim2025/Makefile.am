@@ -6,11 +6,11 @@ noinst_SCRIPTS = multiresmap.sh multireselevation.sh
 lib_LTLIBRARIES = libsfsim2025.la
 
 pkginclude_HEADERS = body.h contact.h coordinate.h edge.h elevation.h face.h force.h friction.h image.h joint.h large_matrix.h \
-										 large_vector.h list.h matrix.h mechanics.h plane.h polygon.h projection.h quaternion.h hull.h state.h \
+										 large_vector.h list.h map.h matrix.h mechanics.h plane.h polygon.h projection.h quaternion.h hull.h state.h \
 										 vector.h world.h
 
-libsfsim2025_la_SOURCES = contact.c elevation.c force.c friction.c image.c joint.c large_matrix.c large_vector.c list.c matrix.c \
-													mechanics.c plane.c polygon.c projection.c quaternion.c hull.c state.c vector.c world.c
+libsfsim2025_la_SOURCES = contact.c elevation.c force.c friction.c image.c joint.c large_matrix.c large_vector.c list.c map.c \
+													matrix.c mechanics.c plane.c polygon.c projection.c quaternion.c hull.c state.c vector.c world.c
 libsfsim2025_la_CFLAGS = $(GLEW_CFLAGS) $(GL_CFLAGS) $(MAGICK_CFLAGS) $(ATLAS_CFLAGS) $(BOEHM_CFLAGS)
 libsfsim2025_la_LDFLAGS =
 libsfsim2025_la_LIBADD = $(GLEW_LIBS) $(GL_LIBS) $(MAGICK_LIBS) -llapack_atlas $(ATLAS_LIBS) $(BOEHM_LIBS) -lm

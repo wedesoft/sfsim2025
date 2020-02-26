@@ -9,6 +9,7 @@
 #include "test_large_matrix.h"
 #include "test_large_vector.h"
 #include "test_list.h"
+#include "test_map.h"
 #include "test_matrix.h"
 #include "test_mechanics.h"
 #include "test_plane.h"
@@ -41,6 +42,7 @@ static MunitSuite test_sfsim[] = {
   {"/image"               , test_image               , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/elevation"           , test_elevation           , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/projection"          , test_projection          , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/map"                 , test_map                 , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {NULL                   , NULL                     , NULL, 0, MUNIT_SUITE_OPTION_NONE}
 };
 

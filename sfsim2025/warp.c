@@ -1,6 +1,7 @@
 #include <tgmath.h>
 #include <stdio.h>
 #include "sfsim2025/image.h"
+#include "sfsim2025/map.h"
 
 
 int main(int argc, char *argv[]) {
@@ -15,39 +16,9 @@ int main(int argc, char *argv[]) {
     unsigned char *p = result.data;
     for (int j=0; j<256; j++) {
       for (int i=0; i<256; i++) {
-        float x, y, z;
-        switch (k) {
-          case 0:
-            x = -1 + 2 * i / 256.0;
-            y = 1;
-            z = -1 + 2 * j / 256.0;
-            break;
-          case 1:
-            x = -1 + 2 * i / 256.0;
-            y = 1 - 2 * j / 256.0;
-            z = 1;
-            break;
-          case 2:
-            x = 1;
-            y = 1 - 2 * j / 256.0;
-            z = 1 - 2 * i / 256.0;
-            break;
-          case 3:
-            x = 1 - 2 * i / 256.0;
-            y = 1 - 2 * j / 256.0;
-            z = -1;
-            break;
-          case 4:
-            x = -1;
-            y = 1 - 2 * j / 256.0;
-            z = -1 + 2 * i / 256.0;
-            break;
-          case 5:
-            x = -1 + 2 * i / 256.0;
-            y = -1;
-            z = 1 - 2 * j / 256.0;
-            break;
-        };
+        float x = cube_map_x(k, j / 255.0, i / 255.0);
+        float y = cube_map_y(k, j / 255.0, i / 255.0);
+        float z = cube_map_z(k, j / 255.0, i / 255.0);
         float longitude = atan2(x, z);
         float r = sqrt(x * x + z * z);
         float lattitude = atan(y / r);

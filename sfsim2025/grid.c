@@ -6,6 +6,7 @@
 #include <SDL_opengl.h>
 #include "sfsim2025/image.h"
 #include "sfsim2025/projection.h"
+#include "sfsim2025/map.h"
 
 
 const char *vertexSource = "#version 130\n\
@@ -120,39 +121,9 @@ int main(int argc, char *argv[]) {
     GLfloat *p = vertices;
     for (int j=0; j<11; j++) {
       for (int i=0; i<11; i++) {
-        float x, y, z;
-        switch (k) {
-          case 0:
-            x = -1 + 0.2 * i;
-            y = 1;
-            z = -1 + 0.2 * j;
-            break;
-          case 1:
-            x = -1 + 0.2 * i;
-            y = 1 - 0.2 * j;
-            z = 1;
-            break;
-          case 2:
-            x = 1;
-            y = 1 - 0.2 * j;
-            z = 1 - 0.2 * i;
-            break;
-          case 3:
-            x = 1 - 0.2 * i;
-            y = 1 - 0.2 * j;
-            z = -1;
-            break;
-          case 4:
-            x = -1;
-            y = 1 - 0.2 * j;
-            z = -1 + 0.2 * i;
-            break;
-          case 5:
-            x = -1 + 0.2 * i;
-            y = -1;
-            z = 1 - 0.2 * j;
-            break;
-        };
+        float x = cube_map_x(k, j / 10.0, i / 10.0);
+        float y = cube_map_y(k, j / 10.0, i / 10.0);
+        float z = cube_map_z(k, j / 10.0, i / 10.0);
         double d = sqrt(x * x + y * y + z * z);
         p[0] = x / d;
         p[1] = y / d;
