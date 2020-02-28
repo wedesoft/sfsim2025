@@ -114,32 +114,32 @@ world.200404.3x21600x21600.D1.png:
 world.200404.3x21600x21600.D2.png:
 	$(WGET) https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.D2.png
 
-world/00/00.png: world.200404.3x21600x21600.A1.png
-	sh ./multiresmap.sh $< $(basename $@)
+world/0/0/0.png: world.200404.3x21600x21600.A1.png
+	sh ./multiresmap.sh $< world 0 0
 
-world/00/10.png: world.200404.3x21600x21600.A2.png
-	sh ./multiresmap.sh $< $(basename $@)
+world/0/0/1.png: world.200404.3x21600x21600.A2.png
+	sh ./multiresmap.sh $< world 1 0
 
-world/00/01.png: world.200404.3x21600x21600.B1.png
-	sh ./multiresmap.sh $< $(basename $@)
+world/0/1/0.png: world.200404.3x21600x21600.B1.png
+	sh ./multiresmap.sh $< world 0 1
 
-world/00/11.png: world.200404.3x21600x21600.B2.png
-	sh ./multiresmap.sh $< $(basename $@)
+world/0/1/1.png: world.200404.3x21600x21600.B2.png
+	sh ./multiresmap.sh $< world 1 1
 
-world/01/00.png: world.200404.3x21600x21600.C1.png
-	sh ./multiresmap.sh $< $(basename $@)
+world/0/2/0.png: world.200404.3x21600x21600.C1.png
+	sh ./multiresmap.sh $< world 0 2
 
-world/01/10.png: world.200404.3x21600x21600.C2.png
-	sh ./multiresmap.sh $< $(basename $@)
+world/0/2/1.png: world.200404.3x21600x21600.C2.png
+	sh ./multiresmap.sh $< world 1 2
 
-world/01/01.png: world.200404.3x21600x21600.D1.png
-	sh ./multiresmap.sh $< $(basename $@)
+world/0/3/0.png: world.200404.3x21600x21600.D1.png
+	sh ./multiresmap.sh $< world 0 3
 
-world/01/11.png: world.200404.3x21600x21600.D2.png
-	sh ./multiresmap.sh $< $(basename $@)
+world/0/3/1.png: world.200404.3x21600x21600.D2.png
+	sh ./multiresmap.sh $< world 1 3
 
-bluemarble-local: world/00/00.png world/00/01.png world/00/10.png world/00/11.png \
-	world/01/00.png world/01/01.png world/01/10.png world/01/11.png
+bluemarble-local: world/0/0/0.png world/0/0/1.png world/0/1/0.png world/0/1/1.png \
+	world/0/2/0.png world/0/2/1.png world/0/3/0.png world/0/3/1.png
 
 all10: all10g.tgz
 	tar -xvf $<
@@ -169,32 +169,32 @@ elevation.C2.raw: all10
 elevation.D2.raw: all10
 	cat all10/l10g all10/p10g > $@
 
-elevation/00/00.raw: elevation.A1.raw
-	sh ./multireselevation.sh $< $(basename $@)
+elevation/0/0/0.raw: elevation.A1.raw
+	sh ./multireselevation.sh $< elevation 0 0
 
-elevation/00/10.raw: elevation.A2.raw
-	sh ./multireselevation.sh $< $(basename $@)
+elevation/0/0/1.raw: elevation.A2.raw
+	sh ./multireselevation.sh $< elevation 1 0
 
-elevation/00/01.raw: elevation.B1.raw
-	sh ./multireselevation.sh $< $(basename $@)
+elevation/0/1/0.raw: elevation.B1.raw
+	sh ./multireselevation.sh $< elevation 0 1
 
-elevation/00/11.raw: elevation.B2.raw
-	sh ./multireselevation.sh $< $(basename $@)
+elevation/0/1/1.raw: elevation.B2.raw
+	sh ./multireselevation.sh $< elevation 1 1
 
-elevation/01/00.raw: elevation.C1.raw
-	sh ./multireselevation.sh $< $(basename $@)
+elevation/0/2/0.raw: elevation.C1.raw
+	sh ./multireselevation.sh $< elevation 0 2
 
-elevation/01/10.raw: elevation.C2.raw
-	sh ./multireselevation.sh $< $(basename $@)
+elevation/0/2/1.raw: elevation.C2.raw
+	sh ./multireselevation.sh $< elevation 1 2
 
-elevation/01/01.raw: elevation.D1.raw
-	sh ./multireselevation.sh $< $(basename $@)
+elevation/0/3/0.raw: elevation.D1.raw
+	sh ./multireselevation.sh $< elevation 0 3
 
-elevation/01/11.raw: elevation.D2.raw
-	sh ./multireselevation.sh $< $(basename $@)
+elevation/0/3/1.raw: elevation.D2.raw
+	sh ./multireselevation.sh $< elevation 1 3
 
-heightfield-local: elevation/00/00.raw elevation/00/01.raw elevation/00/10.raw elevation/00/11.raw \
-	elevation/01/00.raw elevation/01/01.raw elevation/01/10.raw elevation/01/11.raw
+heightfield-local: elevation/0/0/0.raw elevation/0/0/1.raw elevation/0/1/0.raw elevation/0/1/1.raw \
+	elevation/0/2/0.raw elevation/0/2/1.raw elevation/0/3/0.raw elevation/0/3/1.raw
 
 all10g.tgz:
 	$(WGET) https://www.ngdc.noaa.gov/mgg/topo/DATATILES/elev/all10g.tgz

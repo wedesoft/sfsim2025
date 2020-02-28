@@ -59,9 +59,9 @@ static MunitResult test_mkdir_p(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_tilepath(const MunitParameter params[], void *data) {
-  munit_assert_string_equal(tilepath("test", 0, 0, 0, ".png"), "test.png");
-  munit_assert_string_equal(tilepath("test", 1, 1, 0, ".png"), "test/10.png");
-  munit_assert_string_equal(tilepath("test", 2, 3, 1, ".png"), "test/10/11.png");
+  munit_assert_string_equal(tilepath("test", 0, 0, 0, ".png"), "test/0/0/0.png");
+  munit_assert_string_equal(tilepath("test", 1, 1, 0, ".png"), "test/1/0/1.png");
+  munit_assert_string_equal(tilepath("test", 2, 3, 1, ".png"), "test/2/1/3.png");
   return MUNIT_OK;
 }
 

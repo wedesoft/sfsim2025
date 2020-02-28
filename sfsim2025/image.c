@@ -86,15 +86,7 @@ void mkdir_p(const char *path) {
 
 char *tilepath(const char *prefix, int levels, int y, int x, const char *suffix) {
   char *result = GC_MALLOC_ATOMIC(4096);
-  sprintf(result, "%s", prefix);
-  for (int l=levels-1; l>=0; l--) {
-    char buf[4];
-    int yb = (y >> l) & 1;
-    int xb = (x >> l) & 1;
-    sprintf(buf, "/%d%d", yb, xb);
-    strcat(result, buf);
-  };
-  strcat(result, suffix);
+  snprintf(result, 4096, "%s/%d/%d/%d%s", prefix, levels, x, y, suffix);
   return result;
 }
 

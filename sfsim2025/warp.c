@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
   image_t world[2][4];
   for (int j=0; j<2; j++) {
     for (int i=0; i<4; i++) {
-      world[j][i] = read_image(tilepath("world", 2, j, i, ".png"));
+      world[j][i] = read_image(tilepath("world", 0, j, i, ".png"));
     };
   };
   for (int k=0; k<6; k++) {
