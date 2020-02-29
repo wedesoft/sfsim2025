@@ -76,7 +76,7 @@ void display(void) {
     glUniformMatrix4fv(glGetUniformLocation(program, "rotation"), 1, GL_FALSE, rot);
     glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, proj);
     glBindTexture(GL_TEXTURE_2D, tex[k]);
-    glDrawElements(GL_TRIANGLES, 10 * 10 * 2 * 3, GL_UNSIGNED_INT, (void *)0);
+    glDrawElements(GL_TRIANGLES, 15 * 15 * 2 * 3, GL_UNSIGNED_INT, (void *)0);
   };
   glFlush();
 }
@@ -117,46 +117,46 @@ int main(int argc, char *argv[]) {
     glGenVertexArrays(1, &vao[k]);
     glBindVertexArray(vao[k]);
 
-    GLfloat *vertices = GC_MALLOC_ATOMIC(11 * 11 * 5 * sizeof(GLfloat));
+    GLfloat *vertices = GC_MALLOC_ATOMIC(16 * 16 * 5 * sizeof(GLfloat));
     GLfloat *p = vertices;
-    for (int j=0; j<11; j++) {
-      for (int i=0; i<11; i++) {
-        float x = cube_map_x(k, j / 10.0, i / 10.0);
-        float y = cube_map_y(k, j / 10.0, i / 10.0);
-        float z = cube_map_z(k, j / 10.0, i / 10.0);
+    for (int j=0; j<16; j++) {
+      for (int i=0; i<16; i++) {
+        float x = cube_map_x(k, j / 15.0, i / 15.0);
+        float y = cube_map_y(k, j / 15.0, i / 15.0);
+        float z = cube_map_z(k, j / 15.0, i / 15.0);
         double d = sqrt(x * x + y * y + z * z);
         p[0] = x / d;
         p[1] = y / d;
         p[2] = z / d;
         p += 3;
-        p[0] = i * 0.1;
-        p[1] = j * 0.1;
+        p[0] = i / 15.0;
+        p[1] = j / 15.0;
         p += 2;
       };
     };
 
-    int *indices = GC_MALLOC_ATOMIC(10 * 10 * 2 * 3 * sizeof(int));
+    int *indices = GC_MALLOC_ATOMIC(15 * 15 * 2 * 3 * sizeof(int));
     int *q = indices;
-    for (int j=0; j<10; j++) {
-      for (int i=0; i<10; i++) {
-        q[0] = j * 11 + i + 1;
-        q[1] = j * 11 + i;
-        q[2] = (j + 1) * 11 + i;
+    for (int j=0; j<15; j++) {
+      for (int i=0; i<15; i++) {
+        q[0] = j * 16 + i + 1;
+        q[1] = j * 16 + i;
+        q[2] = (j + 1) * 16 + i;
         q += 3;
-        q[0] = (j + 1) * 11 + i;
-        q[1] = (j + 1) * 11 + i + 1;
-        q[2] = j * 11 + i + 1;
+        q[0] = (j + 1) * 16 + i;
+        q[1] = (j + 1) * 16 + i + 1;
+        q[2] = j * 16 + i + 1;
         q += 3;
       };
     };
 
     glGenBuffers(1, &vbo[k]);
     glBindBuffer(GL_ARRAY_BUFFER, vbo[k]);
-    glBufferData(GL_ARRAY_BUFFER, 11 * 11 * 5 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 16 * 16 * 5 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
 
     glGenBuffers(1, &idx[k]);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idx[k]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 10 * 10 * 2 * 3 * sizeof(int), indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 15 * 15 * 2 * 3 * sizeof(int), indices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(glGetAttribLocation(program, "point"), 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
     glVertexAttribPointer(glGetAttribLocation(program, "texcoord"), 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
