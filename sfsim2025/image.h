@@ -8,7 +8,7 @@ typedef struct {
   unsigned char *data;
 } image_t;
 
-image_t allocate_image(int height, int width) {
+static inline image_t allocate_image(int height, int width) {
   return (image_t){.height = height, .width = width, .data = GC_MALLOC_ATOMIC(height * width * 3)};
 }
 

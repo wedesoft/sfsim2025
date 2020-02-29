@@ -7,7 +7,7 @@ typedef struct {
   short int *data;
 } elevation_t;
 
-elevation_t allocate_elevation(int height, int width) {
+static inline elevation_t allocate_elevation(int height, int width) {
   return (elevation_t){.height = height, .width = width, .data = GC_MALLOC_ATOMIC(width * height * 2)};
 }
 
