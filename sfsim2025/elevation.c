@@ -14,9 +14,7 @@ elevation_t read_elevation(const char *file_name) {
   if (!error) {
     int n = statbuf.st_size;
     int size = (int)round(sqrt(n / 2));
-    result.width = size;
-    result.height = size;
-    result.data = GC_MALLOC_ATOMIC(n);
+    result = allocate_elevation(size, size);
     FILE *f = fopen(file_name, "rb");
     fread(result.data, 2 * size, size, f);
     fclose(f);
