@@ -23,7 +23,6 @@ int main(int argc, char *argv[]) {
         float x = cube_map_x(k, j / 255.0, i / 255.0);
         float y = cube_map_y(k, j / 255.0, i / 255.0);
         float z = cube_map_z(k, j / 255.0, i / 255.0);
-        float r = sqrt(x * x + z * z);
         int dx = (int)round(675 * 2 * longitude(x, y, z) / M_PI) + 675 * 2;
         int dy = 675 - (int)round(675 * 2 * lattitude(x, y, z) / M_PI);
         if (dx >= 4 * 675) dx = 0;
