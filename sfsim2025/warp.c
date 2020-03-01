@@ -16,30 +16,57 @@ int main(int argc, char *argv[]) {
     };
   };
   for (int k=0; k<6; k++) {
-    image_t result = allocate_image(256, 256);
-    unsigned char *p = result.data;
-    for (int j=0; j<256; j++) {
-      for (int i=0; i<256; i++) {
-        float x = cube_map_x(k, j / 255.0, i / 255.0);
-        float y = cube_map_y(k, j / 255.0, i / 255.0);
-        float z = cube_map_z(k, j / 255.0, i / 255.0);
-        int dx = (int)round(675 * 2 * longitude(x, y, z) / M_PI) + 675 * 2;
-        int dy = 675 - (int)round(675 * 2 * lattitude(x, y, z) / M_PI);
-        if (dx >= 4 * 675) dx = 0;
-        if (dy >= 2 * 675) dy = 2 * 675 - 1;
-        assert(dx >= 0 && dx < 4 * 675);
-        assert(dy >= 0 && dy < 2 * 675);
-        image_t source = world[dy / 675][dx / 675];
-        unsigned char *q = source.data + (675 * (dy % 675) + (dx % 675)) * 3;
-        p[0] = q[0];
-        p[1] = q[1];
-        p[2] = q[2];
-        p += 3;
+    {
+      int width = world[0][0].width;
+      int height = world[0][0].height;
+      image_t image = allocate_image(256, 256);
+      unsigned char *p = image.data;
+      for (int j=0; j<256; j++) {
+        for (int i=0; i<256; i++) {
+          float x = cube_map_x(k, j / 255.0, i / 255.0);
+          float y = cube_map_y(k, j / 255.0, i / 255.0);
+          float z = cube_map_z(k, j / 255.0, i / 255.0);
+          int dx = (int)round(width * 2 * longitude(x, y, z) / M_PI) + width * 2;
+          int dy = height - (int)round(height * 2 * lattitude(x, y, z) / M_PI);
+          if (dx >= 4 * width) dx = 0;
+          if (dy >= 2 * height) dy = 2 * height - 1;
+          assert(dx >= 0 && dx < 4 * width);
+          assert(dy >= 0 && dy < 2 * height);
+          image_t source = world[dy / height][dx / width];
+          unsigned char *q = source.data + (width * (dy % height) + (dx % width)) * 3;
+          p[0] = q[0];
+          p[1] = q[1];
+          p[2] = q[2];
+          p += 3;
+        };
       };
+      char buf[128];
+      sprintf(buf, "globe%d.png", k);
+      write_image(image, buf);
     };
-    char buf[128];
-    sprintf(buf, "globe%d.png", k);
-    write_image(result, buf);
+    {
+      int width = elevation[0][0].width;
+      int height = elevation[0][0].height;
+      elevation_t image = allocate_elevation(16, 16);
+      short int *p = image.data;
+      for (int j=0; j<16; j++) {
+        for (int i=0; i<16; i++) {
+          float x = cube_map_x(k, j / 15.0, i / 15.0);
+          float y = cube_map_y(k, j / 15.0, i / 15.0);
+          float z = cube_map_z(k, j / 15.0, i / 15.0);
+          int dx = (int)round(width * 2 * longitude(x, y, z) / M_PI) + width * 2;
+          int dy = height - (int)round(height * 2 * lattitude(x, y, z) / M_PI);
+          if (dx >= 4 * width) dx = 0;
+          if (dy >= 2 * height) dy = 2 * height - 1;
+          elevation_t source = elevation[dy / height][dx / width];
+          *p = *(source.data + width * (dy % height) + (dx % width));
+          p++;
+        };
+      };
+      char buf[128];
+      sprintf(buf, "globe%d.raw", k);
+      write_elevation(image, buf);
+    };
   };
   return 0;
 }

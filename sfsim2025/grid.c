@@ -5,6 +5,7 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include "sfsim2025/image.h"
+#include "sfsim2025/elevation.h"
 #include "sfsim2025/projection.h"
 #include "sfsim2025/map.h"
 
@@ -64,6 +65,7 @@ double angle = 0;
 
 void display(void) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glEnable(GL_DEPTH_TEST);
   float *rot = GC_MALLOC_ATOMIC(16 * sizeof(float));
   rot[0] = cos(angle); rot[4] = 0; rot[ 8] = -sin(angle); rot[12] = 0;
   rot[1] = 0; rot[5] = 1; rot[ 9] = 0; rot[13] = 0;
@@ -117,21 +119,27 @@ int main(int argc, char *argv[]) {
     glGenVertexArrays(1, &vao[k]);
     glBindVertexArray(vao[k]);
 
+    char buf[128];
+    sprintf(buf, "globe%d.raw", k);
+    elevation_t elevation = read_elevation(buf);
     GLfloat *vertices = GC_MALLOC_ATOMIC(16 * 16 * 5 * sizeof(GLfloat));
     GLfloat *p = vertices;
+    short int *e = elevation.data;
     for (int j=0; j<16; j++) {
       for (int i=0; i<16; i++) {
         float x = cube_map_x(k, j / 15.0, i / 15.0);
         float y = cube_map_y(k, j / 15.0, i / 15.0);
         float z = cube_map_z(k, j / 15.0, i / 15.0);
-        double d = sqrt(x * x + y * y + z * z);
-        p[0] = x / d;
-        p[1] = y / d;
-        p[2] = z / d;
+        float d = sqrtf(x * x + y * y + z * z);
+        float r = 1.0 + *e * 0.00001;
+        p[0] = x / d * r;
+        p[1] = y / d * r;
+        p[2] = z / d * r;
         p += 3;
         p[0] = i / 15.0;
         p[1] = j / 15.0;
         p += 2;
+        e++;
       };
     };
 
@@ -167,7 +175,6 @@ int main(int argc, char *argv[]) {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, tex[k]);
     glUniform1i(glGetUniformLocation(program, "tex"), 0);
-    char buf[128];
     sprintf(buf, "globe%d.png", k);
     image_t img = read_image(buf);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.width, img.height, 0, GL_RGB, GL_UNSIGNED_BYTE, img.data);
