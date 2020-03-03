@@ -1,5 +1,6 @@
 #include <gc.h>
 #include "munit.h"
+#include "test_cache.h"
 #include "test_contact.h"
 #include "test_elevation.h"
 #include "test_force.h"
@@ -22,7 +23,7 @@
 #include "test_world.h"
 
 
-static MunitSuite test_sfsim[] = {
+static MunitSuite test_sfsim2025[] = {
   {"/list"                , test_list                , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/vector"              , test_vector              , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/matrix"              , test_matrix              , NULL, 1, MUNIT_SUITE_OPTION_NONE},
@@ -43,11 +44,12 @@ static MunitSuite test_sfsim[] = {
   {"/elevation"           , test_elevation           , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/projection"          , test_projection          , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {"/map"                 , test_map                 , NULL, 1, MUNIT_SUITE_OPTION_NONE},
+  {"/cache"               , test_cache               , NULL, 1, MUNIT_SUITE_OPTION_NONE},
   {NULL                   , NULL                     , NULL, 0, MUNIT_SUITE_OPTION_NONE}
 };
 
 static const MunitSuite test_suite[] = {
-  {"", NULL, test_sfsim, 1, MUNIT_SUITE_OPTION_NONE}
+  {"", NULL, test_sfsim2025, 1, MUNIT_SUITE_OPTION_NONE}
 };
 
 int main(int argc, char *argv[MUNIT_ARRAY_PARAM(argc + 1)]) {
