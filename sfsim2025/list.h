@@ -23,6 +23,8 @@ static inline list_t make_list(void) {
 
 void grow_list(list_t *list, size_t element_size, bool atomic);
 
+void remove_from_list(list_t *list, size_t element_size, int index);
+
 static inline void append_gluint(list_t *list, GLuint value) {
   grow_list(list, sizeof(GLuint), true);
   ((GLuint *)list->element)[list->size++] = value;
@@ -138,4 +140,8 @@ static inline void append_image(list_t *list, image_t value) {
 
 static inline image_t *get_image(list_t list) {
   return (image_t *)list.element;
+}
+
+static inline void remove_image(list_t *list, int index) {
+  remove_from_list(list, sizeof(image_t), index);
 }
