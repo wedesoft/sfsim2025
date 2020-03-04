@@ -3,6 +3,8 @@ noinst_PROGRAMS = tumble pendulum chain collide spring gear wheel car icosahedro
 
 noinst_SCRIPTS = multiresmap.sh multireselevation.sh
 
+EXTRA_DIST = multiresmap.sh multireselevation.sh
+
 lib_LTLIBRARIES = libsfsim2025.la
 
 pkginclude_HEADERS = body.h cache.h contact.h coordinate.h edge.h elevation.h face.h force.h friction.h image.h joint.h \

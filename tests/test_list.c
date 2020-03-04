@@ -249,6 +249,22 @@ static MunitResult test_get_joint(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_append_image(const MunitParameter params[], void *data) {
+  image_t image = allocate_image(32, 32);
+  list_t list = make_list();
+  append_image(&list, image);
+  munit_assert_int(list.size, ==, 1);
+  return MUNIT_OK;
+}
+
+static MunitResult test_get_image(const MunitParameter params[], void *data) {
+  image_t image = allocate_image(32, 32);
+  list_t list = make_list();
+  append_image(&list, image);
+  munit_assert_int(get_image(list)[0].width, ==, 32);
+  return MUNIT_OK;
+}
+
 MunitTest test_list[] = {
   {"/zero_size"               , test_zero_size               , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/append_gluint"           , test_append_gluint           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -281,5 +297,7 @@ MunitTest test_list[] = {
   {"/get_force"               , test_get_force               , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/append_joint"            , test_append_joint            , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/get_joint"               , test_get_joint               , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/append_image"            , test_append_image            , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/get_image"               , test_get_image               , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                       , NULL                         , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

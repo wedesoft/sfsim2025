@@ -6,6 +6,7 @@
 #include "edge.h"
 #include "face.h"
 #include "force.h"
+#include "image.h"
 #include "joint.h"
 #include "vector.h"
 
@@ -128,4 +129,13 @@ static inline void append_joint(list_t *list, joint_t value) {
 
 static inline joint_t *get_joint(list_t list) {
   return (joint_t *)list.element;
+}
+
+static inline void append_image(list_t *list, image_t value) {
+  grow_list(list, sizeof(image_t), false);
+  ((image_t *)list->element)[list->size++] = value;
+}
+
+static inline image_t *get_image(list_t list) {
+  return (image_t *)list.element;
 }

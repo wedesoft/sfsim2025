@@ -1,4 +1,4 @@
-noinst_DATA = black.png color.png indices.png zeros.raw data.raw
+check_DATA = black.png color.png indices.png zeros.raw data.raw cache-2-5-3.png data.raw indices.raw zeros.raw
 
 check_PROGRAMS = suite
 
@@ -11,6 +11,8 @@ suite_SOURCES = suite.c munit.c test_cache.c test_contact.c test_elevation.c tes
 								test_plane.c test_polygon.c test_projection.c test_quaternion.c test_state.c test_hull.c test_vector.c test_world.c
 suite_CFLAGS = -I.. $(GLEW_CFLAGS) $(GL_CFLAGS) $(ATLAS_CFLAGS) $(BOEHM_CFLAGS)
 suite_LDADD = ../sfsim2025/libsfsim2025.la $(GLEW_LIBS) $(GL_LIBS) $(ATLAS_LIBS) $(BOEHM_LIBS) -lm
+
+EXTRA_DIST = black.png color.png indices.png zeros.raw data.raw cache-2-5-3.png data.raw indices.raw zeros.raw
 
 check-local:
 	./suite

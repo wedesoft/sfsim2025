@@ -1,10 +1,16 @@
 #pragma once
-#include <stdio.h>
-#include <gc.h>
+#include "list.h"
+#include "image.h"
 
 
-static inline char *tile_key(int level, int y, int x) {
-  char *result = GC_MALLOC_ATOMIC(32);
-  snprintf(result, 32, "%d/%d/%d", level, x, y);
-  return result;
+typedef struct {
+  int size;
+  list_t list;
+} lru_cache_t;
+
+
+static inline lru_cache_t make_image_cache(int size) {
+  return (lru_cache_t){.size = size, .list = make_list()};
 }
+
+image_t cache_image(lru_cache_t *cache, const char *format, int level, int y, int x);

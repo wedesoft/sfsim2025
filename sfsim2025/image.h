@@ -22,8 +22,8 @@ image_t crop_image(image_t image, int y, int x, int height, int width);
 void mkdir_p(const char *path);
 
 static inline char *tilepath(const char *prefix, int levels, int y, int x, const char *suffix) {
-  char *result = GC_MALLOC_ATOMIC(4096);
-  snprintf(result, 4096, "%s/%d/%d/%d%s", prefix, levels, x, y, suffix);
+  char *result = GC_MALLOC_ATOMIC(256);
+  snprintf(result, 256, "%s/%d/%d/%d%s", prefix, levels, x, y, suffix);
   return result;
 }
 
