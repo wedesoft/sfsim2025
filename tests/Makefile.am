@@ -1,4 +1,5 @@
-check_DATA = black.png color.png indices.png zeros.raw data.raw cache-2-5-3.png data.raw indices.raw zeros.raw
+check_DATA = black.png color.png indices.png zeros.raw data.raw cache-2-5-3.png cache-2-5-4.png cache-2-5-7.png \
+						 data.raw indices.raw zeros.raw
 
 check_PROGRAMS = suite
 
