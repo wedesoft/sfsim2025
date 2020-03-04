@@ -19,7 +19,7 @@ static MunitResult test_add_image(const MunitParameter params[], void *data) {
 }
 
 MunitTest test_cache[] = {
-  {"init"     , test_init     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"add_image", test_add_image, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {NULL       , NULL          , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
+  {"/init"     , test_init     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/add_image", test_add_image, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {NULL        , NULL          , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
