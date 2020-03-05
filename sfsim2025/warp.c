@@ -47,13 +47,13 @@ int main(int argc, char *argv[]) {
     {
       int width = elevation[0][0].width;
       int height = elevation[0][0].height;
-      elevation_t image = allocate_elevation(16, 16);
+      elevation_t image = allocate_elevation(128, 128);
       short int *p = image.data;
-      for (int j=0; j<16; j++) {
-        for (int i=0; i<16; i++) {
-          float x = cube_map_x(k, j / 15.0, i / 15.0);
-          float y = cube_map_y(k, j / 15.0, i / 15.0);
-          float z = cube_map_z(k, j / 15.0, i / 15.0);
+      for (int j=0; j<128; j++) {
+        for (int i=0; i<128; i++) {
+          float x = cube_map_x(k, j / 127.0, i / 127.0);
+          float y = cube_map_y(k, j / 127.0, i / 127.0);
+          float z = cube_map_z(k, j / 127.0, i / 127.0);
           int dx = (int)round(width * 2 * longitude(x, y, z) / M_PI) + width * 2;
           int dy = height - (int)round(height * 2 * lattitude(x, y, z) / M_PI);
           if (dx >= 4 * width) dx = 0;

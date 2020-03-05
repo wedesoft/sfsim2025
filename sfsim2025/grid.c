@@ -1,3 +1,4 @@
+#include <time.h>
 #include <stdbool.h>
 #include <gc.h>
 #include <GL/glew.h>
@@ -62,6 +63,7 @@ GLuint idx[6];
 GLuint tex[6];
 GLuint program;
 double angle = 0;
+struct timespec t0;
 
 void display(void) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -78,13 +80,16 @@ void display(void) {
     glUniformMatrix4fv(glGetUniformLocation(program, "rotation"), 1, GL_FALSE, rot);
     glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, proj);
     glBindTexture(GL_TEXTURE_2D, tex[k]);
-    glDrawElements(GL_TRIANGLES, 15 * 15 * 2 * 3, GL_UNSIGNED_INT, (void *)0);
+    glDrawElements(GL_TRIANGLES, 127 * 127 * 2 * 3, GL_UNSIGNED_INT, (void *)0);
   };
   glFlush();
 }
 
 void step(void) {
-  angle = fmod(angle + 0.02, 2 * M_PI);
+  struct timespec t1;
+  clock_gettime(CLOCK_REALTIME, &t1);
+  double dt = fmin(t1.tv_sec - t0.tv_sec + (t1.tv_nsec - t0.tv_nsec) * 1e-9, 0.1);
+  angle = fmod(angle + 0.1 * dt, 2 * M_PI);
 }
 
 int main(int argc, char *argv[]) {
@@ -122,49 +127,49 @@ int main(int argc, char *argv[]) {
     char buf[128];
     sprintf(buf, "globe%d.raw", k);
     elevation_t elevation = read_elevation(buf);
-    GLfloat *vertices = GC_MALLOC_ATOMIC(16 * 16 * 5 * sizeof(GLfloat));
+    GLfloat *vertices = GC_MALLOC_ATOMIC(128 * 128 * 5 * sizeof(GLfloat));
     GLfloat *p = vertices;
     short int *e = elevation.data;
-    for (int j=0; j<16; j++) {
-      for (int i=0; i<16; i++) {
-        float x = cube_map_x(k, j / 15.0, i / 15.0);
-        float y = cube_map_y(k, j / 15.0, i / 15.0);
-        float z = cube_map_z(k, j / 15.0, i / 15.0);
+    for (int j=0; j<128; j++) {
+      for (int i=0; i<128; i++) {
+        float x = cube_map_x(k, j / 127.0, i / 127.0);
+        float y = cube_map_y(k, j / 127.0, i / 127.0);
+        float z = cube_map_z(k, j / 127.0, i / 127.0);
         float d = sqrtf(x * x + y * y + z * z);
-        float r = 1.0 + *e * 0.00001;
+        float r = 1.0 + *e * 0.00002;
         p[0] = x / d * r;
         p[1] = y / d * r;
         p[2] = z / d * r;
         p += 3;
-        p[0] = i / 15.0;
-        p[1] = j / 15.0;
+        p[0] = i / 127.0;
+        p[1] = j / 127.0;
         p += 2;
         e++;
       };
     };
 
-    int *indices = GC_MALLOC_ATOMIC(15 * 15 * 2 * 3 * sizeof(int));
+    int *indices = GC_MALLOC_ATOMIC(127 * 127 * 2 * 3 * sizeof(int));
     int *q = indices;
-    for (int j=0; j<15; j++) {
-      for (int i=0; i<15; i++) {
-        q[0] = j * 16 + i + 1;
-        q[1] = j * 16 + i;
-        q[2] = (j + 1) * 16 + i;
+    for (int j=0; j<127; j++) {
+      for (int i=0; i<127; i++) {
+        q[0] = j * 128 + i + 1;
+        q[1] = j * 128 + i;
+        q[2] = (j + 1) * 128 + i;
         q += 3;
-        q[0] = (j + 1) * 16 + i;
-        q[1] = (j + 1) * 16 + i + 1;
-        q[2] = j * 16 + i + 1;
+        q[0] = (j + 1) * 128 + i;
+        q[1] = (j + 1) * 128 + i + 1;
+        q[2] = j * 128 + i + 1;
         q += 3;
       };
     };
 
     glGenBuffers(1, &vbo[k]);
     glBindBuffer(GL_ARRAY_BUFFER, vbo[k]);
-    glBufferData(GL_ARRAY_BUFFER, 16 * 16 * 5 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 128 * 128 * 5 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
 
     glGenBuffers(1, &idx[k]);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idx[k]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 15 * 15 * 2 * 3 * sizeof(int), indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 127 * 127 * 2 * 3 * sizeof(int), indices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(glGetAttribLocation(program, "point"), 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
     glVertexAttribPointer(glGetAttribLocation(program, "texcoord"), 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
@@ -188,6 +193,7 @@ int main(int argc, char *argv[]) {
   glCullFace(GL_BACK);
 
   glViewport(0, 0, width, height);
+  clock_gettime(CLOCK_REALTIME, &t0);
   bool quit = false;
   while (!quit) {
     SDL_Event e;
