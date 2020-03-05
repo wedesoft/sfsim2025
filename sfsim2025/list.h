@@ -52,6 +52,10 @@ static inline void **get_pointer(list_t list) {
   return (void **)list.element;
 }
 
+static inline void remove_pointer(list_t *list, int index) {
+  remove_from_list(list, sizeof(void *), index);
+}
+
 static inline void append_vector(list_t *list, vector_t value) {
   grow_list(list, sizeof(vector_t), true);
   ((vector_t *)list->element)[list->size++] = value;

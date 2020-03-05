@@ -91,6 +91,17 @@ static MunitResult test_append_pointer(const MunitParameter params[], void *data
   return MUNIT_OK;
 }
 
+static MunitResult test_remove_pointer(const MunitParameter params[], void *data) {
+  list_t list = make_list();
+  append_pointer(&list, "a");
+  append_pointer(&list, "b");
+  append_pointer(&list, "c");
+  remove_pointer(&list, 1);
+  munit_assert_string_equal(get_pointer(list)[0], "a");
+  munit_assert_string_equal(get_pointer(list)[1], "c");
+  return MUNIT_OK;
+}
+
 static MunitResult test_get_pointer(const MunitParameter params[], void *data) {
   char test = 42;
   list_t list = make_list();
@@ -290,6 +301,7 @@ MunitTest test_list[] = {
   {"/append_glfloat"          , test_append_glfloat          , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/get_glfloat"             , test_get_glfloat             , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/append_pointer"          , test_append_pointer          , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/remove_pointer"          , test_remove_pointer          , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/get_pointer"             , test_get_pointer             , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/append_vector"           , test_append_vector           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/get_vector"              , test_get_vector              , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
