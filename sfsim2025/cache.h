@@ -1,5 +1,6 @@
 #pragma once
 #include "list.h"
+#include "elevation.h"
 #include "image.h"
 
 
@@ -15,3 +16,5 @@ static inline cache_t make_cache(int size) {
 }
 
 image_t cache_image(cache_t *cache, const char *format, int level, int y, int x);
+
+elevation_t cache_elevation(cache_t *cache, const char *format, int level, int y, int x);

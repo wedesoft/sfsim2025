@@ -288,6 +288,34 @@ static MunitResult test_remove_image(const MunitParameter params[], void *data) 
   return MUNIT_OK;
 }
 
+static MunitResult test_append_elevation(const MunitParameter params[], void *data) {
+  elevation_t elevation = allocate_elevation(32, 32);
+  list_t list = make_list();
+  append_elevation(&list, elevation);
+  munit_assert_int(list.size, ==, 1);
+  return MUNIT_OK;
+}
+
+static MunitResult test_get_elevation(const MunitParameter params[], void *data) {
+  elevation_t elevation = allocate_elevation(32, 32);
+  list_t list = make_list();
+  append_elevation(&list, elevation);
+  munit_assert_int(get_elevation(list)[0].width, ==, 32);
+  return MUNIT_OK;
+}
+
+static MunitResult test_remove_elevation(const MunitParameter params[], void *data) {
+  list_t list = make_list();
+  append_elevation(&list, allocate_elevation(2, 2));
+  append_elevation(&list, allocate_elevation(3, 3));
+  append_elevation(&list, allocate_elevation(5, 5));
+  remove_elevation(&list, 1);
+  munit_assert_int(list.size, ==, 2);
+  munit_assert_int(get_elevation(list)[0].width, ==, 2);
+  munit_assert_int(get_elevation(list)[1].width, ==, 5);
+  return MUNIT_OK;
+}
+
 MunitTest test_list[] = {
   {"/zero_size"               , test_zero_size               , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/append_gluint"           , test_append_gluint           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -324,5 +352,8 @@ MunitTest test_list[] = {
   {"/append_image"            , test_append_image            , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/get_image"               , test_get_image               , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/remove_image"            , test_remove_image            , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/append_elevation"        , test_append_elevation        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/get_elevation"           , test_get_elevation           , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/remove_elevation"        , test_remove_elevation        , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                       , NULL                         , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

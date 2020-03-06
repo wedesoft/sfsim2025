@@ -4,6 +4,7 @@
 #include "contact.h"
 #include "coordinate.h"
 #include "edge.h"
+#include "elevation.h"
 #include "face.h"
 #include "force.h"
 #include "image.h"
@@ -148,4 +149,17 @@ static inline image_t *get_image(list_t list) {
 
 static inline void remove_image(list_t *list, int index) {
   remove_from_list(list, sizeof(image_t), index);
+}
+
+static inline void append_elevation(list_t *list, elevation_t value) {
+  grow_list(list, sizeof(elevation_t), false);
+  ((elevation_t *)list->element)[list->size++] = value;
+}
+
+static inline elevation_t *get_elevation(list_t list) {
+  return (elevation_t *)list.element;
+}
+
+static inline void remove_elevation(list_t *list, int index) {
+  remove_from_list(list, sizeof(elevation_t), index);
 }

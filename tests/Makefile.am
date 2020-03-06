@@ -1,5 +1,5 @@
 check_DATA = black.png color.png indices.png zeros.raw data.raw cache-2-5-3.png cache-2-5-4.png cache-2-5-7.png \
-						 data.raw indices.raw zeros.raw
+						 data.raw indices.raw zeros.raw cache-2-5-3.raw cache-2-5-4.raw cache-2-5-7.raw
 
 check_PROGRAMS = suite
 
@@ -13,7 +13,8 @@ suite_SOURCES = suite.c munit.c test_cache.c test_contact.c test_elevation.c tes
 suite_CFLAGS = -I.. $(GLEW_CFLAGS) $(GL_CFLAGS) $(ATLAS_CFLAGS) $(BOEHM_CFLAGS)
 suite_LDADD = ../sfsim2025/libsfsim2025.la $(GLEW_LIBS) $(GL_LIBS) $(ATLAS_LIBS) $(BOEHM_LIBS) -lm
 
-EXTRA_DIST = black.png color.png indices.png zeros.raw data.raw cache-2-5-3.png data.raw indices.raw zeros.raw
+EXTRA_DIST = black.png color.png indices.png zeros.raw data.raw cache-2-5-3.png cache-2-5-4.png cache-2-5-7.png \
+						 data.raw indices.raw zeros.raw cache-2-5-3.raw cache-2-5-4.raw cache-2-5-7.raw
 
 check-local:
 	./suite
