@@ -10,7 +10,7 @@ typedef struct {
 } cache_t;
 
 
-static inline cache_t make_image_cache(int size) {
+static inline cache_t make_cache(int size) {
   return (cache_t){.size = size, .keys = make_list(), .values = make_list()};
 }
 

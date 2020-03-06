@@ -4,15 +4,15 @@
 
 
 static MunitResult test_init(const MunitParameter params[], void *data) {
-  cache_t cache = make_image_cache(2);
+  cache_t cache = make_cache(2);
   munit_assert_int(cache.size, ==, 2);
   munit_assert_int(cache.keys.size, ==, 0);
   munit_assert_int(cache.values.size, ==, 0);
   return MUNIT_OK;
 }
 
-static MunitResult test_cache_miss(const MunitParameter params[], void *data) {
-  cache_t cache = make_image_cache(2);
+static MunitResult test_image_cache_miss(const MunitParameter params[], void *data) {
+  cache_t cache = make_cache(2);
   image_t image = cache_image(&cache, "cache-%d-%d-%d.png", 2, 3, 5);
   munit_assert_int(cache.keys.size, ==, 1);
   munit_assert_int(cache.values.size, ==, 1);
@@ -21,7 +21,7 @@ static MunitResult test_cache_miss(const MunitParameter params[], void *data) {
 }
 
 static MunitResult test_drop_image(const MunitParameter params[], void *data) {
-  cache_t cache = make_image_cache(2);
+  cache_t cache = make_cache(2);
   cache_image(&cache, "cache-%d-%d-%d.png", 2, 3, 5);
   cache_image(&cache, "cache-%d-%d-%d.png", 2, 4, 5);
   cache_image(&cache, "cache-%d-%d-%d.png", 2, 7, 5);
@@ -32,8 +32,8 @@ static MunitResult test_drop_image(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
-static MunitResult test_cache_hit(const MunitParameter params[], void *data) {
-  cache_t cache = make_image_cache(2);
+static MunitResult test_image_cache_hit(const MunitParameter params[], void *data) {
+  cache_t cache = make_cache(2);
   cache_image(&cache, "cache-%d-%d-%d.png", 2, 3, 5);
   image_t image = cache_image(&cache, "cache-%d-%d-%d.png", 2, 3, 5);
   munit_assert_int(cache.keys.size, ==, 1);
@@ -43,9 +43,9 @@ static MunitResult test_cache_hit(const MunitParameter params[], void *data) {
 }
 
 MunitTest test_cache[] = {
-  {"/init"      , test_init      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/cache_miss", test_cache_miss, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/drop_image", test_drop_image, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/cache_hit" , test_cache_hit , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {NULL         , NULL           , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
+  {"/init"                , test_init                , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/image_cache_miss"    , test_image_cache_miss    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/drop_image"          , test_drop_image          , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/image_cache_hit"     , test_image_cache_hit     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {NULL                   , NULL                     , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
