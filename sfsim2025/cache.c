@@ -21,6 +21,7 @@ static int index_of(list_t keys, const char *key) {
   return result;
 }
 
+// Load image into cache if required and return it.
 image_t cache_image(cache_t *cache, const char *format, int level, int y, int x) {
   char *path = format_path(format, level, y, x);
   int found = index_of(cache->keys, path);
@@ -41,6 +42,7 @@ image_t cache_image(cache_t *cache, const char *format, int level, int y, int x)
   return image;
 }
 
+// Load elevation tile into cache if required and return it.
 elevation_t cache_elevation(cache_t *cache, const char *format, int level, int y, int x) {
   char *path = format_path(format, level, y, x);
   int found = index_of(cache->keys, path);
