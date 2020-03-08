@@ -65,6 +65,11 @@ static MunitResult test_tilepath(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_cubepath(const MunitParameter params[], void *data) {
+  munit_assert_string_equal(cubepath("test", 5, 2, 3, 1, ".png"), "test/5/2/1/3.png");
+  return MUNIT_OK;
+}
+
 static MunitResult test_scale_image(const MunitParameter params[], void *data) {
   char *pixels = GC_MALLOC_ATOMIC(12);
   image_t image = (image_t){.height = 2, .width = 2, .data = pixels};
@@ -88,6 +93,7 @@ MunitTest test_image[] = {
   {"/write"      , test_write      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/mkdir_p"    , test_mkdir_p    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/tilepath"   , test_tilepath   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/cubepath"   , test_cubepath   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/scale_image", test_scale_image, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL          , NULL            , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

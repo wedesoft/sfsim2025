@@ -180,7 +180,7 @@ int main(int argc, char *argv[]) {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, tex[k]);
     glUniform1i(glGetUniformLocation(program, "tex"), 0);
-    sprintf(buf, "globe%d.png", k);
+    sprintf(buf, "globe/%d/0/0/0.png", k);
     image_t img = read_image(buf);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.width, img.height, 0, GL_RGB, GL_UNSIGNED_BYTE, img.data);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
