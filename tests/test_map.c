@@ -70,6 +70,20 @@ static MunitResult test_lattitude(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_map_x(const MunitParameter params[], void *data) {
+  munit_assert_int(map_x(0, 675, 3), ==, 675 * 2 * 8);
+  munit_assert_int(map_x(-M_PI, 675, 3), ==, 0);
+  munit_assert_int(map_x(+M_PI, 675, 3), ==, 0);
+  return MUNIT_OK;
+}
+
+static MunitResult test_map_y(const MunitParameter params[], void *data) {
+  munit_assert_int(map_y(0, 675, 3), ==, 675 * 8);
+  munit_assert_int(map_y(M_PI / 2, 675, 3), ==, 0);
+  munit_assert_int(map_y(-M_PI / 2, 675, 3), ==, 675 * 8 * 2 - 1);
+  return MUNIT_OK;
+}
+
 MunitTest test_map[] = {
   {"/cube_face_0", test_cube_face_0, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/cube_face_1", test_cube_face_1, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
@@ -79,5 +93,7 @@ MunitTest test_map[] = {
   {"/cube_face_5", test_cube_face_5, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/longitude"  , test_longitude  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/lattitude"  , test_lattitude  , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/map_x"      , test_map_x      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/map_y"      , test_map_y      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL          , NULL            , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
 };

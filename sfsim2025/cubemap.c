@@ -6,7 +6,6 @@
 
 int main(int argc, char *argv[]) {
   const int level = 0;
-  int count = pow(2, level);
   const int n = 1;
   const int size = 256;
   const int w = 675;
@@ -25,12 +24,8 @@ int main(int argc, char *argv[]) {
             float z = cube_map_z(k, j, i);
             float lon = longitude(x, y, z);
             float lat = lattitude(x, y, z);
-            int dx = (lon + M_PI) / (2 * M_PI) * w * 4 * count;
-            int dy = (M_PI / 2 - lat) / M_PI * w * 2 * count;
-            if (dx >= w * 4 * count) dx = 0;
-            if (dy >= w * 2 * count) dy = w * 2 * count - 1;
-            assert(dx >= 0 && dx < w * 4 * count);
-            assert(dy >= 0 && dy < w * 2 * count);
+            int dx = map_x(lon, w, level);
+            int dy = map_y(lat, w, level);
             int tx = dx / w;
             int ty = dy / w;
             int px = dx % w;
