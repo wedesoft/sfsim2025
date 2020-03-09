@@ -11,12 +11,15 @@ int main(int argc, char *argv[]) {
   const int n = pow(2, out_level);
   const int size = 256;
   const int w = 675;
-  cache_t cache = make_cache(4);
+  cache_t image_cache = make_cache(4);
+  cache_t elevation_cache = make_cache(4);
   for (int k=0; k<6;  k++) {
     for (int b=0; b<n; b++) {
       for (int a=0; a<n; a++) {
         image_t image = allocate_image(size, size);
-        unsigned char *p = image.data;
+        elevation_t elevation = allocate_elevation(size, size);
+        unsigned char *p1 = image.data;
+        short int *p2 = elevation.data;
         for (int v=0; v<size; v++) {
           float j = ((float)v / (size - 1) + b) / n;
           for (int u=0; u<size; u++) {
@@ -32,16 +35,26 @@ int main(int argc, char *argv[]) {
             int ty = dy / w;
             int px = dx % w;
             int py = dy % w;
-            image_t source = cache_image(&cache, "world/%d/%d/%d.png", in_level, ty, tx);
-            unsigned char *q = source.data + (w * py + px) * 3;
-            p[0] = q[0];
-            p[1] = q[1];
-            p[2] = q[2];
-            p += 3;
+            image_t image_source = cache_image(&image_cache, "world/%d/%d/%d.png", in_level, ty, tx);
+            elevation_t elevation_source = cache_elevation(&elevation_cache, "elevation/%d/%d/%d.raw", in_level, ty, tx);
+            assert(image_source.width == w);
+            assert(image_source.height == w);
+            assert(elevation_source.width == w);
+            assert(elevation_source.height == w);
+            unsigned char *q1 = image_source.data + (w * py + px) * 3;
+            short int *q2 = elevation_source.data + w * py + px;
+            p1[0] = q1[0];
+            p1[1] = q1[1];
+            p1[2] = q1[2];
+            *p2 = *q2;
+            p1 += 3;
+            p2++;
           };
         };
         mkdir_p(dirname(cubepath("globe", k, out_level, b, a, ".png")));
         write_image(image, cubepath("globe", k, out_level, b, a, ".png"));
+        mkdir_p(dirname(cubepath("globe", k, out_level, b, a, ".raw")));
+        write_elevation(elevation, cubepath("globe", k, out_level, b, a, ".raw"));
       };
     };
   };

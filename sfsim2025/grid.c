@@ -70,9 +70,9 @@ void display(void) {
   glEnable(GL_DEPTH_TEST);
   float *rot = GC_MALLOC_ATOMIC(16 * sizeof(float));
   rot[0] = cos(angle); rot[4] = 0; rot[ 8] = -sin(angle); rot[12] = 0;
-  rot[1] = 0; rot[5] = 1; rot[ 9] = 0; rot[13] = 0;
-  rot[2] = sin(angle); rot[6] = 0; rot[10] = cos(angle); rot[14] = 0;
-  rot[3] = 0; rot[7] = 0; rot[11] = 0; rot[15] = 1;
+  rot[1] =          0; rot[5] = 1; rot[ 9] =           0; rot[13] = 0;
+  rot[2] = sin(angle); rot[6] = 0; rot[10] =  cos(angle); rot[14] = 0;
+  rot[3] =          0; rot[7] = 0; rot[11] =           0; rot[15] = 1;
   float *proj = projection(width, height, 0.1, 20.0, 45.0);
   for (int k=0; k<6; k++) {
     glBindVertexArray(vao[k]);
@@ -80,7 +80,7 @@ void display(void) {
     glUniformMatrix4fv(glGetUniformLocation(program, "rotation"), 1, GL_FALSE, rot);
     glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, proj);
     glBindTexture(GL_TEXTURE_2D, tex[k]);
-    glDrawElements(GL_TRIANGLES, 127 * 127 * 2 * 3, GL_UNSIGNED_INT, (void *)0);
+    glDrawElements(GL_TRIANGLES, 255 * 255 * 2 * 3, GL_UNSIGNED_INT, (void *)0);
   };
   glFlush();
 }
@@ -125,51 +125,51 @@ int main(int argc, char *argv[]) {
     glBindVertexArray(vao[k]);
 
     char buf[128];
-    sprintf(buf, "globe%d.raw", k);
+    sprintf(buf, "globe/%d/0/0/0.raw", k);
     elevation_t elevation = read_elevation(buf);
-    GLfloat *vertices = GC_MALLOC_ATOMIC(128 * 128 * 5 * sizeof(GLfloat));
+    GLfloat *vertices = GC_MALLOC_ATOMIC(256 * 256 * 5 * sizeof(GLfloat));
     GLfloat *p = vertices;
     short int *e = elevation.data;
-    for (int j=0; j<128; j++) {
-      for (int i=0; i<128; i++) {
-        float x = cube_map_x(k, j / 127.0, i / 127.0);
-        float y = cube_map_y(k, j / 127.0, i / 127.0);
-        float z = cube_map_z(k, j / 127.0, i / 127.0);
+    for (int j=0; j<256; j++) {
+      for (int i=0; i<256; i++) {
+        float x = cube_map_x(k, j / 255.0, i / 255.0);
+        float y = cube_map_y(k, j / 255.0, i / 255.0);
+        float z = cube_map_z(k, j / 255.0, i / 255.0);
         float d = sqrtf(x * x + y * y + z * z);
         float r = 1.0 + *e * 0.00002;
         p[0] = x / d * r;
         p[1] = y / d * r;
         p[2] = z / d * r;
         p += 3;
-        p[0] = i / 127.0;
-        p[1] = j / 127.0;
+        p[0] = i / 255.0;
+        p[1] = j / 255.0;
         p += 2;
         e++;
       };
     };
 
-    int *indices = GC_MALLOC_ATOMIC(127 * 127 * 2 * 3 * sizeof(int));
+    int *indices = GC_MALLOC_ATOMIC(255 * 255 * 2 * 3 * sizeof(int));
     int *q = indices;
-    for (int j=0; j<127; j++) {
-      for (int i=0; i<127; i++) {
-        q[0] = j * 128 + i + 1;
-        q[1] = j * 128 + i;
-        q[2] = (j + 1) * 128 + i;
+    for (int j=0; j<255; j++) {
+      for (int i=0; i<255; i++) {
+        q[0] = j * 256 + i + 1;
+        q[1] = j * 256 + i;
+        q[2] = (j + 1) * 256 + i;
         q += 3;
-        q[0] = (j + 1) * 128 + i;
-        q[1] = (j + 1) * 128 + i + 1;
-        q[2] = j * 128 + i + 1;
+        q[0] = (j + 1) * 256 + i;
+        q[1] = (j + 1) * 256 + i + 1;
+        q[2] = j * 256 + i + 1;
         q += 3;
       };
     };
 
     glGenBuffers(1, &vbo[k]);
     glBindBuffer(GL_ARRAY_BUFFER, vbo[k]);
-    glBufferData(GL_ARRAY_BUFFER, 128 * 128 * 5 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 256 * 256 * 5 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
 
     glGenBuffers(1, &idx[k]);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idx[k]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 127 * 127 * 2 * 3 * sizeof(int), indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 255 * 255 * 2 * 3 * sizeof(int), indices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(glGetAttribLocation(program, "point"), 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
     glVertexAttribPointer(glGetAttribLocation(program, "texcoord"), 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
