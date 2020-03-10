@@ -16,7 +16,6 @@ scale-elevation
 elevationtiles
 elevation
 grid
-warp
 *.png
 *.raw
 *.tgz

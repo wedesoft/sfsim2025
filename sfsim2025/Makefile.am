@@ -1,5 +1,5 @@
 noinst_PROGRAMS = tumble pendulum chain collide spring gear wheel car icosahedron maptiles scale-image scale-elevation \
-									elevationtiles grid warp cubemap
+									elevationtiles grid cubemap
 
 noinst_SCRIPTS = multiresmap.sh multireselevation.sh
 
@@ -86,11 +86,6 @@ grid_SOURCES = grid.c
 grid_CFLAGS = $(GLEW_CFLAGS) $(GL_CFLAGS) $(ATLAS_CFLAGS) $(BOEHM_CFLAGS) $(SDL_CFLAGS)
 grid_LDFLAGS =
 grid_LDADD = libsfsim2025.la $(GLEW_LIBS) $(GL_LIBS) $(BOEHM_LIBS) $(SDL_LIBS) -lm
-
-warp_SOURCES = warp.c
-warp_CFLAGS = $(BOEHM_CFLAGS)
-warp_LDFLAGS =
-warp_LDADD = libsfsim2025.la $(BOEHM_LIBS)
 
 cubemap_SOURCES = cubemap.c
 cubemap_CFLAGS = $(BOEHM_CFLAGS)
