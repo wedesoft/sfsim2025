@@ -11,16 +11,34 @@ float longitude(float x, float y, float z);
 
 float lattitude(float x, float y, float z);
 
-static int map_x(float longitude, int tilesize, int level) {
+static float map_x(float longitude, int tilesize, int level) {
   int count = pow(2, level);
-  int result = (longitude + M_PI) / (2 * M_PI) * 4 * count * tilesize;
-  if (result >= 4 * count * tilesize) result = 0;
+  float result = (longitude + M_PI) / (2 * M_PI) * 4 * count * tilesize;
   return result;
 }
 
-static int map_y(float lattitude, int tilesize, int level) {
+static float map_y(float lattitude, int tilesize, int level) {
   int count = pow(2, level);
-  int result = (M_PI / 2 - lattitude) / M_PI * tilesize * 2 * count;
-  if (result >= 2 * count * tilesize) result = 2 * count * tilesize - 1;
+  float result = (M_PI / 2 - lattitude) / M_PI * tilesize * 2 * count;
   return result;
+}
+
+static void map_pixels_x(float longitude, int tilesize, int level, int *x0, int *x1, float *frac) {
+  int count = pow(2, level);
+  float x = map_x(longitude, tilesize, level);
+  *x0 = floor(x);
+  *frac = x - *x0;
+  if (*x0 >= 4 * count * tilesize) *x0 = 0;
+  *x1 = *x0 + 1;
+  if (*x1 >= 4 * count * tilesize) *x1 = 0;
+}
+
+static void map_pixels_y(float lattitude, int tilesize, int level, int *y0, int *y1, float *frac) {
+  int count = pow(2, level);
+  float y = map_y(lattitude, tilesize, level);
+  *y0 = floor(y);
+  *frac = y - *y0;
+  if (*y0 >= 2 * count * tilesize) *y0 = 2 * count * tilesize - 1;
+  *y1 = *y0 + 1;
+  if (*y1 >= 2 * count * tilesize) *y1 = 2 * count * tilesize - 1;
 }
