@@ -23,21 +23,23 @@ static float map_y(float lattitude, int tilesize, int level) {
   return result;
 }
 
-static void map_pixels_x(float longitude, int tilesize, int level, int *x0, int *x1, float *frac) {
+static void map_pixels_x(float longitude, int tilesize, int level, int *x0, int *x1, float *frac0, float *frac1) {
   int count = pow(2, level);
   float x = map_x(longitude, tilesize, level);
   *x0 = floor(x);
-  *frac = x - *x0;
+  *frac1 = x - *x0;
+  *frac0 = 1 - *frac1;
   if (*x0 >= 4 * count * tilesize) *x0 = 0;
   *x1 = *x0 + 1;
   if (*x1 >= 4 * count * tilesize) *x1 = 0;
 }
 
-static void map_pixels_y(float lattitude, int tilesize, int level, int *y0, int *y1, float *frac) {
+static void map_pixels_y(float lattitude, int tilesize, int level, int *y0, int *y1, float *frac0, float *frac1) {
   int count = pow(2, level);
   float y = map_y(lattitude, tilesize, level);
   *y0 = floor(y);
-  *frac = y - *y0;
+  *frac1 = y - *y0;
+  *frac0 = 1 - *frac1;
   if (*y0 >= 2 * count * tilesize) *y0 = 2 * count * tilesize - 1;
   *y1 = *y0 + 1;
   if (*y1 >= 2 * count * tilesize) *y1 = 2 * count * tilesize - 1;

@@ -84,61 +84,67 @@ static MunitResult test_map_y(const MunitParameter params[], void *data) {
 
 static MunitResult test_map_pixels_x(const MunitParameter params[], void *data) {
   int x0, x1;
-  float frac;
-  map_pixels_x(0, 675, 3, &x0, &x1, &frac);
+  float frac0, frac1;
+  map_pixels_x(0, 675, 3, &x0, &x1, &frac0, &frac1);
   munit_assert_int(x0, ==, 675 * 2 * 8);
   munit_assert_int(x1, ==, 675 * 2 * 8 + 1);
-  munit_assert_float(frac, ==, 0);
+  munit_assert_float(frac0, ==, 1);
+  munit_assert_float(frac1, ==, 0);
   return MUNIT_OK;
 }
 
 static MunitResult test_wrap_x0(const MunitParameter params[], void *data) {
   int x0, x1;
-  float frac;
-  map_pixels_x(M_PI, 675, 3, &x0, &x1, &frac);
+  float frac0, frac1;
+  map_pixels_x(M_PI, 675, 3, &x0, &x1, &frac0, &frac1);
   munit_assert_int(x0, ==, 0);
   munit_assert_int(x1, ==, 1);
-  munit_assert_float(frac, ==, 0);
+  munit_assert_float(frac0, ==, 1);
+  munit_assert_float(frac1, ==, 0);
   return MUNIT_OK;
 }
 
 static MunitResult test_wrap_x1(const MunitParameter params[], void *data) {
   int x0, x1;
-  float frac;
-  map_pixels_x(M_PI - M_PI / (256 * 4), 256, 0, &x0, &x1, &frac);
+  float frac0, frac1;
+  map_pixels_x(M_PI - M_PI / (256 * 4), 256, 0, &x0, &x1, &frac0, &frac1);
   munit_assert_int(x0, ==, 256 * 4 - 1);
   munit_assert_int(x1, ==, 0);
-  munit_assert_double_equal(frac, 0.5, 6);
+  munit_assert_double_equal(frac0, 0.5, 6);
+  munit_assert_double_equal(frac1, 0.5, 6);
   return MUNIT_OK;
 }
 
 static MunitResult test_map_pixels_y(const MunitParameter params[], void *data) {
   int y0, y1;
-  float frac;
-  map_pixels_y(0, 675, 3, &y0, &y1, &frac);
+  float frac0, frac1;
+  map_pixels_y(0, 675, 3, &y0, &y1, &frac0, &frac1);
   munit_assert_int(y0, ==, 675 * 8);
   munit_assert_int(y1, ==, 675 * 8 + 1);
-  munit_assert_float(frac, ==, 0);
+  munit_assert_float(frac0, ==, 1);
+  munit_assert_float(frac1, ==, 0);
   return MUNIT_OK;
 }
 
 static MunitResult test_clip_y0(const MunitParameter params[], void *data) {
   int y0, y1;
-  float frac;
-  map_pixels_y(-M_PI / 2, 675, 3, &y0, &y1, &frac);
+  float frac0, frac1;
+  map_pixels_y(-M_PI / 2, 675, 3, &y0, &y1, &frac0, &frac1);
   munit_assert_int(y0, ==, 675 * 8 * 2 - 1);
   munit_assert_int(y1, ==, 675 * 8 * 2 - 1);
-  munit_assert_float(frac, ==, 0);
+  munit_assert_float(frac0, ==, 1);
+  munit_assert_float(frac1, ==, 0);
   return MUNIT_OK;
 }
 
 static MunitResult test_frac_y0(const MunitParameter params[], void *data) {
   int y0, y1;
-  float frac;
-  map_pixels_y(M_PI / (4 * 256), 256, 0, &y0, &y1, &frac);
+  float frac0, frac1;
+  map_pixels_y(M_PI / (4 * 256), 256, 0, &y0, &y1, &frac0, &frac1);
   munit_assert_int(y0, ==, 256 - 1);
   munit_assert_int(y1, ==, 256);
-  munit_assert_float(frac, ==, 0.5);
+  munit_assert_float(frac0, ==, 0.5);
+  munit_assert_float(frac1, ==, 0.5);
   return MUNIT_OK;
 }
 

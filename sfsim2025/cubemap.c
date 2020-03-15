@@ -30,9 +30,9 @@ int main(int argc, char *argv[]) {
             float lon = longitude(x, y, z);
             float lat = lattitude(x, y, z);
             int dx[2], dy[2];
-            float xfrac, yfrac;
-            map_pixels_x(lon, w, in_level, &dx[0], &dx[1], &xfrac);
-            map_pixels_y(lat, w, in_level, &dy[0], &dy[1], &yfrac);
+            float xfrac[2], yfrac[2];
+            map_pixels_x(lon, w, in_level, &dx[0], &dx[1], &xfrac[0], &xfrac[1]);
+            map_pixels_y(lat, w, in_level, &dy[0], &dy[1], &yfrac[0], &yfrac[1]);
             float r[4];
             float g[4];
             float b[4];
@@ -57,10 +57,10 @@ int main(int argc, char *argv[]) {
                 e[2 * t + s] = *q2 > 0 ? *q2 : 0;
               };
             };
-            p1[0] = r[0] * (1 - xfrac) * (1 - yfrac) + r[1] * xfrac * (1 - yfrac) + r[2] * (1 - xfrac) * yfrac + r[3] * xfrac * yfrac;
-            p1[1] = g[0] * (1 - xfrac) * (1 - yfrac) + g[1] * xfrac * (1 - yfrac) + g[2] * (1 - xfrac) * yfrac + g[3] * xfrac * yfrac;
-            p1[2] = b[0] * (1 - xfrac) * (1 - yfrac) + b[1] * xfrac * (1 - yfrac) + b[2] * (1 - xfrac) * yfrac + b[3] * xfrac * yfrac;
-            *p2 = e[0] * (1 - xfrac) * (1 - yfrac) + e[1] * xfrac * (1 - yfrac) + e[2] * (1 - xfrac) * yfrac + e[3] * xfrac * yfrac;
+            p1[0] = r[0] * xfrac[0] * yfrac[0] + r[1] * xfrac[1] * yfrac[0] + r[2] * xfrac[0] * yfrac[1] + r[3] * xfrac[1] * yfrac[1];
+            p1[1] = g[0] * xfrac[0] * yfrac[0] + g[1] * xfrac[1] * yfrac[0] + g[2] * xfrac[0] * yfrac[1] + g[3] * xfrac[1] * yfrac[1];
+            p1[2] = b[0] * xfrac[0] * yfrac[0] + b[1] * xfrac[1] * yfrac[0] + b[2] * xfrac[0] * yfrac[1] + b[3] * xfrac[1] * yfrac[1];
+            *p2 = e[0] * xfrac[0] * yfrac[0] + e[1] * xfrac[1] * yfrac[0] + e[2] * xfrac[0] * yfrac[1] + e[3] * xfrac[1] * yfrac[1];
             p1 += 3;
             p2++;
           };
