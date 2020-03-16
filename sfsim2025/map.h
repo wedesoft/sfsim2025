@@ -44,3 +44,8 @@ static void map_pixels_y(float lattitude, int tilesize, int level, int *y0, int 
   *y1 = *y0 + 1;
   if (*y1 >= 2 * count * tilesize) *y1 = 2 * count * tilesize - 1;
 }
+
+static float cube_coordinate(int level, int tilesize, int tile, int pixel) {
+  int tiles = pow(2, level);
+  return (tile + pixel / (float)(tilesize - 1)) / tiles;
+}

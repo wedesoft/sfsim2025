@@ -148,22 +148,31 @@ static MunitResult test_frac_y0(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_cube_coordinate(const MunitParameter params[], void *data) {
+  munit_assert_float(cube_coordinate(0, 256, 0, 0), ==, 0);
+  munit_assert_float(cube_coordinate(0, 256, 0, 255), ==, 1.0);
+  munit_assert_float(cube_coordinate(1, 256, 0, 255), ==, 0.5);
+  munit_assert_float(cube_coordinate(1, 256, 1, 255), ==, 1.0);
+  return MUNIT_OK;
+}
+
 MunitTest test_map[] = {
-  {"/cube_face_0" , test_cube_face_0 , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/cube_face_1" , test_cube_face_1 , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/cube_face_2" , test_cube_face_2 , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/cube_face_3" , test_cube_face_3 , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/cube_face_4" , test_cube_face_4 , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/cube_face_5" , test_cube_face_5 , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/longitude"   , test_longitude   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/lattitude"   , test_lattitude   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/map_x"       , test_map_x       , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/map_y"       , test_map_y       , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/map_pixels_x", test_map_pixels_x, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/wrap_x0"     , test_wrap_x0     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/wrap_x1"     , test_wrap_x1     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/map_pixels_y", test_map_pixels_y, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/clip_y0"     , test_clip_y0     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/frac_y0"     , test_frac_y0     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
-  {NULL           , NULL             , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
+  {"/cube_face_0"    , test_cube_face_0    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/cube_face_1"    , test_cube_face_1    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/cube_face_2"    , test_cube_face_2    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/cube_face_3"    , test_cube_face_3    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/cube_face_4"    , test_cube_face_4    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/cube_face_5"    , test_cube_face_5    , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/longitude"      , test_longitude      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/lattitude"      , test_lattitude      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/map_x"          , test_map_x          , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/map_y"          , test_map_y          , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/map_pixels_x"   , test_map_pixels_x   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/wrap_x0"        , test_wrap_x0        , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/wrap_x1"        , test_wrap_x1        , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/map_pixels_y"   , test_map_pixels_y   , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/clip_y0"        , test_clip_y0        , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/frac_y0"        , test_frac_y0        , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/cube_coordinate", test_cube_coordinate, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {NULL              , NULL                , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
 };

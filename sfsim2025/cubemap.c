@@ -21,9 +21,9 @@ int main(int argc, char *argv[]) {
         unsigned char *p1 = image.data;
         short int *p2 = elevation.data;
         for (int v=0; v<size; v++) {
-          float j = ((float)v / (size - 1) + b) / n;
+          float j = cube_coordinate(out_level, size, b, v);
           for (int u=0; u<size; u++) {
-            float i = ((float)u / (size - 1) + a) / n;
+            float i = cube_coordinate(out_level, size, a, u);
             float x = cube_map_x(k, j, i);
             float y = cube_map_y(k, j, i);
             float z = cube_map_z(k, j, i);
