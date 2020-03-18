@@ -32,8 +32,8 @@ void main()\n\
   fragColor = texture(tex, UV).rgb;\n\
 }";
 
-const int width = 640;
-const int height = 480;
+const int width = 1024;
+const int height = 768;
 
 void printStatus(const char *step, GLuint context, GLuint status) {
   GLint result = GL_FALSE;
