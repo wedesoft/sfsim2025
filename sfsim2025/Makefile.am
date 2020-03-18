@@ -92,6 +92,8 @@ cubemap_CFLAGS = $(BOEHM_CFLAGS)
 cubemap_LDFLAGS =
 cubemap_LDADD = libsfsim2025.la $(BOEHM_LIBS)
 
+# See https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/
+# Also see https://visibleearth.nasa.gov/collection/1484/blue-marble (downloads keep failing)
 world.200404.3x21600x21600.A1.png:
 	$(WGET) https://neo.sci.gsfc.nasa.gov/archive/bluemarble/bmng/world_500m/world.200404.3x21600x21600.A1.png
 
@@ -198,5 +200,6 @@ elevation/0/3/1.raw: elevation.D2.raw
 heightfield-local: elevation/0/0/0.raw elevation/0/0/1.raw elevation/0/1/0.raw elevation/0/1/1.raw \
 	elevation/0/2/0.raw elevation/0/2/1.raw elevation/0/3/0.raw elevation/0/3/1.raw
 
+# See https://www.ngdc.noaa.gov/mgg/topo/gltiles.html
 all10g.tgz:
 	$(WGET) https://www.ngdc.noaa.gov/mgg/topo/DATATILES/elev/all10g.tgz
