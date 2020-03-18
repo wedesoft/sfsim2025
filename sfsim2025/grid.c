@@ -79,6 +79,8 @@ void display(void) {
     glUseProgram(program);
     glUniformMatrix4fv(glGetUniformLocation(program, "rotation"), 1, GL_FALSE, rot);
     glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, proj);
+    glActiveTexture(GL_TEXTURE0 + 0);
+    glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, tex[k]);
     glDrawElements(GL_TRIANGLES, 255 * 255 * 2 * 3, GL_UNSIGNED_INT, (void *)0);
   };
@@ -175,7 +177,6 @@ int main(int argc, char *argv[]) {
     glEnableVertexAttribArray(1);
 
     glGenTextures(1, &tex[k]);
-    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, tex[k]);
     glUniform1i(glGetUniformLocation(program, "tex"), 0);
     image_t img = read_image(cubepath("globe", k, 0, 0, 0, ".png"));
