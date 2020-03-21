@@ -148,20 +148,7 @@ int main(int argc, char *argv[]) {
       };
     };
 
-    int *indices = GC_MALLOC_ATOMIC(255 * 255 * 2 * 3 * sizeof(int));
-    int *q = indices;
-    for (int j=0; j<255; j++) {
-      for (int i=0; i<255; i++) {
-        q[0] = j * 256 + i + 1;
-        q[1] = j * 256 + i;
-        q[2] = (j + 1) * 256 + i;
-        q += 3;
-        q[0] = (j + 1) * 256 + i;
-        q[1] = (j + 1) * 256 + i + 1;
-        q[2] = j * 256 + i + 1;
-        q += 3;
-      };
-    };
+    int *indices = cube_indices(256);
 
     glGenBuffers(1, &vbo[k]);
     glBindBuffer(GL_ARRAY_BUFFER, vbo[k]);

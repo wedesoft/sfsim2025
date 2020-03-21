@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <gc.h>
 #include <tgmath.h>
 #include <stdbool.h>
 #include "map.h"
@@ -91,4 +92,20 @@ float longitude(float x, float y, float z) {
 float lattitude(float x, float y, float z) {
   float r = sqrt(x * x + z * z);
   return atan2(y, r);
+}
+
+int *cube_indices(int size) {
+  int *result = GC_MALLOC_ATOMIC((size - 1) * (size - 1) * 2 * 3 * sizeof(int));
+  int *p = result;
+  for (int j=0; j<size - 1; j++) {
+    for (int i=0; i<size - 1; i++) {
+      *p++ = j * size + i + 1;
+      *p++ = j * size + i;
+      *p++ = (j + 1) * size + i;
+      *p++ = (j + 1) * size + i;
+      *p++ = (j + 1) * size + i + 1;
+      *p++ = j * size + i + 1;
+    };
+  };
+  return result;
 }

@@ -49,3 +49,5 @@ static float cube_coordinate(int level, int tilesize, int tile, int pixel) {
   int tiles = pow(2, level);
   return (tile + pixel / (float)(tilesize - 1)) / tiles;
 }
+
+int *cube_indices(int size);
