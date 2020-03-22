@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include "map.h"
 
+
 float cube_map_x(int face, float j, float i) {
   float result;
   switch (face) {

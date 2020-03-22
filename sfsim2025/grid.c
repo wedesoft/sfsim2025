@@ -19,7 +19,7 @@ uniform mat4 rotation;\n\
 out mediump vec2 UV;\n\
 void main()\n\
 {\n\
-  gl_Position = projection * (rotation * vec4(point, 1) - vec4(0, 0, 5, 0));\n\
+  gl_Position = projection * (rotation * vec4(point, 1) - vec4(0, 0, 6378000 * 5, 0));\n\
   UV = texcoord;\n\
 }";
 
@@ -73,7 +73,7 @@ void display(void) {
   rot[1] =          0; rot[5] = 1; rot[ 9] =           0; rot[13] = 0;
   rot[2] = sin(angle); rot[6] = 0; rot[10] =  cos(angle); rot[14] = 0;
   rot[3] =          0; rot[7] = 0; rot[11] =           0; rot[15] = 1;
-  float *proj = projection(width, height, 0.1, 20.0, 45.0);
+  float *proj = projection(width, height, 6378000 * 0.1, 6378000.0 * 6, 45.0);
   for (int k=0; k<6; k++) {
     glBindVertexArray(vao[k]);
     glUseProgram(program);
@@ -136,7 +136,7 @@ int main(int argc, char *argv[]) {
         float y = cube_map_y(k, j / 255.0, i / 255.0);
         float z = cube_map_z(k, j / 255.0, i / 255.0);
         float d = sqrtf(x * x + y * y + z * z);
-        float r = 1.0 + *e * 0.00002;
+        float r = 6378000.0 + *e;
         p[0] = x / d * r;
         p[1] = y / d * r;
         p[2] = z / d * r;
