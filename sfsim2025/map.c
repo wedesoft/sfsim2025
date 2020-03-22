@@ -110,3 +110,14 @@ int *cube_indices(int size) {
   };
   return result;
 }
+
+void spherical_map(int k, float j, float i, float radius, float *x, float *y, float *z) {
+  float cube_x = cube_map_x(k, j, i);
+  float cube_y = cube_map_y(k, j, i);
+  float cube_z = cube_map_z(k, j, i);
+  float distance = sqrt(cube_x * cube_x + cube_y * cube_y + cube_z * cube_z);
+  float factor = radius / distance;
+  *x = cube_x * factor;
+  *y = cube_y * factor;
+  *z = cube_z * factor;
+}
