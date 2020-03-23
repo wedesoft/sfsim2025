@@ -111,6 +111,7 @@ int *cube_indices(int size) {
   return result;
 }
 
+// Map coordinate on cube to sphere of given radius.
 void spherical_map(int k, float j, float i, float radius, float *x, float *y, float *z) {
   float cube_x = cube_map_x(k, j, i);
   float cube_y = cube_map_y(k, j, i);
@@ -122,6 +123,7 @@ void spherical_map(int k, float j, float i, float radius, float *x, float *y, fl
   *z = cube_z * factor;
 }
 
+// Determine 3D center of map tile.
 void tile_center(int level, int k, int b, int a, float radius, float *x, float *y, float *z) {
   float j = cube_coordinate(level, 3, b, 1);
   float i = cube_coordinate(level, 3, a, 1);
