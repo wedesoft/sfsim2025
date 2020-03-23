@@ -121,3 +121,9 @@ void spherical_map(int k, float j, float i, float radius, float *x, float *y, fl
   *y = cube_y * factor;
   *z = cube_z * factor;
 }
+
+void tile_center(int level, int k, int b, int a, float radius, float *x, float *y, float *z) {
+  float j = cube_coordinate(level, 3, b, 1);
+  float i = cube_coordinate(level, 3, a, 1);
+  spherical_map(k, j, i, radius, x, y, z);
+}

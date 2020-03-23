@@ -53,3 +53,5 @@ static float cube_coordinate(int level, int tilesize, int tile, int pixel) {
 int *cube_indices(int size);
 
 void spherical_map(int k, float j, float i, float r, float *x, float *y, float *z);
+
+void tile_center(int level, int k, int b, int a, float radius, float *x, float *y, float *z);

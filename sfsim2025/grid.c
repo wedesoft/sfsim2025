@@ -132,10 +132,12 @@ int main(int argc, char *argv[]) {
     short int *e = elevation.data;
     for (int j=0; j<256; j++) {
       for (int i=0; i<256; i++) {
-        spherical_map(k, j / 255.0, i / 255.0, 6378000.0 + *e * 100, p, p + 1, p + 2);
+        float jj = cube_coordinate(0, 256, 0, j);
+        float ii = cube_coordinate(0, 256, 0, i);
+        spherical_map(k, jj, ii, 6378000.0 + *e * 100, p, p + 1, p + 2);
         p += 3;
-        p[0] = i / 255.0;
-        p[1] = j / 255.0;
+        p[0] = ii;
+        p[1] = jj;
         p += 2;
         e++;
       };
