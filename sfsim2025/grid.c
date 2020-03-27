@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <time.h>
 #include <stdbool.h>
 #include <gc.h>
@@ -19,7 +20,7 @@ uniform mat4 rotation;\n\
 out mediump vec2 UV;\n\
 void main()\n\
 {\n\
-  gl_Position = projection * (rotation * vec4(point, 1) - vec4(0, 0, 6378000 * 5, 0));\n\
+  gl_Position = projection * (rotation * vec4(point, 1) - vec4(0, 0, 6378000 * 4, 0));\n\
   UV = texcoord;\n\
 }";
 
@@ -57,10 +58,10 @@ void printLinkStatus(const char *step, GLuint context) {
   printStatus(step, context, GL_LINK_STATUS);
 }
 
-GLuint vao[6];
-GLuint vbo[6];
-GLuint idx[6];
-GLuint tex[6];
+GLuint vao[6 * 4];
+GLuint vbo[6 * 4];
+GLuint idx[6 * 4];
+GLuint tex[6 * 4];
 GLuint program;
 double angle = 0;
 struct timespec t0;
@@ -68,21 +69,26 @@ struct timespec t0;
 void display(void) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glEnable(GL_DEPTH_TEST);
+  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   float *rot = GC_MALLOC_ATOMIC(16 * sizeof(float));
   rot[0] = cos(angle); rot[4] = 0; rot[ 8] = -sin(angle); rot[12] = 0;
   rot[1] =          0; rot[5] = 1; rot[ 9] =           0; rot[13] = 0;
   rot[2] = sin(angle); rot[6] = 0; rot[10] =  cos(angle); rot[14] = 0;
   rot[3] =          0; rot[7] = 0; rot[11] =           0; rot[15] = 1;
-  float *proj = projection(width, height, 6378000 * 0.1, 6378000.0 * 6, 45.0);
+  float *proj = projection(width, height, 1000, 6378000.0 * 4, 45.0);
   for (int k=0; k<6; k++) {
-    glBindVertexArray(vao[k]);
-    glUseProgram(program);
-    glUniformMatrix4fv(glGetUniformLocation(program, "rotation"), 1, GL_FALSE, rot);
-    glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, proj);
-    glActiveTexture(GL_TEXTURE0 + 0);
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, tex[k]);
-    glDrawElements(GL_TRIANGLES, 255 * 255 * 2 * 3, GL_UNSIGNED_INT, (void *)0);
+    for (int b=0; b<2; b++) {
+      for (int a=0; a<2; a++) {
+        glBindVertexArray(vao[k * 4 + b * 2 + a]);
+        glUseProgram(program);
+        glUniformMatrix4fv(glGetUniformLocation(program, "rotation"), 1, GL_FALSE, rot);
+        glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, proj);
+        glActiveTexture(GL_TEXTURE0 + 0);
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, tex[k * 4 + b * 2 + a]);
+        glDrawElements(GL_TRIANGLES, 255 * 255 * 2 * 3, GL_UNSIGNED_INT, (void *)0);
+      };
+    };
   };
   glFlush();
 }
@@ -123,50 +129,56 @@ int main(int argc, char *argv[]) {
   printLinkStatus("Shader program", program);
 
   for (int k=0; k<6; k++) {
-    glGenVertexArrays(1, &vao[k]);
-    glBindVertexArray(vao[k]);
+    for (int b=0; b<2; b++) {
+      for (int a=0; a<2; a++) {
+        glGenVertexArrays(1, &vao[k * 4 + b * 2 + a]);
+        glBindVertexArray(vao[k * 4 + b * 2 + a]);
 
-    elevation_t elevation = read_elevation(cubepath("globe", k, 0, 0, 0, ".raw"));
-    GLfloat *vertices = GC_MALLOC_ATOMIC(256 * 256 * 5 * sizeof(GLfloat));
-    GLfloat *p = vertices;
-    short int *e = elevation.data;
-    for (int j=0; j<256; j++) {
-      for (int i=0; i<256; i++) {
-        float jj = cube_coordinate(0, 256, 0, j);
-        float ii = cube_coordinate(0, 256, 0, i);
-        spherical_map(k, jj, ii, 6378000.0 + *e * 100, p, p + 1, p + 2);
-        p += 3;
-        p[0] = ii;
-        p[1] = jj;
-        p += 2;
-        e++;
+        elevation_t elevation = read_elevation(cubepath("globe", k, 1, b, a, ".raw"));
+        GLfloat *vertices = GC_MALLOC_ATOMIC(256 * 256 * 5 * sizeof(GLfloat));
+        GLfloat *p = vertices;
+        short int *e = elevation.data;
+        assert(e);
+        for (int j=0; j<256; j++) {
+          for (int i=0; i<256; i++) {
+            float jj = cube_coordinate(1, 256, b, j);
+            float ii = cube_coordinate(1, 256, a, i);
+            spherical_map(k, jj, ii, 6378000.0 + *e, p, p + 1, p + 2);
+            p += 3;
+            p[0] = i / 255.0;
+            p[1] = j / 255.0;
+            p += 2;
+            e++;
+          };
+        };
+
+        int *indices = cube_indices(256);
+
+        glGenBuffers(1, &vbo[k * 4 + b * 2 + a]);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo[k * 4 + b * 2 + a]);
+        glBufferData(GL_ARRAY_BUFFER, 256 * 256 * 5 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+
+        glGenBuffers(1, &idx[k * 4 + b * 2 + a]);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idx[k * 4 + b * 2 + a]);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 255 * 255 * 2 * 3 * sizeof(int), indices, GL_STATIC_DRAW);
+
+        glVertexAttribPointer(glGetAttribLocation(program, "point"), 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
+        glVertexAttribPointer(glGetAttribLocation(program, "texcoord"), 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
+        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+
+        glGenTextures(1, &tex[k * 4 + b * 2 + a]);
+        glBindTexture(GL_TEXTURE_2D, tex[k * 4 + b * 2 + a]);
+        glUniform1i(glGetUniformLocation(program, "tex"), 0);
+        image_t img = read_image(cubepath("globe", k, 1, b, a, ".png"));
+        assert(img.data);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.width, img.height, 0, GL_RGB, GL_UNSIGNED_BYTE, img.data);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glGenerateMipmap(GL_TEXTURE_2D);
       };
     };
-
-    int *indices = cube_indices(256);
-
-    glGenBuffers(1, &vbo[k]);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[k]);
-    glBufferData(GL_ARRAY_BUFFER, 256 * 256 * 5 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
-
-    glGenBuffers(1, &idx[k]);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idx[k]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 255 * 255 * 2 * 3 * sizeof(int), indices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(glGetAttribLocation(program, "point"), 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
-    glVertexAttribPointer(glGetAttribLocation(program, "texcoord"), 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-
-    glGenTextures(1, &tex[k]);
-    glBindTexture(GL_TEXTURE_2D, tex[k]);
-    glUniform1i(glGetUniformLocation(program, "tex"), 0);
-    image_t img = read_image(cubepath("globe", k, 0, 0, 0, ".png"));
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.width, img.height, 0, GL_RGB, GL_UNSIGNED_BYTE, img.data);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glGenerateMipmap(GL_TEXTURE_2D);
   };
 
   glEnable(GL_CULL_FACE);
@@ -186,7 +198,7 @@ int main(int argc, char *argv[]) {
     SDL_GL_SwapWindow(window);
   };
 
-  for (int k=0; k<6; k++) {
+  for (int k=0; k<6 * 2 * 2; k++) {
     glBindVertexArray(vao[k]);
     glDisableVertexAttribArray(0);
 

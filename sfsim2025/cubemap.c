@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
   const int width = 675;
   cache_t image_cache = make_cache(4);
   cache_t elevation_cache = make_cache(4);
-  for (int k=0; k<6;  k++) {
+  for (int k=0; k<6; k++) {
     for (int b=0; b<n; b++) {
       for (int a=0; a<n; a++) {
         image_t image = allocate_image(tilesize, tilesize);
