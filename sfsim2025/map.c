@@ -112,10 +112,10 @@ int *cube_indices(int size) {
 }
 
 // Map coordinate on cube to sphere of given radius.
-void spherical_map(int k, float j, float i, float radius, float *x, float *y, float *z) {
-  float cube_x = cube_map_x(k, j, i);
-  float cube_y = cube_map_y(k, j, i);
-  float cube_z = cube_map_z(k, j, i);
+void spherical_map(int face, float j, float i, float radius, float *x, float *y, float *z) {
+  float cube_x = cube_map_x(face, j, i);
+  float cube_y = cube_map_y(face, j, i);
+  float cube_z = cube_map_z(face, j, i);
   float distance = sqrt(cube_x * cube_x + cube_y * cube_y + cube_z * cube_z);
   float factor = radius / distance;
   *x = cube_x * factor;
@@ -124,8 +124,8 @@ void spherical_map(int k, float j, float i, float radius, float *x, float *y, fl
 }
 
 // Determine 3D center of map tile.
-void tile_center(int level, int k, int b, int a, float radius, float *x, float *y, float *z) {
+void tile_center(int level, int face, int b, int a, float radius, float *x, float *y, float *z) {
   float j = cube_coordinate(level, 3, b, 1);
   float i = cube_coordinate(level, 3, a, 1);
-  spherical_map(k, j, i, radius, x, y, z);
+  spherical_map(face, j, i, radius, x, y, z);
 }
