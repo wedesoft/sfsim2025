@@ -11,8 +11,8 @@ int main(int argc, char *argv[]) {
   const int n = pow(2, out_level);
   const int tilesize = 256;
   const int width = 675;
-  cache_t image_cache = make_cache(4);
-  cache_t elevation_cache = make_cache(4);
+  cache_t image_cache = make_cache(2 * n * n);
+  cache_t elevation_cache = make_cache(2 * n * n);
   for (int k=0; k<6; k++) {
     for (int b=0; b<n; b++) {
       for (int a=0; a<n; a++) {

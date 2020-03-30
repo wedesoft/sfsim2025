@@ -58,10 +58,13 @@ void printLinkStatus(const char *step, GLuint context) {
   printStatus(step, context, GL_LINK_STATUS);
 }
 
-GLuint vao[6 * 4];
-GLuint vbo[6 * 4];
-GLuint idx[6 * 4];
-GLuint tex[6 * 4];
+#define L 0
+#define N 1
+
+GLuint vao[6 * N * N];
+GLuint vbo[6 * N * N];
+GLuint idx[6 * N * N];
+GLuint tex[6 * N * N];
 GLuint program;
 double angle = 0;
 struct timespec t0;
@@ -77,15 +80,15 @@ void display(void) {
   rot[3] =          0; rot[7] = 0; rot[11] =           0; rot[15] = 1;
   float *proj = projection(width, height, 1000, 6378000.0 * 4, 45.0);
   for (int k=0; k<6; k++) {
-    for (int b=0; b<2; b++) {
-      for (int a=0; a<2; a++) {
-        glBindVertexArray(vao[k * 4 + b * 2 + a]);
+    for (int b=0; b<N; b++) {
+      for (int a=0; a<N; a++) {
+        glBindVertexArray(vao[k * N * N + b * N + a]);
         glUseProgram(program);
         glUniformMatrix4fv(glGetUniformLocation(program, "rotation"), 1, GL_FALSE, rot);
         glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, proj);
         glActiveTexture(GL_TEXTURE0 + 0);
         glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, tex[k * 4 + b * 2 + a]);
+        glBindTexture(GL_TEXTURE_2D, tex[k * N * N + b * N + a]);
         glDrawElements(GL_TRIANGLES, 255 * 255 * 2 * 3, GL_UNSIGNED_INT, (void *)0);
       };
     };
@@ -108,9 +111,9 @@ GLfloat *cube_vertices(elevation_t elevation, int face, int b, int a) {
   assert(elevation.height == 256);
   for (int j=0; j<256; j++) {
     for (int i=0; i<256; i++) {
-      float jj = cube_coordinate(1, 256, b, j);
-      float ii = cube_coordinate(1, 256, a, i);
-      spherical_map(face, jj, ii, 6378000.0 + *e, p, p + 1, p + 2);
+      float jj = cube_coordinate(L, 256, b, j);
+      float ii = cube_coordinate(L, 256, a, i);
+      spherical_map(face, jj, ii, 6378000.0 + *e * 50, p, p + 1, p + 2);
       p += 3;
       p[0] = i / 255.0;
       p[1] = j / 255.0;
@@ -150,22 +153,22 @@ int main(int argc, char *argv[]) {
   printLinkStatus("Shader program", program);
 
   for (int k=0; k<6; k++) {
-    for (int b=0; b<2; b++) {
-      for (int a=0; a<2; a++) {
-        glGenVertexArrays(1, &vao[k * 4 + b * 2 + a]);
-        glBindVertexArray(vao[k * 4 + b * 2 + a]);
+    for (int b=0; b<N; b++) {
+      for (int a=0; a<N; a++) {
+        glGenVertexArrays(1, &vao[k * N * N + b * N + a]);
+        glBindVertexArray(vao[k * N * N + b * N + a]);
 
-        elevation_t elevation = read_elevation(cubepath("globe", k, 1, b, a, ".raw"));
+        elevation_t elevation = read_elevation(cubepath("globe", k, L, b, a, ".raw"));
         assert(elevation.data);
         GLfloat *vertices = cube_vertices(elevation, k, b, a);
         int *indices = cube_indices(256);
 
-        glGenBuffers(1, &vbo[k * 4 + b * 2 + a]);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo[k * 4 + b * 2 + a]);
+        glGenBuffers(1, &vbo[k * N * N + b * N + a]);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo[k * N * N + b * N + a]);
         glBufferData(GL_ARRAY_BUFFER, 256 * 256 * 5 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
 
-        glGenBuffers(1, &idx[k * 4 + b * 2 + a]);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idx[k * 4 + b * 2 + a]);
+        glGenBuffers(1, &idx[k * N * N + b * N + a]);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idx[k * N * N + b * N + a]);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, 255 * 255 * 2 * 3 * sizeof(int), indices, GL_STATIC_DRAW);
 
         glVertexAttribPointer(glGetAttribLocation(program, "point"), 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
@@ -173,10 +176,10 @@ int main(int argc, char *argv[]) {
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
 
-        glGenTextures(1, &tex[k * 4 + b * 2 + a]);
-        glBindTexture(GL_TEXTURE_2D, tex[k * 4 + b * 2 + a]);
+        glGenTextures(1, &tex[k * N * N + b * N + a]);
+        glBindTexture(GL_TEXTURE_2D, tex[k * N * N + b * N + a]);
         glUniform1i(glGetUniformLocation(program, "tex"), 0);
-        image_t img = read_image(cubepath("globe", k, 1, b, a, ".png"));
+        image_t img = read_image(cubepath("globe", k, L, b, a, ".png"));
         assert(img.data);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.width, img.height, 0, GL_RGB, GL_UNSIGNED_BYTE, img.data);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -204,7 +207,7 @@ int main(int argc, char *argv[]) {
     SDL_GL_SwapWindow(window);
   };
 
-  for (int k=0; k<6 * 2 * 2; k++) {
+  for (int k=0; k<6 * N * N; k++) {
     glBindVertexArray(vao[k]);
     glDisableVertexAttribArray(0);
 
