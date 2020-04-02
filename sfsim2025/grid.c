@@ -113,7 +113,8 @@ GLfloat *cube_vertices(elevation_t elevation, int face, int b, int a) {
     for (int i=0; i<256; i++) {
       float jj = cube_coordinate(L, 256, b, j);
       float ii = cube_coordinate(L, 256, a, i);
-      spherical_map(face, jj, ii, 6378000.0 + *e * 50, p, p + 1, p + 2);
+      int h = *e > 0 ? *e : 0;
+      spherical_map(face, jj, ii, 6378000.0 + h * 50, p, p + 1, p + 2);
       p += 3;
       p[0] = i / 255.0;
       p[1] = j / 255.0;
