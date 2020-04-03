@@ -103,21 +103,21 @@ void step(void) {
   angle = fmod(angle + 0.1 * dt, 2 * M_PI);
 }
 
-GLfloat *cube_vertices(elevation_t elevation, int face, int level, int b, int a) {
-  GLfloat *vertices = GC_MALLOC_ATOMIC(256 * 256 * 5 * sizeof(GLfloat));
+GLfloat *cube_vertices(elevation_t elevation, float radius, int face, int level, int b, int a) {
+  int width = elevation.width;
+  int height = elevation.height;
+  GLfloat *vertices = GC_MALLOC_ATOMIC(width * height * 5 * sizeof(GLfloat));
   GLfloat *p = vertices;
   short int *e = elevation.data;
-  assert(elevation.width == 256);
-  assert(elevation.height == 256);
-  for (int j=0; j<256; j++) {
-    for (int i=0; i<256; i++) {
-      float cube_j = cube_coordinate(level, 256, b, j);
-      float cube_i = cube_coordinate(level, 256, a, i);
+  for (int j=0; j<height; j++) {
+    for (int i=0; i<width; i++) {
+      float cube_j = cube_coordinate(level, height, b, j);
+      float cube_i = cube_coordinate(level, width, a, i);
       int h = *e > 0 ? *e : 0;
-      spherical_map(face, cube_j, cube_i, 6378000.0 + h * 50, p, p + 1, p + 2);
+      spherical_map(face, cube_j, cube_i, radius + h * 50, p, p + 1, p + 2);
       p += 3;
-      p[0] = i / 255.0;
-      p[1] = j / 255.0;
+      p[0] = i / (float)width;
+      p[1] = j / (float)height;
       p += 2;
       e++;
     };
@@ -161,7 +161,7 @@ int main(int argc, char *argv[]) {
 
         elevation_t elevation = read_elevation(cubepath("globe", k, L, b, a, ".raw"));
         assert(elevation.data);
-        GLfloat *vertices = cube_vertices(elevation, k, L, b, a);
+        GLfloat *vertices = cube_vertices(elevation, 6378000.0, k, L, b, a);
         int *indices = cube_indices(256);
 
         glGenBuffers(1, &vbo[k * N * N + b * N + a]);
