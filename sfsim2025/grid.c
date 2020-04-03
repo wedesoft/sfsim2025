@@ -59,7 +59,7 @@ void printLinkStatus(const char *step, GLuint context) {
 }
 
 #define L 0
-#define N 1
+#define N (1 << L)
 
 GLuint vao[6 * N * N];
 GLuint vbo[6 * N * N];
