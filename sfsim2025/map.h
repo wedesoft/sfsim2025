@@ -1,5 +1,7 @@
 #pragma once
 #include <tgmath.h>
+#include "elevation.h"
+
 
 float cube_map_x(int face, float j, float i);
 
@@ -55,3 +57,5 @@ int *cube_indices(int size);
 void spherical_map(int face, float j, float i, float r, float *x, float *y, float *z);
 
 void tile_center(int level, int face, int b, int a, float radius, float *x, float *y, float *z);
+
+float *cube_vertices(elevation_t elevation, float radius, int face, int level, int b, int a);

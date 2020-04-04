@@ -129,3 +129,26 @@ void tile_center(int level, int face, int b, int a, float radius, float *x, floa
   float i = cube_coordinate(level, 3, a, 1);
   spherical_map(face, j, i, radius, x, y, z);
 }
+
+// Compute 3D vertices for part of a sphere using elevation data.
+float *cube_vertices(elevation_t elevation, float radius, int face, int level, int b, int a) {
+  int width = elevation.width;
+  int height = elevation.height;
+  float *vertices = GC_MALLOC_ATOMIC(width * height * 5 * sizeof(float));
+  float *p = vertices;
+  short int *e = elevation.data;
+  for (int j=0; j<height; j++) {
+    for (int i=0; i<width; i++) {
+      float cube_j = cube_coordinate(level, height, b, j);
+      float cube_i = cube_coordinate(level, width, a, i);
+      int h = *e > 0 ? *e : 0;
+      spherical_map(face, cube_j, cube_i, radius + h, p, p + 1, p + 2);
+      p += 3;
+      p[0] = i / (float)(width - 1);
+      p[1] = j / (float)(height - 1);
+      p += 2;
+      e++;
+    };
+  };
+  return vertices;
+}

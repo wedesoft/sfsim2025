@@ -103,28 +103,6 @@ void step(void) {
   angle = fmod(angle + 0.1 * dt, 2 * M_PI);
 }
 
-GLfloat *cube_vertices(elevation_t elevation, float radius, int face, int level, int b, int a) {
-  int width = elevation.width;
-  int height = elevation.height;
-  GLfloat *vertices = GC_MALLOC_ATOMIC(width * height * 5 * sizeof(GLfloat));
-  GLfloat *p = vertices;
-  short int *e = elevation.data;
-  for (int j=0; j<height; j++) {
-    for (int i=0; i<width; i++) {
-      float cube_j = cube_coordinate(level, height, b, j);
-      float cube_i = cube_coordinate(level, width, a, i);
-      int h = *e > 0 ? *e : 0;
-      spherical_map(face, cube_j, cube_i, radius + h * 50, p, p + 1, p + 2);
-      p += 3;
-      p[0] = i / (float)width;
-      p[1] = j / (float)height;
-      p += 2;
-      e++;
-    };
-  };
-  return vertices;
-}
-
 int main(int argc, char *argv[]) {
   GC_INIT();
   glutInit(&argc, argv);

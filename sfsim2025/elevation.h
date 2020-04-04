@@ -1,4 +1,5 @@
 #pragma once
+#include <gc.h>
 
 
 typedef struct {

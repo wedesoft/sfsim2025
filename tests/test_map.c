@@ -185,6 +185,19 @@ static MunitResult test_tile_center(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_cube_vertices(const MunitParameter params[], void *data) {
+  elevation_t elevation = allocate_elevation(3, 3);
+  memset(elevation.data, 0, 3 * 3 * 2);
+  elevation.data[4] = 2;
+  float *result = cube_vertices(elevation, 3.0, 0, 0, 0, 0);
+  munit_assert_float(result[4 * 5 + 0], ==, 0);
+  munit_assert_float(result[4 * 5 + 1], ==, 5);
+  munit_assert_float(result[4 * 5 + 2], ==, 0);
+  munit_assert_float(result[4 * 5 + 3], ==, 0.5);
+  munit_assert_float(result[4 * 5 + 4], ==, 0.5);
+  return MUNIT_OK;
+}
+
 MunitTest test_map[] = {
   {"/cube_face_0"    , test_cube_face_0    , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/cube_face_1"    , test_cube_face_1    , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
@@ -206,5 +219,6 @@ MunitTest test_map[] = {
   {"/cube_indices"   , test_cube_indices   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/spherical_map"  , test_spherical_map  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/tile_center"    , test_tile_center    , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/cube_vertices"  , test_cube_vertices  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL              , NULL                , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
