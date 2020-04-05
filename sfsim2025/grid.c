@@ -58,7 +58,7 @@ void printLinkStatus(const char *step, GLuint context) {
   printStatus(step, context, GL_LINK_STATUS);
 }
 
-#define L 0
+#define L 1
 #define N (1 << L)
 
 GLuint vao[6 * N * N];
@@ -161,9 +161,10 @@ int main(int argc, char *argv[]) {
         image_t img = read_image(cubepath("globe", k, L, b, a, ".png"));
         assert(img.data);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.width, img.height, 0, GL_RGB, GL_UNSIGNED_BYTE, img.data);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glGenerateMipmap(GL_TEXTURE_2D);
       };
     };
