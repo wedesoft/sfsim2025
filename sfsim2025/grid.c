@@ -138,7 +138,6 @@ int main(int argc, char *argv[]) {
         glBindVertexArray(vao[k * N * N + b * N + a]);
 
         elevation_t elevation = read_elevation(cubepath("globe", k, L, b, a, ".raw"));
-        assert(elevation.data);
         GLfloat *vertices = cube_vertices(elevation, 6378000.0, k, L, b, a);
         int *indices = cube_indices(256);
 

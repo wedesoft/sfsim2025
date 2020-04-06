@@ -137,6 +137,7 @@ float *cube_vertices(elevation_t elevation, float radius, int face, int level, i
   float *vertices = GC_MALLOC_ATOMIC(width * height * 5 * sizeof(float));
   float *p = vertices;
   short int *e = elevation.data;
+  assert(e);
   for (int j=0; j<height; j++) {
     for (int i=0; i<width; i++) {
       float cube_j = cube_coordinate(level, height, b, j);
