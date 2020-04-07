@@ -69,3 +69,19 @@ elevation_t crop_elevation(elevation_t elevation, int y, int x, int height, int 
   };
   return result;
 }
+
+water_t water_from_elevation(elevation_t elevation) {
+  int height = elevation.height;
+  int width = elevation.width;
+  water_t result = allocate_water(height, width);
+  unsigned char *p = result.data;
+  short int *q = elevation.data;
+  for (int j=0; j<height; j++) {
+    for (int i=0; i<width; i++) {
+      *p = *q < 0 ? 255 : 0;
+      p++;
+      q++;
+    };
+  };
+  return result;
+}

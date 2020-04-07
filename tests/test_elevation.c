@@ -57,6 +57,18 @@ static MunitResult test_crop_data(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_water(const MunitParameter params[], void *data) {
+  elevation_t elevation = allocate_elevation(1, 2);
+  elevation.data[0] = -500;
+  elevation.data[1] = 0;
+  water_t water = water_from_elevation(elevation);
+  munit_assert_int(water.width, ==, 2);
+  munit_assert_int(water.height, ==, 1);
+  munit_assert_int(water.data[0], ==, 255);
+  munit_assert_int(water.data[1], ==, 0);
+  return MUNIT_OK;
+}
+
 MunitTest test_elevation[] = {
   {"/shape"      , test_shape      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/no_data"    , test_no_data    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -64,5 +76,6 @@ MunitTest test_elevation[] = {
   {"/write_data" , test_write_data , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/scale_data" , test_scale_data , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/crop_data"  , test_crop_data  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/water"      , test_water      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL          , NULL            , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

@@ -19,3 +19,15 @@ void write_elevation(elevation_t elevation, const char *file_name);
 elevation_t scale_elevation(elevation_t elevation);
 
 elevation_t crop_elevation(elevation_t elevation, int y, int x, int height, int width);
+
+typedef struct {
+  int height;
+  int width;
+  unsigned char *data;
+} water_t;
+
+static inline water_t allocate_water(int height, int width) {
+  return (water_t){.height = height, .width = width, .data = GC_MALLOC_ATOMIC(width * height)};
+}
+
+water_t water_from_elevation(elevation_t elevation);
