@@ -60,7 +60,7 @@ static MunitResult test_crop_data(const MunitParameter params[], void *data) {
 static MunitResult test_water(const MunitParameter params[], void *data) {
   elevation_t elevation = allocate_elevation(1, 2);
   elevation.data[0] = -500;
-  elevation.data[1] = 0;
+  elevation.data[1] = 1;
   water_t water = water_from_elevation(elevation);
   munit_assert_int(water.width, ==, 2);
   munit_assert_int(water.height, ==, 1);

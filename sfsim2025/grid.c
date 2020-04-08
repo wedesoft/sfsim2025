@@ -28,9 +28,11 @@ const char *fragmentSource = "#version 130\n\
 in mediump vec2 UV;\n\
 out mediump vec3 fragColor;\n\
 uniform sampler2D tex;\n\
+uniform sampler2D water;\n\
 void main()\n\
 {\n\
-  fragColor = texture(tex, UV).rgb;\n\
+  float wat = texture(water, UV).y;\n\
+  fragColor = texture(tex, UV).rgb * (1 - wat) + wat * vec3(0.2, 0.2, 0.4);\n\
 }";
 
 const int width = 1024;
@@ -58,13 +60,14 @@ void printLinkStatus(const char *step, GLuint context) {
   printStatus(step, context, GL_LINK_STATUS);
 }
 
-#define L 1
+#define L 0
 #define N (1 << L)
 
 GLuint vao[6 * N * N];
 GLuint vbo[6 * N * N];
 GLuint idx[6 * N * N];
 GLuint tex[6 * N * N];
+GLuint wat[6 * N * N];
 GLuint program;
 double angle = 0;
 struct timespec t0;
@@ -89,6 +92,9 @@ void display(void) {
         glActiveTexture(GL_TEXTURE0 + 0);
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, tex[k * N * N + b * N + a]);
+        glActiveTexture(GL_TEXTURE0 + 1);
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, wat[k * N * N + b * N + a]);
         glDrawElements(GL_TRIANGLES, 255 * 255 * 2 * 3, GL_UNSIGNED_INT, (void *)0);
       };
     };
@@ -138,6 +144,9 @@ int main(int argc, char *argv[]) {
         glBindVertexArray(vao[k * N * N + b * N + a]);
 
         elevation_t elevation = read_elevation(cubepath("globe", k, L, b, a, ".raw"));
+        water_t water = water_from_elevation(elevation);
+        image_t img = read_image(cubepath("globe", k, L, b, a, ".png"));
+        assert(img.data);
         GLfloat *vertices = cube_vertices(elevation, 6378000.0, k, L, b, a);
         int *indices = cube_indices(256);
 
@@ -154,17 +163,30 @@ int main(int argc, char *argv[]) {
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
 
+
+        glActiveTexture(GL_TEXTURE0 + 0);
         glGenTextures(1, &tex[k * N * N + b * N + a]);
         glBindTexture(GL_TEXTURE_2D, tex[k * N * N + b * N + a]);
+        glUseProgram(program);
         glUniform1i(glGetUniformLocation(program, "tex"), 0);
-        image_t img = read_image(cubepath("globe", k, L, b, a, ".png"));
-        assert(img.data);
+
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.width, img.height, 0, GL_RGB, GL_UNSIGNED_BYTE, img.data);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glGenerateMipmap(GL_TEXTURE_2D);
+
+        glActiveTexture(GL_TEXTURE0 + 1);
+        glGenTextures(1, &wat[k * N * N + b * N + a]);
+        glBindTexture(GL_TEXTURE_2D, wat[k * N * N + b * N + a]);
+        glUseProgram(program);
+        glUniform1i(glGetUniformLocation(program, "water"), 1);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, water.width, water.height, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, water.data);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       };
     };
   };
@@ -199,8 +221,13 @@ int main(int argc, char *argv[]) {
     glBindVertexArray(0);
     glDeleteVertexArrays(1, &vao[k]);
 
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);
     glDeleteTextures(1, &tex[k]);
+
+    glActiveTexture(GL_TEXTURE0 + 1);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDeleteTextures(1, &wat[k]);
   };
 
   glDetachShader(program, vertexShader);

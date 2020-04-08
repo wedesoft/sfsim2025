@@ -78,9 +78,7 @@ water_t water_from_elevation(elevation_t elevation) {
   short int *q = elevation.data;
   for (int j=0; j<height; j++) {
     for (int i=0; i<width; i++) {
-      *p = *q < 0 ? 255 : 0;
-      p++;
-      q++;
+      *p++ = *q++ <= 0 ? 255 : 0;
     };
   };
   return result;
