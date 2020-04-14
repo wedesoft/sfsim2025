@@ -69,13 +69,27 @@ static MunitResult test_water(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_write_vertices(const MunitParameter params[], void *data) {
+  vertex_tile_t vertices = allocate_vertex_tile(1, 1);
+  vertices.data[0] = 2;
+  vertices.data[4] = 3;
+  write_vertex_tile(vertices, "/tmp/test-elevation-vertices.raw");
+  vertex_tile_t loaded = read_vertex_tile("/tmp/test-elevation-vertices.raw");
+  munit_assert_int(loaded.height, ==, 1);
+  munit_assert_int(loaded.width, ==, 1);
+  munit_assert_float(loaded.data[0], ==, 2);
+  munit_assert_float(loaded.data[4], ==, 3);
+  return MUNIT_OK;
+}
+
 MunitTest test_elevation[] = {
-  {"/shape"      , test_shape      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/no_data"    , test_no_data    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/read_data"  , test_read_data  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/write_data" , test_write_data , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/scale_data" , test_scale_data , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/crop_data"  , test_crop_data  , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/water"      , test_water      , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {NULL          , NULL            , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
+  {"/shape"         , test_shape         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/no_data"       , test_no_data       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/read_data"     , test_read_data     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/write_data"    , test_write_data    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/scale_data"    , test_scale_data    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/crop_data"     , test_crop_data     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/water"         , test_water         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/write_vertices", test_write_vertices, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {NULL             , NULL               , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

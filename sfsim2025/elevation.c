@@ -13,10 +13,10 @@ elevation_t read_elevation(const char *file_name) {
   int error = stat(file_name, &statbuf);
   if (!error) {
     int n = statbuf.st_size;
-    int size = (int)round(sqrt(n / 2));
+    int size = (int)round(sqrt(n / sizeof(short int)));
     result = allocate_elevation(size, size);
     FILE *f = fopen(file_name, "rb");
-    fread(result.data, 2 * size, size, f);
+    fread(result.data, sizeof(short int) * size, size, f);
     fclose(f);
   } else {
     result.width = 0;
@@ -82,4 +82,29 @@ water_t water_from_elevation(elevation_t elevation) {
     };
   };
   return result;
+}
+
+vertex_tile_t read_vertex_tile(const char *file_name) {
+  vertex_tile_t result;
+  struct stat statbuf;
+  int error = stat(file_name, &statbuf);
+  if (!error) {
+    int n = statbuf.st_size;
+    int size = (int)round(sqrt(n / (5 * sizeof(float))));
+    result = allocate_vertex_tile(size, size);
+    FILE *f = fopen(file_name, "rb");
+    fread(result.data, 5 * sizeof(float) * size, size, f);
+    fclose(f);
+  } else {
+    result.width = 0;
+    result.height = 0;
+    result.data = NULL;
+  };
+  return result;
+}
+
+void write_vertex_tile(vertex_tile_t vertices, const char *file_name) {
+  FILE *f = fopen(file_name, "wb");
+  fwrite(vertices.data, 5 * sizeof(float) * vertices.width, vertices.height, f);
+  fclose(f);
 }

@@ -31,3 +31,17 @@ static inline water_t allocate_water(int height, int width) {
 }
 
 water_t water_from_elevation(elevation_t elevation);
+
+typedef struct {
+  int height;
+  int width;
+  float *data;
+} vertex_tile_t;
+
+static inline vertex_tile_t allocate_vertex_tile(int height, int width) {
+  return (vertex_tile_t){.height = height, .width = width, .data = GC_MALLOC_ATOMIC(width * height * 5 * sizeof(float))};
+}
+
+vertex_tile_t read_vertex_tile(const char *file_name);
+
+void write_vertex_tile(vertex_tile_t vertices, const char *file_name);
