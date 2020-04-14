@@ -58,4 +58,4 @@ void spherical_map(int face, float j, float i, float r, float *x, float *y, floa
 
 void tile_center(int level, int face, int b, int a, float radius, float *x, float *y, float *z);
 
-float *cube_vertices(elevation_t elevation, float radius, int face, int level, int b, int a);
+vertex_tile_t cube_vertices(elevation_t elevation, float radius, int face, int level, int b, int a);

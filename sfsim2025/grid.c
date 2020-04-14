@@ -147,12 +147,12 @@ int main(int argc, char *argv[]) {
         water_t water = water_from_elevation(elevation);
         image_t img = read_image(cubepath("globe", k, L, b, a, ".png"));
         assert(img.data);
-        GLfloat *vertices = cube_vertices(elevation, 6378000.0, k, L, b, a);
+        vertex_tile_t vertices = cube_vertices(elevation, 6378000.0, k, L, b, a);
         int *indices = cube_indices(256);
 
         glGenBuffers(1, &vbo[k * N * N + b * N + a]);
         glBindBuffer(GL_ARRAY_BUFFER, vbo[k * N * N + b * N + a]);
-        glBufferData(GL_ARRAY_BUFFER, 256 * 256 * 5 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, 256 * 256 * 5 * sizeof(GLfloat), vertices.data, GL_STATIC_DRAW);
 
         glGenBuffers(1, &idx[k * N * N + b * N + a]);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idx[k * N * N + b * N + a]);

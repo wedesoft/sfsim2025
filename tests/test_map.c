@@ -189,12 +189,12 @@ static MunitResult test_cube_vertices(const MunitParameter params[], void *data)
   elevation_t elevation = allocate_elevation(3, 3);
   memset(elevation.data, 0, 3 * 3 * 2);
   elevation.data[4] = 2;
-  float *result = cube_vertices(elevation, 3.0, 0, 0, 0, 0);
-  munit_assert_float(result[4 * 5 + 0], ==, 0);
-  munit_assert_float(result[4 * 5 + 1], ==, 5);
-  munit_assert_float(result[4 * 5 + 2], ==, 0);
-  munit_assert_float(result[4 * 5 + 3], ==, 0.5);
-  munit_assert_float(result[4 * 5 + 4], ==, 0.5);
+  vertex_tile_t result = cube_vertices(elevation, 3.0, 0, 0, 0, 0);
+  munit_assert_float(result.data[4 * 5 + 0], ==, 0);
+  munit_assert_float(result.data[4 * 5 + 1], ==, 5);
+  munit_assert_float(result.data[4 * 5 + 2], ==, 0);
+  munit_assert_float(result.data[4 * 5 + 3], ==, 0.5);
+  munit_assert_float(result.data[4 * 5 + 4], ==, 0.5);
   return MUNIT_OK;
 }
 
@@ -202,8 +202,8 @@ static MunitResult test_clip_height(const MunitParameter params[], void *data) {
   elevation_t elevation = allocate_elevation(3, 3);
   memset(elevation.data, 0, 3 * 3 * 2);
   elevation.data[4] = -1;
-  float *result = cube_vertices(elevation, 3.0, 0, 0, 0, 0);
-  munit_assert_float(result[4 * 5 + 1], ==, 3);
+  vertex_tile_t result = cube_vertices(elevation, 3.0, 0, 0, 0, 0);
+  munit_assert_float(result.data[4 * 5 + 1], ==, 3);
   return MUNIT_OK;
 }
 
