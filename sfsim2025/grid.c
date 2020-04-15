@@ -143,11 +143,11 @@ int main(int argc, char *argv[]) {
         glGenVertexArrays(1, &vao[k * N * N + b * N + a]);
         glBindVertexArray(vao[k * N * N + b * N + a]);
 
-        elevation_t elevation = read_elevation(cubepath("globe", k, L, b, a, ".raw"));
+        elevation_t elevation = read_elevation(cubepath("tmp", k, L, b, a, ".raw"));
         water_t water = water_from_elevation(elevation);
         image_t img = read_image(cubepath("globe", k, L, b, a, ".png"));
         assert(img.data);
-        vertex_tile_t vertices = cube_vertices(elevation, 6378000.0, k, L, b, a);
+        vertex_tile_t vertices = read_vertex_tile(cubepath("globe", k, L, b, a, ".raw"));
         int *indices = cube_indices(256);
 
         glGenBuffers(1, &vbo[k * N * N + b * N + a]);
