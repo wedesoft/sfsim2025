@@ -84,6 +84,31 @@ water_t water_from_elevation(elevation_t elevation) {
   return result;
 }
 
+water_t read_water(const char *file_name) {
+  water_t result;
+  struct stat statbuf;
+  int error = stat(file_name, &statbuf);
+  if (!error) {
+    int n = statbuf.st_size;
+    int size = (int)round(sqrt(n / sizeof(unsigned char)));
+    result = allocate_water(size, size);
+    FILE *f = fopen(file_name, "rb");
+    fread(result.data, sizeof(unsigned char) * size, size, f);
+    fclose(f);
+  } else {
+    result.width = 0;
+    result.height = 0;
+    result.data = NULL;
+  };
+  return result;
+}
+
+void write_water(water_t water, const char *file_name) {
+  FILE *f = fopen(file_name, "wb");
+  fwrite(water.data, sizeof(unsigned char) * water.width, water.height, f);
+  fclose(f);
+}
+
 vertex_tile_t read_vertex_tile(const char *file_name) {
   vertex_tile_t result;
   struct stat statbuf;

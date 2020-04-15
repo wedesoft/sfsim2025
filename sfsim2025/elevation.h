@@ -32,6 +32,10 @@ static inline water_t allocate_water(int height, int width) {
 
 water_t water_from_elevation(elevation_t elevation);
 
+water_t read_water(const char *file_name);
+
+void write_water(water_t water, const char *file_name);
+
 typedef struct {
   int height;
   int width;

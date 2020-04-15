@@ -82,6 +82,17 @@ static MunitResult test_write_vertices(const MunitParameter params[], void *data
   return MUNIT_OK;
 }
 
+static MunitResult test_write_water(const MunitParameter params[], void *data) {
+  water_t water = allocate_water(1, 1);
+  water.data[0] = 255;
+  write_water(water, "/tmp/test-elevation-water.raw");
+  water_t loaded = read_water("/tmp/test-elevation-water.raw");
+  munit_assert_int(loaded.height, ==, 1);
+  munit_assert_int(loaded.width, ==, 1);
+  munit_assert_float(loaded.data[0], ==, 255);
+  return MUNIT_OK;
+}
+
 MunitTest test_elevation[] = {
   {"/shape"         , test_shape         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/no_data"       , test_no_data       , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
@@ -91,5 +102,6 @@ MunitTest test_elevation[] = {
   {"/crop_data"     , test_crop_data     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/water"         , test_water         , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/write_vertices", test_write_vertices, test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/write_water"   , test_write_water   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL             , NULL               , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

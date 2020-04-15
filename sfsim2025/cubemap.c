@@ -74,8 +74,10 @@ int main(int argc, char *argv[]) {
       for (int a=0; a<n; a++) {
         image_t image = allocate_image(tilesize, tilesize);
         vertex_tile_t vertex_tile = allocate_vertex_tile(tilesize, tilesize);
+        water_t water = allocate_water(tilesize, tilesize);
         unsigned char *p1 = image.data;
         float *p2 = vertex_tile.data;
+        unsigned char *p3 = water.data;
         for (int v=0; v<tilesize; v++) {
           float j = cube_coordinate(out_level, tilesize, b, v);
           for (int u=0; u<tilesize; u++) {
@@ -85,18 +87,20 @@ int main(int argc, char *argv[]) {
             float z = cube_map_z(k, j, i);
             color_for_point(&image_cache, in_level, width, x, y, z, p1, p1 + 1, p1 + 2);
             float h = elevation_for_point(&elevation_cache, in_level, width, x, y, z);
+            *p3 = h <= 0 ? 255 : 0;
             if (h < 0) h = 0;
             spherical_map(k, j, i, radius + h, p2, p2 + 1, p2 + 2);
             p2[3] = u / (float)(tilesize - 1);
             p2[4] = v / (float)(tilesize - 1);
             p1 += 3;
             p2 += 5;
+            p3++;
           };
         };
         mkdir_p(dirname(cubepath("globe", k, out_level, b, a, ".png")));
         write_image(image, cubepath("globe", k, out_level, b, a, ".png"));
-        mkdir_p(dirname(cubepath("globe", k, out_level, b, a, ".raw")));
         write_vertex_tile(vertex_tile, cubepath("globe", k, out_level, b, a, ".raw"));
+        write_water(water, cubepath("globe", k, out_level, b, a, ".bin"));
       };
     };
   };
