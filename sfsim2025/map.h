@@ -9,9 +9,14 @@ float cube_map_y(int face, float j, float i);
 
 float cube_map_z(int face, float j, float i);
 
-float longitude(float x, float y, float z);
+static inline float longitude(float x, float y, float z) {
+  return atan2(x, z);
+}
 
-float lattitude(float x, float y, float z);
+static inline float lattitude(float x, float y, float z) {
+  float r = sqrt(x * x + z * z);
+  return atan2(y, r);
+}
 
 static float map_x(float longitude, int tilesize, int level) {
   int count = pow(2, level);

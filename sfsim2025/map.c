@@ -86,15 +86,6 @@ float cube_map_z(int face, float j, float i) {
   return result;
 }
 
-float longitude(float x, float y, float z) {
-  return atan2(x, z);
-}
-
-float lattitude(float x, float y, float z) {
-  float r = sqrt(x * x + z * z);
-  return atan2(y, r);
-}
-
 int *cube_indices(int size) {
   int *result = GC_MALLOC_ATOMIC((size - 1) * (size - 1) * 2 * 3 * sizeof(int));
   int *p = result;
