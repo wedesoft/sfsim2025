@@ -1,4 +1,5 @@
 #pragma once
+#include <tgmath.h>
 #include "vector.h"
 
 
@@ -65,4 +66,22 @@ static inline matrix_t matrix_scale(matrix_t m, double s) {
 // Negate matrix.
 static inline matrix_t matrix_negative(matrix_t m) {
   return matrix(-m.m11, -m.m12, -m.m13, -m.m21, -m.m22, -m.m23, -m.m31, -m.m32, -m.m33);
+}
+
+static inline matrix_t rotation_x(double angle) {
+  double ca = cos(angle);
+  double sa = sin(angle);
+  return matrix(1, 0, 0, 0, ca, -sa, 0, sa, ca);
+}
+
+static inline matrix_t rotation_y(double angle) {
+  double ca = cos(angle);
+  double sa = sin(angle);
+  return matrix(ca, 0, sa, 0, 1, 0, -sa, 0, ca);
+}
+
+static inline matrix_t rotation_z(double angle) {
+  double ca = cos(angle);
+  double sa = sin(angle);
+  return matrix(ca, -sa, 0, sa, ca, 0, 0, 0, 1);
 }

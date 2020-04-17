@@ -93,6 +93,36 @@ static MunitResult test_negative(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
+static MunitResult test_rotation_x(const MunitParameter params[], void *data) {
+  float ca = sqrt(3) / 2;
+  float sa = 0.5;
+  matrix_t rot = rotation_x(M_PI / 6);
+  munit_assert_double_equal(rot.m11, 1, 6); munit_assert_double_equal(rot.m12,  0, 6); munit_assert_double_equal(rot.m13,   0, 6);
+  munit_assert_double_equal(rot.m21, 0, 6); munit_assert_double_equal(rot.m22, ca, 6); munit_assert_double_equal(rot.m23, -sa, 6);
+  munit_assert_double_equal(rot.m31, 0, 6); munit_assert_double_equal(rot.m32, sa, 6); munit_assert_double_equal(rot.m33,  ca, 6);
+  return MUNIT_OK;
+}
+
+static MunitResult test_rotation_y(const MunitParameter params[], void *data) {
+  float ca = sqrt(3) / 2;
+  float sa = 0.5;
+  matrix_t rot = rotation_y(M_PI / 6);
+  munit_assert_double_equal(rot.m11,  ca, 6); munit_assert_double_equal(rot.m12, 0, 6); munit_assert_double_equal(rot.m13, sa, 6);
+  munit_assert_double_equal(rot.m21,   0, 6); munit_assert_double_equal(rot.m22, 1, 6); munit_assert_double_equal(rot.m23,  0, 6);
+  munit_assert_double_equal(rot.m31, -sa, 6); munit_assert_double_equal(rot.m32, 0, 6); munit_assert_double_equal(rot.m33, ca, 6);
+  return MUNIT_OK;
+}
+
+static MunitResult test_rotation_z(const MunitParameter params[], void *data) {
+  float ca = sqrt(3) / 2;
+  float sa = 0.5;
+  matrix_t rot = rotation_z(M_PI / 6);
+  munit_assert_double_equal(rot.m11, ca, 6); munit_assert_double_equal(rot.m12, -sa, 6); munit_assert_double_equal(rot.m13, 0, 6);
+  munit_assert_double_equal(rot.m21, sa, 6); munit_assert_double_equal(rot.m22,  ca, 6); munit_assert_double_equal(rot.m23, 0, 6);
+  munit_assert_double_equal(rot.m31,  0, 6); munit_assert_double_equal(rot.m32,   0, 6); munit_assert_double_equal(rot.m33, 1, 6);
+  return MUNIT_OK;
+}
+
 MunitTest test_matrix[] = {
   {"/create"              , test_create              , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/cross_product_matrix", test_cross_product_matrix, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
@@ -104,5 +134,8 @@ MunitTest test_matrix[] = {
   {"/identity"            , test_identity            , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/scale"               , test_scale               , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/negative"            , test_negative            , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/rotation_x"          , test_rotation_x          , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/rotation_y"          , test_rotation_y          , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/rotation_z"          , test_rotation_z          , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {NULL                   , NULL                     , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL}
 };
