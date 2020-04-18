@@ -3,6 +3,8 @@
 #include <tgmath.h>
 #include <stdbool.h>
 #include "map.h"
+#include "vector.h"
+#include "matrix.h"
 
 
 float cube_map_x(int face, float j, float i) {
@@ -143,4 +145,13 @@ vertex_tile_t cube_vertices(elevation_t elevation, float radius, int face, int l
     };
   };
   return vertices;
+}
+
+void offset_longitude(float x, float y, float z, int level, int tilesize, float *dx, float *dy, float *dz) {
+  float lon = longitude(x, y, z);
+  vector_t v = vector(0, 0, -2 * M_PI / (4 * tilesize));
+  vector_t vs = matrix_vector_dot(rotation_y(-lon), v);
+  *dx = vs.x;
+  *dy = vs.y;
+  *dz = vs.z;
 }

@@ -10,7 +10,7 @@ float cube_map_y(int face, float j, float i);
 float cube_map_z(int face, float j, float i);
 
 static inline float longitude(float x, float y, float z) {
-  return atan2(x, z);
+  return atan2(z, x);
 }
 
 static inline float lattitude(float x, float y, float z) {
@@ -20,7 +20,7 @@ static inline float lattitude(float x, float y, float z) {
 
 static float map_x(float longitude, int tilesize, int level) {
   int count = pow(2, level);
-  float result = (longitude + M_PI) / (2 * M_PI) * 4 * count * tilesize;
+  float result = (M_PI - longitude) / (2 * M_PI) * 4 * count * tilesize;
   return result;
 }
 
@@ -64,3 +64,5 @@ void spherical_map(int face, float j, float i, float r, float *x, float *y, floa
 void tile_center(int level, int face, int b, int a, float radius, float *x, float *y, float *z);
 
 vertex_tile_t cube_vertices(elevation_t elevation, float radius, int face, int level, int b, int a);
+
+void offset_longitude(float x, float y, float z, int level, int tilesize, float *dx, float *dy, float *dz);
