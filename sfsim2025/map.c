@@ -149,9 +149,17 @@ vertex_tile_t cube_vertices(elevation_t elevation, float radius, int face, int l
 
 void offset_longitude(float x, float y, float z, int level, int tilesize, float *dx, float *dy, float *dz) {
   float lon = longitude(x, y, z);
-  vector_t v = vector(0, 0, -2 * M_PI / (4 * tilesize));
+  float norm = sqrt(x * x + y * y + z * z);
+  vector_t v = vector(0, 0, -norm * M_PI / (2 * tilesize * (1 << level)));
   vector_t vs = matrix_vector_dot(rotation_y(-lon), v);
   *dx = vs.x;
   *dy = vs.y;
   *dz = vs.z;
+}
+
+void offset_latitude(float x, float y, float z, int level, int tilesize, float *dx, float *dy, float *dz) {
+  vector_t v = vector(0, M_PI / (2 * tilesize), 0);
+  *dx = v.x;
+  *dy = v.y;
+  *dz = v.z;
 }

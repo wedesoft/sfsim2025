@@ -66,3 +66,5 @@ void tile_center(int level, int face, int b, int a, float radius, float *x, floa
 vertex_tile_t cube_vertices(elevation_t elevation, float radius, int face, int level, int b, int a);
 
 void offset_longitude(float x, float y, float z, int level, int tilesize, float *dx, float *dy, float *dz);
+
+void offset_latitude(float x, float y, float z, int level, int tilesize, float *dx, float *dy, float *dz);

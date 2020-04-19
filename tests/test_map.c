@@ -225,6 +225,33 @@ static MunitResult test_rotate_offset(const MunitParameter params[], void *data)
   return MUNIT_OK;
 }
 
+static MunitResult test_scale_offset(const MunitParameter params[], void *data) {
+  float dx, dy, dz;
+  offset_longitude(0, 0, 2, 0, 675, &dx, &dy, &dz);
+  munit_assert_double_equal(dx, 4 * M_PI / (4 * 675), 6);
+  munit_assert_double_equal(dy, 0, 6);
+  munit_assert_double_equal(dz, 0, 6);
+  return MUNIT_OK;
+}
+
+static MunitResult test_level_offset(const MunitParameter params[], void *data) {
+  float dx, dy, dz;
+  offset_longitude(0, 0, 2, 1, 675, &dx, &dy, &dz);
+  munit_assert_double_equal(dx, 2 * M_PI / (4 * 675), 6);
+  munit_assert_double_equal(dy, 0, 6);
+  munit_assert_double_equal(dz, 0, 6);
+  return MUNIT_OK;
+}
+
+static MunitResult test_offset_latitude(const MunitParameter params[], void *data) {
+  float dx, dy, dz;
+  offset_latitude(0, 0, 1, 0, 675, &dx, &dy, &dz);
+  munit_assert_double_equal(dx, 0, 6);
+  munit_assert_double_equal(dy, 2 * M_PI / (4 * 675), 6);
+  munit_assert_double_equal(dz, 0, 6);
+  return MUNIT_OK;
+}
+
 MunitTest test_map[] = {
   {"/cube_face_0"     , test_cube_face_0     , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/cube_face_1"     , test_cube_face_1     , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
@@ -250,5 +277,8 @@ MunitTest test_map[] = {
   {"/clip_height"     , test_clip_height     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/offset_longitude", test_offset_longitude, NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/rotate_offset"   , test_rotate_offset   , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/scale_offset"    , test_scale_offset    , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/level_offset"    , test_level_offset    , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/offset_latitude" , test_offset_latitude , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {NULL               , NULL                 , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };
