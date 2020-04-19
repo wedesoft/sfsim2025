@@ -19,19 +19,19 @@ static inline float lattitude(float x, float y, float z) {
 }
 
 static float map_x(float longitude, int tilesize, int level) {
-  int count = pow(2, level);
+  int count = 1 << level;
   float result = (M_PI - longitude) / (2 * M_PI) * 4 * count * tilesize;
   return result;
 }
 
 static float map_y(float lattitude, int tilesize, int level) {
-  int count = pow(2, level);
+  int count = 1 << level;
   float result = (M_PI / 2 - lattitude) / M_PI * tilesize * 2 * count;
   return result;
 }
 
 static void map_pixels_x(float longitude, int tilesize, int level, int *x0, int *x1, float *frac0, float *frac1) {
-  int count = pow(2, level);
+  int count = 1 << level;
   float x = map_x(longitude, tilesize, level);
   *x0 = floor(x);
   *frac1 = x - *x0;
@@ -42,7 +42,7 @@ static void map_pixels_x(float longitude, int tilesize, int level, int *x0, int 
 }
 
 static void map_pixels_y(float lattitude, int tilesize, int level, int *y0, int *y1, float *frac0, float *frac1) {
-  int count = pow(2, level);
+  int count = 1 << level;
   float y = map_y(lattitude, tilesize, level);
   *y0 = floor(y);
   *frac1 = y - *y0;
@@ -53,7 +53,7 @@ static void map_pixels_y(float lattitude, int tilesize, int level, int *y0, int 
 }
 
 static float cube_coordinate(int level, int tilesize, int tile, int pixel) {
-  int tiles = pow(2, level);
+  int tiles = 1 << level;
   return (tile + pixel / (float)(tilesize - 1)) / tiles;
 }
 

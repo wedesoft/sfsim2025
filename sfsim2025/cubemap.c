@@ -63,7 +63,7 @@ void color_for_point(cache_t *image_cache, int in_level, int width, float x, flo
 int main(int argc, char *argv[]) {
   const int in_level = 0;
   const int out_level = 0;
-  const int n = pow(2, out_level);
+  const int n = 1 << out_level;
   const int tilesize = 256;
   const int width = 675;
   float radius = 6378000.0;
