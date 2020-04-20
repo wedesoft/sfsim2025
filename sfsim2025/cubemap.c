@@ -7,7 +7,7 @@
 
 float elevation_for_point(cache_t *elevation_cache, int in_level, int width, float x, float y, float z) {
   float lon = longitude(x, y, z);
-  float lat = lattitude(x, y, z);
+  float lat = latitude(x, y, z);
   int dx[2], dy[2];
   float xfrac[2], yfrac[2];
   map_pixels_x(lon, width, in_level, &dx[0], &dx[1], &xfrac[0], &xfrac[1]);
@@ -32,7 +32,7 @@ float elevation_for_point(cache_t *elevation_cache, int in_level, int width, flo
 void color_for_point(cache_t *image_cache, int in_level, int width, float x, float y, float z,
                      unsigned char *red, unsigned char *green, unsigned char *blue) {
   float lon = longitude(x, y, z);
-  float lat = lattitude(x, y, z);
+  float lat = latitude(x, y, z);
   int dx[2], dy[2];
   float xfrac[2], yfrac[2];
   map_pixels_x(lon, width, in_level, &dx[0], &dx[1], &xfrac[0], &xfrac[1]);

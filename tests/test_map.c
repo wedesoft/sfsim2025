@@ -64,10 +64,10 @@ static MunitResult test_longitude(const MunitParameter params[], void *data) {
   return MUNIT_OK;
 }
 
-static MunitResult test_lattitude(const MunitParameter params[], void *data) {
-  munit_assert_double_equal(lattitude(0, 0, 1), 0, 6);
-  munit_assert_double_equal(lattitude(0, 1, 0), M_PI / 2, 6);
-  munit_assert_double_equal(lattitude(0.5, 0.5, 0), M_PI / 4, 6);
+static MunitResult test_latitude(const MunitParameter params[], void *data) {
+  munit_assert_double_equal(latitude(0, 0, 1), 0, 6);
+  munit_assert_double_equal(latitude(0, 1, 0), M_PI / 2, 6);
+  munit_assert_double_equal(latitude(0.5, 0.5, 0), M_PI / 4, 6);
   return MUNIT_OK;
 }
 
@@ -245,10 +245,46 @@ static MunitResult test_level_offset(const MunitParameter params[], void *data) 
 
 static MunitResult test_offset_latitude(const MunitParameter params[], void *data) {
   float dx, dy, dz;
-  offset_latitude(0, 0, 1, 0, 675, &dx, &dy, &dz);
+  offset_latitude(1, 0, 0, 0, 675, &dx, &dy, &dz);
   munit_assert_double_equal(dx, 0, 6);
   munit_assert_double_equal(dy, 2 * M_PI / (4 * 675), 6);
   munit_assert_double_equal(dz, 0, 6);
+  return MUNIT_OK;
+}
+
+static MunitResult test_rotate_offset2(const MunitParameter params[], void *data) {
+  float dx, dy, dz;
+  offset_latitude(0, 1, 0, 0, 675, &dx, &dy, &dz);
+  munit_assert_double_equal(dx, -2 * M_PI / (4 * 675), 6);
+  munit_assert_double_equal(dy, 0, 6);
+  munit_assert_double_equal(dz, 0, 6);
+  return MUNIT_OK;
+}
+
+static MunitResult test_scale_offset2(const MunitParameter params[], void *data) {
+  float dx, dy, dz;
+  offset_latitude(2, 0, 0, 0, 675, &dx, &dy, &dz);
+  munit_assert_double_equal(dx, 0, 6);
+  munit_assert_double_equal(dy, 4 * M_PI / (4 * 675), 6);
+  munit_assert_double_equal(dz, 0, 6);
+  return MUNIT_OK;
+}
+
+static MunitResult test_level_offset2(const MunitParameter params[], void *data) {
+  float dx, dy, dz;
+  offset_latitude(2, 0, 0, 1, 675, &dx, &dy, &dz);
+  munit_assert_double_equal(dx, 0, 6);
+  munit_assert_double_equal(dy, 2 * M_PI / (4 * 675), 6);
+  munit_assert_double_equal(dz, 0, 6);
+  return MUNIT_OK;
+}
+
+static MunitResult test_rotate_offset3(const MunitParameter params[], void *data) {
+  float dx, dy, dz;
+  offset_latitude(0, 1, 1e-8, 0, 675, &dx, &dy, &dz);
+  munit_assert_double_equal(dx, 0, 6);
+  munit_assert_double_equal(dy, 0, 6);
+  munit_assert_double_equal(dz, -2 * M_PI / (4 * 675), 6);
   return MUNIT_OK;
 }
 
@@ -260,7 +296,7 @@ MunitTest test_map[] = {
   {"/cube_face_4"     , test_cube_face_4     , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/cube_face_5"     , test_cube_face_5     , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/longitude"       , test_longitude       , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
-  {"/lattitude"       , test_lattitude       , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/latitude"        , test_latitude        , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/map_x"           , test_map_x           , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/map_y"           , test_map_y           , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/map_pixels_x"    , test_map_pixels_x    , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
@@ -280,5 +316,9 @@ MunitTest test_map[] = {
   {"/scale_offset"    , test_scale_offset    , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/level_offset"    , test_level_offset    , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/offset_latitude" , test_offset_latitude , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/rotate_offset2"  , test_rotate_offset2  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/scale_offset2"   , test_scale_offset2   , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/level_offset2"   , test_level_offset2   , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
+  {"/rotate_offset3"  , test_rotate_offset3  , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {NULL               , NULL                 , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL}
 };

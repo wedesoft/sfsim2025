@@ -13,7 +13,7 @@ static inline float longitude(float x, float y, float z) {
   return atan2(z, x);
 }
 
-static inline float lattitude(float x, float y, float z) {
+static inline float latitude(float x, float y, float z) {
   float r = sqrt(x * x + z * z);
   return atan2(y, r);
 }
@@ -24,9 +24,9 @@ static float map_x(float longitude, int tilesize, int level) {
   return result;
 }
 
-static float map_y(float lattitude, int tilesize, int level) {
+static float map_y(float latitude, int tilesize, int level) {
   int count = 1 << level;
-  float result = (M_PI / 2 - lattitude) / M_PI * tilesize * 2 * count;
+  float result = (M_PI / 2 - latitude) / M_PI * tilesize * 2 * count;
   return result;
 }
 
@@ -41,9 +41,9 @@ static void map_pixels_x(float longitude, int tilesize, int level, int *x0, int 
   if (*x1 >= 4 * count * tilesize) *x1 = 0;
 }
 
-static void map_pixels_y(float lattitude, int tilesize, int level, int *y0, int *y1, float *frac0, float *frac1) {
+static void map_pixels_y(float latitude, int tilesize, int level, int *y0, int *y1, float *frac0, float *frac1) {
   int count = 1 << level;
-  float y = map_y(lattitude, tilesize, level);
+  float y = map_y(latitude, tilesize, level);
   *y0 = floor(y);
   *frac1 = y - *y0;
   *frac0 = 1 - *frac1;
