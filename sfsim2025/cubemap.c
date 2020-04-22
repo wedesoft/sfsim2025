@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
             float h = elevation_for_point(&elevation_cache, in_level, width, x, y, z);
             *p3 = h <= 0 ? 255 : 0;
             if (h < 0) h = 0;
-            spherical_map(k, j, i, radius + h, p2, p2 + 1, p2 + 2);
+            scale_point(x, y, z, radius + h, p2, p2 + 1, p2 + 2);
             p2[3] = u / (float)(tilesize - 1);
             p2[4] = v / (float)(tilesize - 1);
             p1 += 3;
