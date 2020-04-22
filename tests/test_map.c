@@ -167,6 +167,15 @@ static MunitResult test_cube_indices(const MunitParameter params[], void *data) 
   return MUNIT_OK;
 }
 
+static MunitResult test_scale_point(const MunitParameter params[], void *data) {
+  float x, y, z;
+  scale_point(0, 2, 0, 100, &x, &y, &z);
+  munit_assert_float(x, ==, 0);
+  munit_assert_float(y, ==, 100);
+  munit_assert_float(z, ==, 0);
+  return MUNIT_OK;
+}
+
 static MunitResult test_spherical_map(const MunitParameter params[], void *data) {
   float x, y, z;
   spherical_map(0, 0.5, 0.5, 6370000, &x, &y, &z);
@@ -307,6 +316,7 @@ MunitTest test_map[] = {
   {"/frac_y0"         , test_frac_y0         , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/cube_coordinate" , test_cube_coordinate , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/cube_indices"    , test_cube_indices    , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/scale_point"     , test_scale_point     , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/spherical_map"   , test_spherical_map   , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/tile_center"     , test_tile_center     , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/cube_vertices"   , test_cube_vertices   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},

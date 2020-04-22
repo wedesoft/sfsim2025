@@ -104,16 +104,21 @@ int *cube_indices(int size) {
   return result;
 }
 
+// Scale 3D coordinates to a given radius.
+void scale_point(float x, float y, float z, float radius, float *xs, float *ys, float *zs) {
+  float norm = sqrt(x * x + y * y + z * z);
+  float factor = radius / norm;
+  *xs = x * factor;
+  *ys = y * factor;
+  *zs = z * factor;
+}
+
 // Map coordinate on cube to sphere of given radius.
 void spherical_map(int face, float j, float i, float radius, float *x, float *y, float *z) {
   float cube_x = cube_map_x(face, j, i);
   float cube_y = cube_map_y(face, j, i);
   float cube_z = cube_map_z(face, j, i);
-  float distance = sqrt(cube_x * cube_x + cube_y * cube_y + cube_z * cube_z);
-  float factor = radius / distance;
-  *x = cube_x * factor;
-  *y = cube_y * factor;
-  *z = cube_z * factor;
+  scale_point(cube_x, cube_y, cube_z, radius, x, y, z);
 }
 
 // Determine 3D center of map tile.
