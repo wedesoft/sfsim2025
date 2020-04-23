@@ -85,13 +85,26 @@ int main(int argc, char *argv[]) {
             float x = cube_map_x(k, j, i);
             float y = cube_map_y(k, j, i);
             float z = cube_map_z(k, j, i);
-            color_for_point(&image_cache, in_level, width, x, y, z, p1, p1 + 1, p1 + 2);
+            color_for_point(&image_cache, in_level, width, x, y, z, p1, p1 + 1, p1 + 2); // output RGB value
             float h = elevation_for_point(&elevation_cache, in_level, width, x, y, z);
-            *p3 = h <= 0 ? 255 : 0;
+            *p3 = h <= 0 ? 255 : 0; // output water mask value
             if (h < 0) h = 0;
-            scale_point(x, y, z, radius + h, p2, p2 + 1, p2 + 2);
-            p2[3] = u / (float)(tilesize - 1);
-            p2[4] = v / (float)(tilesize - 1);
+            scale_point(x, y, z, radius + h, p2, p2 + 1, p2 + 2); // output 3D coordinate
+            p2[3] = u / (float)(tilesize - 1); // output texture coordinate u
+            p2[4] = v / (float)(tilesize - 1); // output texture coordinate v
+            float dx1, dy1, dz1;
+            offset_longitude(x, y, z, in_level, tilesize, &dx1, &dy1, &dz1);
+            float dx2, dy2, dz2;
+            offset_latitude(x, y, z, in_level, tilesize, &dx2, &dy2, &dz2);
+            float hs[3][3];
+            for (int dj=-1; dj<=1; dj++) {
+              for (int di=-1; di<=1; di++) {
+                float xs = x + di * dx1 + dj * dx2;
+                float ys = y + di * dy1 + dj * dy2;
+                float zs = z + di * dz1 + dj * dz2;
+                hs[dj][di] = elevation_for_point(&elevation_cache, in_level, width, xs, ys, zs);
+              };
+            };
             p1 += 3;
             p2 += 5;
             p3++;
