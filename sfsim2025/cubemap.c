@@ -96,13 +96,18 @@ int main(int argc, char *argv[]) {
             offset_longitude(x, y, z, in_level, tilesize, &dx1, &dy1, &dz1);
             float dx2, dy2, dz2;
             offset_latitude(x, y, z, in_level, tilesize, &dx2, &dy2, &dz2);
-            float hs[3][3];
+            float p[3][3][3];
             for (int dj=-1; dj<=1; dj++) {
               for (int di=-1; di<=1; di++) {
                 float xs = x + di * dx1 + dj * dx2;
                 float ys = y + di * dy1 + dj * dy2;
                 float zs = z + di * dz1 + dj * dz2;
-                hs[dj][di] = elevation_for_point(&elevation_cache, in_level, width, xs, ys, zs);
+                float hs = elevation_for_point(&elevation_cache, in_level, width, xs, ys, zs);
+                float xh, yh, zh;
+                scale_point(x, y, z, hs, &xh, &yh, &zh);
+                p[dj + 1][di + 1][0] = di * dx1 + dj * dx2 + xh;
+                p[dj + 1][di + 1][1] = di * dy1 + dj * dy2 + yh;
+                p[dj + 1][di + 1][2] = di * dz1 + dj * dz2 + zh;
               };
             };
             p1 += 3;

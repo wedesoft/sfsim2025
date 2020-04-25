@@ -162,7 +162,6 @@ int main(int argc, char *argv[]) {
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
 
-
         glActiveTexture(GL_TEXTURE0 + 0);
         glGenTextures(1, &tex[k * N * N + b * N + a]);
         glBindTexture(GL_TEXTURE_2D, tex[k * N * N + b * N + a]);
