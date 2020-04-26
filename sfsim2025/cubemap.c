@@ -96,7 +96,14 @@ int main(int argc, char *argv[]) {
             offset_longitude(x, y, z, in_level, tilesize, &dx1, &dy1, &dz1);
             float dx2, dy2, dz2;
             offset_latitude(x, y, z, in_level, tilesize, &dx2, &dy2, &dz2);
-            float p[3][3][3];
+            float sx[3][3] = {{-0.25, 0, 0.25}, {-0.5, 0, 0.5}, {-0.25, 0, 0.25}};
+            float sy[3][3] = {{-0.25, -0.5, -0.25}, {0, 0, 0}, {0.25, 0.5, 0.25}};
+            float n1x = 0;
+            float n1y = 0;
+            float n1z = 0;
+            float n2x = 0;
+            float n2y = 0;
+            float n2z = 0;
             for (int dj=-1; dj<=1; dj++) {
               for (int di=-1; di<=1; di++) {
                 float xs = x + di * dx1 + dj * dx2;
@@ -105,9 +112,15 @@ int main(int argc, char *argv[]) {
                 float hs = elevation_for_point(&elevation_cache, in_level, width, xs, ys, zs);
                 float xh, yh, zh;
                 scale_point(x, y, z, hs, &xh, &yh, &zh);
-                p[dj + 1][di + 1][0] = di * dx1 + dj * dx2 + xh;
-                p[dj + 1][di + 1][1] = di * dy1 + dj * dy2 + yh;
-                p[dj + 1][di + 1][2] = di * dz1 + dj * dz2 + zh;
+                float px = di * dx1 + dj * dx2 + xh;
+                float py = di * dy1 + dj * dy2 + yh;
+                float pz = di * dz1 + dj * dz2 + zh;
+                n1x += sx[dj + 1][di + 1] * px;
+                n1y += sx[dj + 1][di + 1] * py;
+                n1z += sx[dj + 1][di + 1] * pz;
+                n2x += sy[dj + 1][di + 1] * px;
+                n2y += sy[dj + 1][di + 1] * py;
+                n2z += sy[dj + 1][di + 1] * pz;
               };
             };
             p1 += 3;
