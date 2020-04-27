@@ -16,4 +16,3 @@ void *runge_kutta(void *y0, double dt, void *f(double, double, void *, void *), 
   void *k4 = f(dt , dt, add(y0, k3            ), data);
   return add(y0, scale(add(add(add(k1, scale(k2, 2)), scale(k3, 2)), k4), 1.0 / 6.0));
 }
-

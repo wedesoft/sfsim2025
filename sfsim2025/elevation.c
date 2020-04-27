@@ -115,10 +115,10 @@ vertex_tile_t read_vertex_tile(const char *file_name) {
   int error = stat(file_name, &statbuf);
   if (!error) {
     int n = statbuf.st_size;
-    int size = (int)round(sqrt(n / (5 * sizeof(float))));
+    int size = (int)round(sqrt(n / (8 * sizeof(float))));
     result = allocate_vertex_tile(size, size);
     FILE *f = fopen(file_name, "rb");
-    fread(result.data, 5 * sizeof(float) * size, size, f);
+    fread(result.data, 8 * sizeof(float) * size, size, f);
     fclose(f);
   } else {
     result.width = 0;
@@ -130,6 +130,6 @@ vertex_tile_t read_vertex_tile(const char *file_name) {
 
 void write_vertex_tile(vertex_tile_t vertices, const char *file_name) {
   FILE *f = fopen(file_name, "wb");
-  fwrite(vertices.data, 5 * sizeof(float) * vertices.width, vertices.height, f);
+  fwrite(vertices.data, 8 * sizeof(float) * vertices.width, vertices.height, f);
   fclose(f);
 }

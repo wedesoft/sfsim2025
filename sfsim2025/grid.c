@@ -15,24 +15,29 @@
 const char *vertexSource = "#version 130\n\
 in mediump vec3 point;\n\
 in mediump vec2 texcoord;\n\
+in mediump vec3 normal;\n\
 uniform mat4 projection;\n\
 uniform mat4 rotation;\n\
 out mediump vec2 UV;\n\
+out mediump vec3 n;\n\
 void main()\n\
 {\n\
   gl_Position = projection * (rotation * vec4(point, 1) - vec4(0, 0, 6378000 * 4, 0));\n\
   UV = texcoord;\n\
+  n = (rotation * vec4(normal, 0)).xyz;\n\
 }";
 
 const char *fragmentSource = "#version 130\n\
 in mediump vec2 UV;\n\
+in mediump vec3 n;\n\
 out mediump vec3 fragColor;\n\
 uniform sampler2D tex;\n\
 uniform sampler2D water;\n\
 void main()\n\
 {\n\
+  float brightness = max(dot(n, vec3(1, 0, 0)), 0.1);\n\
   float wat = texture(water, UV).y;\n\
-  fragColor = texture(tex, UV).rgb * (1 - wat) + wat * vec3(0.2, 0.2, 0.4);\n\
+  fragColor = brightness * (texture(tex, UV).rgb * (1 - wat) + wat * vec3(0.2, 0.2, 0.4));\n\
 }";
 
 const int width = 1024;
@@ -151,16 +156,18 @@ int main(int argc, char *argv[]) {
 
         glGenBuffers(1, &vbo[k * N * N + b * N + a]);
         glBindBuffer(GL_ARRAY_BUFFER, vbo[k * N * N + b * N + a]);
-        glBufferData(GL_ARRAY_BUFFER, 256 * 256 * 5 * sizeof(GLfloat), vertices.data, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, 256 * 256 * 8 * sizeof(GLfloat), vertices.data, GL_STATIC_DRAW);
 
         glGenBuffers(1, &idx[k * N * N + b * N + a]);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idx[k * N * N + b * N + a]);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, 255 * 255 * 2 * 3 * sizeof(int), indices, GL_STATIC_DRAW);
 
-        glVertexAttribPointer(glGetAttribLocation(program, "point"), 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
-        glVertexAttribPointer(glGetAttribLocation(program, "texcoord"), 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
+        glVertexAttribPointer(glGetAttribLocation(program, "point"), 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
+        glVertexAttribPointer(glGetAttribLocation(program, "texcoord"), 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
+        glVertexAttribPointer(glGetAttribLocation(program, "normal"), 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(5 * sizeof(float)));
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
+        glEnableVertexAttribArray(2);
 
         glActiveTexture(GL_TEXTURE0 + 0);
         glGenTextures(1, &tex[k * N * N + b * N + a]);

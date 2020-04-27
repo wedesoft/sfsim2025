@@ -98,12 +98,8 @@ int main(int argc, char *argv[]) {
             offset_latitude(x, y, z, in_level, tilesize, &dx2, &dy2, &dz2);
             float sx[3][3] = {{-0.25, 0, 0.25}, {-0.5, 0, 0.5}, {-0.25, 0, 0.25}};
             float sy[3][3] = {{-0.25, -0.5, -0.25}, {0, 0, 0}, {0.25, 0.5, 0.25}};
-            float n1x = 0;
-            float n1y = 0;
-            float n1z = 0;
-            float n2x = 0;
-            float n2y = 0;
-            float n2z = 0;
+            vector_t n1 = vector(0, 0, 0);
+            vector_t n2 = vector(0, 0, 0);
             for (int dj=-1; dj<=1; dj++) {
               for (int di=-1; di<=1; di++) {
                 float xs = x + di * dx1 + dj * dx2;
@@ -115,16 +111,20 @@ int main(int argc, char *argv[]) {
                 float px = di * dx1 + dj * dx2 + xh;
                 float py = di * dy1 + dj * dy2 + yh;
                 float pz = di * dz1 + dj * dz2 + zh;
-                n1x += sx[dj + 1][di + 1] * px;
-                n1y += sx[dj + 1][di + 1] * py;
-                n1z += sx[dj + 1][di + 1] * pz;
-                n2x += sy[dj + 1][di + 1] * px;
-                n2y += sy[dj + 1][di + 1] * py;
-                n2z += sy[dj + 1][di + 1] * pz;
+                n1.x += sx[dj + 1][di + 1] * px;
+                n1.y += sx[dj + 1][di + 1] * py;
+                n1.z += sx[dj + 1][di + 1] * pz;
+                n2.x += sy[dj + 1][di + 1] * px;
+                n2.y += sy[dj + 1][di + 1] * py;
+                n2.z += sy[dj + 1][di + 1] * pz;
               };
             };
+            vector_t n = normalize(cross_product(n1, n2));
+            p2[5] = n.x;
+            p2[6] = n.y;
+            p2[7] = n.z;
             p1 += 3;
-            p2 += 5;
+            p2 += 8;
             p3++;
           };
         };

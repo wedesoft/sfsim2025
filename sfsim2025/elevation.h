@@ -43,7 +43,7 @@ typedef struct {
 } vertex_tile_t;
 
 static inline vertex_tile_t allocate_vertex_tile(int height, int width) {
-  return (vertex_tile_t){.height = height, .width = width, .data = GC_MALLOC_ATOMIC(width * height * 5 * sizeof(float))};
+  return (vertex_tile_t){.height = height, .width = width, .data = GC_MALLOC_ATOMIC(width * height * 8 * sizeof(float))};
 }
 
 vertex_tile_t read_vertex_tile(const char *file_name);
