@@ -40,8 +40,8 @@ void main()\n\
   fragColor = brightness * (texture(tex, UV).rgb * (1 - wat) + wat * vec3(0.2, 0.2, 0.4));\n\
 }";
 
-const int width = 1024;
-const int height = 768;
+const int width = 640;
+const int height = 480;
 
 void printStatus(const char *step, GLuint context, GLuint status) {
   GLint result = GL_FALSE;
