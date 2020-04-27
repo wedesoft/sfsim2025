@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
                 float xs = x + di * dx1 + dj * dx2;
                 float ys = y + di * dy1 + dj * dy2;
                 float zs = z + di * dz1 + dj * dz2;
-                float hs = elevation_for_point(&elevation_cache, in_level, width, xs, ys, zs);
+                float hs = elevation_for_point(&elevation_cache, in_level, width, xs, ys, zs) / radius;
                 float xh, yh, zh;
                 scale_point(x, y, z, hs, &xh, &yh, &zh);
                 float px = di * dx1 + dj * dx2 + xh;

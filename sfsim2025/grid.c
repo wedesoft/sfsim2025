@@ -35,7 +35,7 @@ uniform sampler2D tex;\n\
 uniform sampler2D water;\n\
 void main()\n\
 {\n\
-  float brightness = max(dot(n, vec3(1, 0, 0)), 0.1);\n\
+  float brightness = max(dot(n, vec3(1, 0, 0)), 0.0);\n\
   float wat = texture(water, UV).y;\n\
   fragColor = brightness * (texture(tex, UV).rgb * (1 - wat) + wat * vec3(0.2, 0.2, 0.4));\n\
 }";
