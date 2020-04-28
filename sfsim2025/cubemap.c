@@ -60,6 +60,39 @@ void color_for_point(cache_t *image_cache, int in_level, int width, float x, flo
   *blue  = b[0] * xfrac[0] * yfrac[0] + b[1] * xfrac[1] * yfrac[0] + b[2] * xfrac[0] * yfrac[1] + b[3] * xfrac[1] * yfrac[1];
 }
 
+void normal_for_point(cache_t *elevation_cache, int in_level, int tilesize, int width, float radius, float x, float y, float z,
+                      float *nx, float *ny, float *nz) {
+  float dx1, dy1, dz1;
+  offset_longitude(x, y, z, in_level, tilesize, &dx1, &dy1, &dz1);
+  float dx2, dy2, dz2;
+  offset_latitude(x, y, z, in_level, tilesize, &dx2, &dy2, &dz2);
+  float sx[3][3] = {{-0.25, 0, 0.25}, {-0.5, 0, 0.5}, {-0.25, 0, 0.25}};
+  float sy[3][3] = {{-0.25, -0.5, -0.25}, {0, 0, 0}, {0.25, 0.5, 0.25}};
+  vector_t n1 = vector(0, 0, 0);
+  vector_t n2 = vector(0, 0, 0);
+  for (int dj=-1; dj<=1; dj++) {
+    for (int di=-1; di<=1; di++) {
+      float xs = x + di * dx1 + dj * dx2;
+      float ys = y + di * dy1 + dj * dy2;
+      float zs = z + di * dz1 + dj * dz2;
+      float hs = elevation_for_point(elevation_cache, in_level, width, xs, ys, zs) / radius;
+      float xh, yh, zh;
+      scale_point(x, y, z, hs, &xh, &yh, &zh);
+      float px = di * dx1 + dj * dx2 + xh;
+      float py = di * dy1 + dj * dy2 + yh;
+      float pz = di * dz1 + dj * dz2 + zh;
+      n1.x += sx[dj + 1][di + 1] * px;
+      n1.y += sx[dj + 1][di + 1] * py;
+      n1.z += sx[dj + 1][di + 1] * pz;
+      n2.x += sy[dj + 1][di + 1] * px;
+      n2.y += sy[dj + 1][di + 1] * py;
+      n2.z += sy[dj + 1][di + 1] * pz;
+    };
+  };
+  vector_t n = normalize(cross_product(n1, n2));
+  *nx = n.x; *ny = n.y; *nz = n.z;
+}
+
 int main(int argc, char *argv[]) {
   const int in_level = 0;
   const int out_level = 0;
@@ -92,37 +125,7 @@ int main(int argc, char *argv[]) {
             scale_point(x, y, z, radius + h, p2, p2 + 1, p2 + 2); // output 3D coordinate
             p2[3] = u / (float)(tilesize - 1); // output texture coordinate u
             p2[4] = v / (float)(tilesize - 1); // output texture coordinate v
-            float dx1, dy1, dz1;
-            offset_longitude(x, y, z, in_level, tilesize, &dx1, &dy1, &dz1);
-            float dx2, dy2, dz2;
-            offset_latitude(x, y, z, in_level, tilesize, &dx2, &dy2, &dz2);
-            float sx[3][3] = {{-0.25, 0, 0.25}, {-0.5, 0, 0.5}, {-0.25, 0, 0.25}};
-            float sy[3][3] = {{-0.25, -0.5, -0.25}, {0, 0, 0}, {0.25, 0.5, 0.25}};
-            vector_t n1 = vector(0, 0, 0);
-            vector_t n2 = vector(0, 0, 0);
-            for (int dj=-1; dj<=1; dj++) {
-              for (int di=-1; di<=1; di++) {
-                float xs = x + di * dx1 + dj * dx2;
-                float ys = y + di * dy1 + dj * dy2;
-                float zs = z + di * dz1 + dj * dz2;
-                float hs = elevation_for_point(&elevation_cache, in_level, width, xs, ys, zs) / radius;
-                float xh, yh, zh;
-                scale_point(x, y, z, hs, &xh, &yh, &zh);
-                float px = di * dx1 + dj * dx2 + xh;
-                float py = di * dy1 + dj * dy2 + yh;
-                float pz = di * dz1 + dj * dz2 + zh;
-                n1.x += sx[dj + 1][di + 1] * px;
-                n1.y += sx[dj + 1][di + 1] * py;
-                n1.z += sx[dj + 1][di + 1] * pz;
-                n2.x += sy[dj + 1][di + 1] * px;
-                n2.y += sy[dj + 1][di + 1] * py;
-                n2.z += sy[dj + 1][di + 1] * pz;
-              };
-            };
-            vector_t n = normalize(cross_product(n1, n2));
-            p2[5] = n.x;
-            p2[6] = n.y;
-            p2[7] = n.z;
+            normal_for_point(&elevation_cache, in_level, tilesize, width, radius, x, y, z, p2 + 5, p2 + 6, p2 + 7); // normal vector
             p1 += 3;
             p2 += 8;
             p3++;
