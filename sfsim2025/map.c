@@ -105,51 +105,26 @@ int *cube_indices(int size) {
 }
 
 // Scale 3D coordinates to a given radius.
-void scale_point(float x, float y, float z, float radius, float *xs, float *ys, float *zs) {
+void scale_point(float x, float y, float z, float radius1, float radius2, float *xs, float *ys, float *zs) {
   float norm = sqrt(x * x + y * y + z * z);
-  float factor = radius / norm;
-  *xs = x * factor;
-  *ys = y * factor;
-  *zs = z * factor;
+  *xs = x * radius1 / norm;
+  *ys = y * radius2 / norm;
+  *zs = z * radius1 / norm;
 }
 
 // Map coordinate on cube to sphere of given radius.
-void spherical_map(int face, float j, float i, float radius, float *x, float *y, float *z) {
+void spherical_map(int face, float j, float i, float radius1, float radius2, float *x, float *y, float *z) {
   float cube_x = cube_map_x(face, j, i);
   float cube_y = cube_map_y(face, j, i);
   float cube_z = cube_map_z(face, j, i);
-  scale_point(cube_x, cube_y, cube_z, radius, x, y, z);
+  scale_point(cube_x, cube_y, cube_z, radius1, radius2, x, y, z);
 }
 
 // Determine 3D center of map tile.
-void tile_center(int level, int face, int b, int a, float radius, float *x, float *y, float *z) {
+void tile_center(int level, int face, int b, int a, float radius1, float radius2, float *x, float *y, float *z) {
   float j = cube_coordinate(level, 3, b, 1);
   float i = cube_coordinate(level, 3, a, 1);
-  spherical_map(face, j, i, radius, x, y, z);
-}
-
-// Compute 3D vertices for part of a sphere using elevation data.
-vertex_tile_t cube_vertices(elevation_t elevation, float radius, int face, int level, int b, int a) {
-  int width = elevation.width;
-  int height = elevation.height;
-  vertex_tile_t vertices = allocate_vertex_tile(width, height);
-  float *p = vertices.data;
-  short int *e = elevation.data;
-  assert(e);
-  for (int j=0; j<height; j++) {
-    for (int i=0; i<width; i++) {
-      float cube_j = cube_coordinate(level, height, b, j);
-      float cube_i = cube_coordinate(level, width, a, i);
-      int h = *e > 0 ? *e : 0;
-      spherical_map(face, cube_j, cube_i, radius + h, p, p + 1, p + 2);
-      p += 3;
-      p[0] = i / (float)(width - 1);
-      p[1] = j / (float)(height - 1);
-      p += 2;
-      e++;
-    };
-  };
-  return vertices;
+  spherical_map(face, j, i, radius1, radius2, x, y, z);
 }
 
 void offset_longitude(float x, float y, float z, int level, int tilesize, float *dx, float *dy, float *dz) {

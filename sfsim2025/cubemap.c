@@ -60,8 +60,8 @@ void color_for_point(cache_t *image_cache, int in_level, int width, float x, flo
   *blue  = b[0] * xfrac[0] * yfrac[0] + b[1] * xfrac[1] * yfrac[0] + b[2] * xfrac[0] * yfrac[1] + b[3] * xfrac[1] * yfrac[1];
 }
 
-void normal_for_point(cache_t *elevation_cache, int in_level, int tilesize, int width, float radius, float x, float y, float z,
-                      float *nx, float *ny, float *nz) {
+void normal_for_point(cache_t *elevation_cache, int in_level, int tilesize, int width, float radius1, float radius2,
+                      float x, float y, float z, float *nx, float *ny, float *nz) {
   float dx1, dy1, dz1;
   offset_longitude(x, y, z, in_level, tilesize, &dx1, &dy1, &dz1);
   float dx2, dy2, dz2;
@@ -75,9 +75,9 @@ void normal_for_point(cache_t *elevation_cache, int in_level, int tilesize, int 
       float xs = x + di * dx1 + dj * dx2;
       float ys = y + di * dy1 + dj * dy2;
       float zs = z + di * dz1 + dj * dz2;
-      float hs = elevation_for_point(elevation_cache, in_level, width, xs, ys, zs) / radius;
+      float hs = elevation_for_point(elevation_cache, in_level, width, xs, ys, zs) / radius1;
       float xh, yh, zh;
-      scale_point(x, y, z, hs, &xh, &yh, &zh);
+      scale_point(x, y, z, hs, hs, &xh, &yh, &zh);
       float px = di * dx1 + dj * dx2 + xh;
       float py = di * dy1 + dj * dy2 + yh;
       float pz = di * dz1 + dj * dz2 + zh;
@@ -99,7 +99,8 @@ int main(int argc, char *argv[]) {
   const int n = 1 << out_level;
   const int tilesize = 256;
   const int width = 675;
-  float radius = 6378000.0;
+  float radius1 = 6378000.0;
+  float radius2 = 6357000.0;
   cache_t image_cache = make_cache(2 * n * n);
   cache_t elevation_cache = make_cache(2 * n * n);
   for (int k=0; k<6; k++) {
@@ -122,10 +123,10 @@ int main(int argc, char *argv[]) {
             float h = elevation_for_point(&elevation_cache, in_level, width, x, y, z);
             *p3 = h <= 0 ? 255 : 0; // output water mask value
             if (h < 0) h = 0;
-            scale_point(x, y, z, radius + h, p2, p2 + 1, p2 + 2); // output 3D coordinate
+            scale_point(x, y, z, radius1 + h, radius2 + h, p2, p2 + 1, p2 + 2); // output 3D coordinate
             p2[3] = u / (float)(tilesize - 1); // output texture coordinate u
             p2[4] = v / (float)(tilesize - 1); // output texture coordinate v
-            normal_for_point(&elevation_cache, in_level, tilesize, width, radius, x, y, z, p2 + 5, p2 + 6, p2 + 7); // normal vector
+            normal_for_point(&elevation_cache, in_level, tilesize, width, radius1, radius2, x, y, z, p2 + 5, p2 + 6, p2 + 7); // normal vector
             p1 += 3;
             p2 += 8;
             p3++;

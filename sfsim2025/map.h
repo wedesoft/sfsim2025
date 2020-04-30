@@ -59,11 +59,11 @@ static float cube_coordinate(int level, int tilesize, int tile, int pixel) {
 
 int *cube_indices(int size);
 
-void scale_point(float x, float y, float z, float radius, float *xs, float *ys, float *zs);
+void scale_point(float x, float y, float z, float radius1, float radius2, float *xs, float *ys, float *zs);
 
-void spherical_map(int face, float j, float i, float r, float *x, float *y, float *z);
+void spherical_map(int face, float j, float i, float radius1, float radius2, float *x, float *y, float *z);
 
-void tile_center(int level, int face, int b, int a, float radius, float *x, float *y, float *z);
+void tile_center(int level, int face, int b, int a, float radius1, float radius2, float *x, float *y, float *z);
 
 vertex_tile_t cube_vertices(elevation_t elevation, float radius, int face, int level, int b, int a);
 

@@ -169,50 +169,28 @@ static MunitResult test_cube_indices(const MunitParameter params[], void *data) 
 
 static MunitResult test_scale_point(const MunitParameter params[], void *data) {
   float x, y, z;
-  scale_point(0, 2, 0, 100, &x, &y, &z);
+  scale_point(0, 2, 0, 100, 80, &x, &y, &z);
   munit_assert_float(x, ==, 0);
-  munit_assert_float(y, ==, 100);
+  munit_assert_float(y, ==, 80);
   munit_assert_float(z, ==, 0);
   return MUNIT_OK;
 }
 
 static MunitResult test_spherical_map(const MunitParameter params[], void *data) {
   float x, y, z;
-  spherical_map(0, 0.5, 0.5, 6370000, &x, &y, &z);
+  spherical_map(0, 0.5, 0.5, 6378000, 6357000, &x, &y, &z);
   munit_assert_float(x, ==, 0);
-  munit_assert_float(y, ==, 6370000);
+  munit_assert_float(y, ==, 6357000);
   munit_assert_float(z, ==, 0);
   return MUNIT_OK;
 }
 
 static MunitResult test_tile_center(const MunitParameter params[], void *data) {
   float x, y, z;
-  tile_center(0, 5, 0, 0, 6370000, &x, &y, &z);
+  tile_center(0, 5, 0, 0, 6378000, 6357000, &x, &y, &z);
   munit_assert_float(x, ==, 0);
-  munit_assert_float(y, ==, -6370000);
+  munit_assert_float(y, ==, -6357000);
   munit_assert_float(z, ==, 0);
-  return MUNIT_OK;
-}
-
-static MunitResult test_cube_vertices(const MunitParameter params[], void *data) {
-  elevation_t elevation = allocate_elevation(3, 3);
-  memset(elevation.data, 0, 3 * 3 * 2);
-  elevation.data[4] = 2;
-  vertex_tile_t result = cube_vertices(elevation, 3.0, 0, 0, 0, 0);
-  munit_assert_float(result.data[4 * 5 + 0], ==, 0);
-  munit_assert_float(result.data[4 * 5 + 1], ==, 5);
-  munit_assert_float(result.data[4 * 5 + 2], ==, 0);
-  munit_assert_float(result.data[4 * 5 + 3], ==, 0.5);
-  munit_assert_float(result.data[4 * 5 + 4], ==, 0.5);
-  return MUNIT_OK;
-}
-
-static MunitResult test_clip_height(const MunitParameter params[], void *data) {
-  elevation_t elevation = allocate_elevation(3, 3);
-  memset(elevation.data, 0, 3 * 3 * 2);
-  elevation.data[4] = -1;
-  vertex_tile_t result = cube_vertices(elevation, 3.0, 0, 0, 0, 0);
-  munit_assert_float(result.data[4 * 5 + 1], ==, 3);
   return MUNIT_OK;
 }
 
@@ -319,8 +297,6 @@ MunitTest test_map[] = {
   {"/scale_point"     , test_scale_point     , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/spherical_map"   , test_spherical_map   , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/tile_center"     , test_tile_center     , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
-  {"/cube_vertices"   , test_cube_vertices   , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
-  {"/clip_height"     , test_clip_height     , test_setup_gc, test_teardown_gc, MUNIT_TEST_OPTION_NONE, NULL},
   {"/offset_longitude", test_offset_longitude, NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/rotate_offset"   , test_rotate_offset   , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
   {"/scale_offset"    , test_scale_offset    , NULL         , NULL            , MUNIT_TEST_OPTION_NONE, NULL},
