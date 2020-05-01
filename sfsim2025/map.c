@@ -137,13 +137,13 @@ void offset_longitude(float x, float y, float z, int level, int tilesize, float 
   *dz = vs.z;
 }
 
-void offset_latitude(float x, float y, float z, int level, int tilesize, float *dx, float *dy, float *dz) {
+void offset_latitude(float x, float y, float z, int level, int tilesize, float radius1, float radius2, float *dx, float *dy, float *dz) {
   float lon = longitude(x, y, z);
   float lat = latitude(x, y, z);
   float norm = sqrt(x * x + y * y + z * z);
   vector_t v = vector(0, norm * M_PI / (2 * tilesize * (1 << level)), 0);
   vector_t vs = matrix_vector_dot(rotation_y(-lon), matrix_vector_dot(rotation_z(lat), v));
   *dx = vs.x;
-  *dy = vs.y;
+  *dy = vs.y * radius2 / radius1;
   *dz = vs.z;
 }
