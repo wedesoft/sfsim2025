@@ -65,7 +65,7 @@ void normal_for_point(cache_t *elevation_cache, int in_level, int tilesize, int 
   float dx1, dy1, dz1;
   offset_longitude(x, y, z, in_level, tilesize, &dx1, &dy1, &dz1);
   float dx2, dy2, dz2;
-  offset_latitude(x, y, z, in_level, tilesize, &dx2, &dy2, &dz2);
+  offset_latitude(x, y, z, in_level, tilesize, radius1, radius2, &dx2, &dy2, &dz2);
   float sx[3][3] = {{-0.25, 0, 0.25}, {-0.5, 0, 0.5}, {-0.25, 0, 0.25}};
   float sy[3][3] = {{-0.25, -0.5, -0.25}, {0, 0, 0}, {0.25, 0.5, 0.25}};
   vector_t n1 = vector(0, 0, 0);
